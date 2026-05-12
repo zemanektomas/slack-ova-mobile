@@ -45,10 +45,12 @@ jobs:
       - name: Install npm deps
         run: npm ci
 
-      - name: Patch expo-sqlite ESM imports
-        run: |
-          find node_modules/expo-sqlite/build -name "*.js" -type f -print0 \
-            | xargs -0 sed -i -E "s|from '(\\./[A-Za-z][A-Za-z0-9_/.-]*)';|from '\\1.js';|g; s|from \"(\\./[A-Za-z][A-Za-z0-9_/.-]*)\";|from \"\\1.js\";|g" || true
+      # Note: ESM `.js` extension patch on expo-sqlite/build/*.js (from memory
+      # `reference_expo_sqlite_bug.md`) was originally a Windows + Node 22 dev
+      # server workaround. Applying it in CI on Linux Hermes RELEASE build
+      # turns out to BREAK expo-sqlite at runtime ('Error: Unimplemented' on
+      # openDatabaseAsync). Local node_modules/expo-sqlite is NOT patched and
+      # works fine in debug. Skipping the patch in CI as well.
 
       - name: Expo prebuild (Android)
         run: npx expo prebuild --platform android --no-install --clean
