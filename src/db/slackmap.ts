@@ -5,6 +5,7 @@
 
 import { getDb, setMeta } from './index';
 import { useSyncStore } from '../store/syncStore';
+import { isoToCountryName } from './countryNames';
 
 const LINES_URL = 'https://data.slackmap.com/geojson/lines/all.geojson';
 const DETAIL_URL = (id: string) => `https://api.slackmap.com/line/${id}/details`;
@@ -132,6 +133,12 @@ export async function seedFromSlackmap(opts: { fromNetwork?: boolean } = {}): Pr
 
     const db = await getDb();
 
+    // Pojistka: pokud z předchozího pokusu zůstala otevřená transakce
+    // (např. po hot reload nebo crash uvnitř withTransactionAsync), zavři ji.
+    // SQLite tu transakci jinak drží, dokud handle neumře, a všechny další
+    // BEGIN selžou na "cannot start a transaction within a transaction".
+    try { await db.execAsync('ROLLBACK'); } catch {}
+
     // Smaž předchozí slackmap data.
     // Krok 1: zjisti, které body patří ke slackmap (přes components → slacklines.source).
     // Slackmap body mají id < 0 (synthetic), CSV body mají id > 0. Stačí mazat negative IDs.
@@ -161,14 +168,15 @@ export async function seedFromSlackmap(opts: { fromNetwork?: boolean } = {}): Pr
 
         const slId = nextSlId--;
         const externalId = f.id;
-        const country = f.c;
+        const isoCountry = f.c;
+        const stateName = isoToCountryName(isoCountry);  // "CZ" -> "Česká republika"
         const detail = payload.details[externalId];
         const lineLength = detail?.length ?? lengthFromString(f.l);
         const lineType = detail?.type ?? mapLineType(f.lt);
 
-        // Použij reálný název z bundled detailu, jinak placeholder "CZ · 170m"
+        // Použij reálný název z bundled detailu, jinak placeholder "Česká republika · 170m"
         const placeholderParts = [
-          country,
+          stateName,
           lineType === 'highline' ? 'highline' : null,
           lineLength ? `${lineLength}m` : null,
         ].filter(Boolean);
@@ -180,7 +188,7 @@ export async function seedFromSlackmap(opts: { fromNetwork?: boolean } = {}): Pr
            (id, name, description, state, length, height, type, restriction, source, external_id, server_updated_at)
            VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'slackmap', ?, ?)`,
           [
-            slId, name, detail?.description ?? null, country,
+            slId, name, detail?.description ?? null, stateName,
             lineLength, detail?.height ?? null, lineType, detail?.restriction ?? null,
             externalId, new Date().toISOString(),
           ],
@@ -217,7 +225,7 @@ export async function seedFromSlackmap(opts: { fromNetwork?: boolean } = {}): Pr
       }
     });
 
-    await setMeta('seeded_from_slackmap', 'bundled-v1');
+    await setMeta('seeded_from_slackmap', 'bundled-v2');
     syncStore.setLastSyncAt(new Date().toISOString());
 
     return { slacklines: insertedSlacklines, points: insertedPoints, components: insertedComponents };
@@ -291,11 +299,15 @@ export async function prefetchDetailsForCountry(countryIso: string): Promise<{ d
   );
   if (already) return { done: 0, failed: 0, skipped: 0 };
 
+  // Po normalizaci state v seedu používáme českou name ("Česká republika"), ne ISO.
+  // Tato funkce přijímá ISO-2 ze zvyklosti, mapujeme na cílový string.
+  const stateName = isoToCountryName(countryIso);
+
   // Najdi všechny slackmap linie pro tuto zemi, které ještě nemají description
   const rows = await db.getAllAsync<{ id: number; external_id: string }>(
     `SELECT id, external_id FROM slacklines
      WHERE source = 'slackmap' AND state = ? AND description IS NULL AND external_id IS NOT NULL`,
-    countryIso,
+    stateName,
   );
   if (rows.length === 0) {
     await db.runAsync(

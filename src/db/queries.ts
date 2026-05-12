@@ -18,13 +18,27 @@ interface QueryByBoundsArgs {
   limit?: number;
   search?: string;
   sourceFilter?: SourceFilter;
+  stateFilter?: string | null;   // přesné porovnání s slacklines.state
+  regionFilter?: string | null;  // přesné porovnání s slacklines.region
+  sectorFilter?: string | null;  // přesné porovnání s slacklines.sector
 }
 
 // Vrátí slacklines, jejichž first_anchor_point je uvnitř bbox (nebo všechny pokud bounds === null).
 // Toto je hot path — volá se na každý map move/zoom.
 export async function queryByBounds(args: QueryByBoundsArgs): Promise<SlacklineListItem[]> {
   const db = await getDb();
-  const { bounds, sortBy, sortDir, center, limit = 1000, search, sourceFilter = 'all' } = args;
+  const {
+    bounds,
+    sortBy,
+    sortDir,
+    center,
+    limit = 1000,
+    search,
+    sourceFilter = 'all',
+    stateFilter,
+    regionFilter,
+    sectorFilter,
+  } = args;
   const col = SORT_COLUMNS[sortBy] ?? 's.name';
   const dir = sortDir === 'desc' ? 'DESC' : 'ASC';
 
@@ -47,6 +61,15 @@ export async function queryByBounds(args: QueryByBoundsArgs): Promise<SlacklineL
   const sourceClause = sourceFilter !== 'all' ? `AND s.source = ?` : '';
   const sourceParams = sourceFilter !== 'all' ? [sourceFilter] : [];
 
+  const stateClause = stateFilter ? `AND s.state = ?` : '';
+  const stateParams = stateFilter ? [stateFilter] : [];
+
+  const regionClause = regionFilter ? `AND s.region = ?` : '';
+  const regionParams = regionFilter ? [regionFilter] : [];
+
+  const sectorClause = sectorFilter ? `AND s.sector = ?` : '';
+  const sectorParams = sectorFilter ? [sectorFilter] : [];
+
   const sql = `
     SELECT
       s.id, s.name, s.state, s.region, s.length, s.height, s.rating, s.date_tense, s.source,
@@ -62,11 +85,22 @@ export async function queryByBounds(args: QueryByBoundsArgs): Promise<SlacklineL
       ${boundsClause}
       ${searchClause}
       ${sourceClause}
+      ${stateClause}
+      ${regionClause}
+      ${sectorClause}
     ORDER BY ${col} ${dir} NULLS LAST
     LIMIT ?
   `;
 
-  const params = [...boundsParams, ...searchParams, ...sourceParams, limit];
+  const params = [
+    ...boundsParams,
+    ...searchParams,
+    ...sourceParams,
+    ...stateParams,
+    ...regionParams,
+    ...sectorParams,
+    limit,
+  ];
 
   const rows = await db.getAllAsync<any>(sql, params);
 
@@ -157,4 +191,51 @@ export async function hasDetailCached(id: number): Promise<boolean> {
   );
   // description je nejtypičtější detail-only pole; pokud je null po listing-only sync, ještě jsme nestáhli detail
   return row?.description !== null && row?.description !== undefined;
+}
+
+// --- Filtr helpery: distinct state/region/sector pro cascading picker ---
+
+export async function getDistinctStates(): Promise<string[]> {
+  const db = await getDb();
+  const rows = await db.getAllAsync<{ state: string }>(
+    `SELECT DISTINCT state FROM slacklines
+     WHERE state IS NOT NULL AND state != ''
+     ORDER BY state`,
+  );
+  return rows.map((r) => r.state);
+}
+
+export async function getDistinctRegions(state?: string | null): Promise<string[]> {
+  const db = await getDb();
+  const sql = state
+    ? `SELECT DISTINCT region FROM slacklines
+       WHERE region IS NOT NULL AND region != '' AND state = ?
+       ORDER BY region`
+    : `SELECT DISTINCT region FROM slacklines
+       WHERE region IS NOT NULL AND region != ''
+       ORDER BY region`;
+  const rows = await db.getAllAsync<{ region: string }>(sql, state ? [state] : []);
+  return rows.map((r) => r.region);
+}
+
+export async function getDistinctSectors(
+  state?: string | null,
+  region?: string | null,
+): Promise<string[]> {
+  const db = await getDb();
+  const clauses: string[] = ["sector IS NOT NULL", "sector != ''"];
+  const params: string[] = [];
+  if (state) {
+    clauses.push('state = ?');
+    params.push(state);
+  }
+  if (region) {
+    clauses.push('region = ?');
+    params.push(region);
+  }
+  const sql = `SELECT DISTINCT sector FROM slacklines
+               WHERE ${clauses.join(' AND ')}
+               ORDER BY sector`;
+  const rows = await db.getAllAsync<{ sector: string }>(sql, params);
+  return rows.map((r) => r.sector);
 }
