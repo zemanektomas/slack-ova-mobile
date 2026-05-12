@@ -28,3 +28,6 @@ android/
 Thumbs.db
 .idea/
 .vscode/
+
+# Build artifact downloads from CI
+artifacts/

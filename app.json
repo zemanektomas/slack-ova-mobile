@@ -1,11 +1,11 @@
 {
   "expo": {
-    "name": "Slackline CZ",
-    "slug": "slackline-cz",
-    "version": "0.1.0",
+    "name": "Slackline.Ova",
+    "slug": "slackline-ova",
+    "version": "0.3.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
-    "scheme": "slacklinecz",
+    "scheme": "slacklineova",
     "userInterfaceStyle": "automatic",
     "splash": {
       "image": "./assets/splash.png",
@@ -17,14 +17,14 @@
     ],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "cz.slackline.app"
+      "bundleIdentifier": "cz.slackline.ova"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "cz.slackline.app"
+      "package": "cz.slackline.ova"
     },
     "plugins": [
       "expo-router",
@@ -38,7 +38,7 @@
       [
         "expo-location",
         {
-          "locationWhenInUsePermission": "Slackline CZ potřebuje polohu pro zobrazení tvého místa na mapě."
+          "locationWhenInUsePermission": "Slackline.Ova potřebuje polohu pro zobrazení tvého místa na mapě."
         }
       ]
     ],

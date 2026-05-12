@@ -1,6 +1,8 @@
-# Slackline CZ — mobile
+# Slackline.Ova — mobile
 
-Offline-first mobilní aplikace pro slackliners v Česku. Ukazuje mapu se slacklines, seznam viditelných linií filtrovaný podle výřezu mapy, detail jednotlivých linií s informacemi o kotvách. Vše bez internetu.
+Offline-first mobilní aplikace pro slackliners. Ukazuje mapu se slacklines (Česko + svět), seznam viditelných linií filtrovaný podle výřezu mapy, detail jednotlivých linií s informacemi o kotvách. Vše bez internetu.
+
+Vznikla na ostravské slackline scéně, ale data jsou globální (slack.cz pro ČR + slackmap.com world).
 
 ![License](https://img.shields.io/badge/license-Apache%202.0-blue)
 ![Platform](https://img.shields.io/badge/platform-Android%20%7C%20iOS-lightgrey)
@@ -38,9 +40,9 @@ Aktuální APK ke stažení: **[github.com/zemanektomas/slack-cz-mobile/releases
 ### Instalace na telefon
 
 1. Otevři odkaz výše v Chrome na Androidu
-2. Klikni na `slackline-cz-<verze>.apk` v sekci Assets — stáhne se ~130 MB
+2. Klikni na `slackline-ova-<verze>.apk` v sekci Assets — stáhne se ~130 MB
 3. Po stažení tap na soubor v Chrome → Android požádá o povolení _„Install unknown apps“_ pro Chrome (jednorázově, povolit)
-4. Tap **Instalovat** → ikona Slackline CZ se objeví na ploše
+4. Tap **Instalovat** → ikona Slackline.Ova se objeví na ploše
 
 iOS verze zatím není k dispozici (plánováno do F4).
 

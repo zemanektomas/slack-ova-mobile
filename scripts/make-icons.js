@@ -1,4 +1,4 @@
-// Připraví ikony pro apku z https://slack.cz/img/slack1.png.
+// Připraví ikony pro apku ze Sl.Ova loga (assets/source/sl-ova-logo.png).
 // Output: assets/icon.png, assets/adaptive-icon.png, assets/splash.png
 //
 // Pouštět: node scripts/make-icons.js
@@ -6,31 +6,18 @@
 
 const fs = require('fs');
 const path = require('path');
-const https = require('https');
 const Jimp = require('jimp-compact');
 
 const ASSETS_DIR = path.join(__dirname, '..', 'assets');
-const TMP_PATH = path.join(__dirname, '..', '.tmp-slack-logo.png');
-
-function download(url, dest) {
-  return new Promise((resolve, reject) => {
-    https.get(url, (res) => {
-      if (res.statusCode !== 200) {
-        reject(new Error(`HTTP ${res.statusCode}`));
-        return;
-      }
-      const file = fs.createWriteStream(dest);
-      res.pipe(file);
-      file.on('finish', () => file.close(resolve));
-    }).on('error', reject);
-  });
-}
+const SOURCE_LOGO = path.join(ASSETS_DIR, 'source', 'sl-ova-logo.png');
 
 async function main() {
-  console.log('Stahuji slack1.png...');
-  await download('https://slack.cz/img/slack1.png', TMP_PATH);
+  if (!fs.existsSync(SOURCE_LOGO)) {
+    throw new Error(`Source logo not found: ${SOURCE_LOGO}`);
+  }
+  console.log(`Načítám: ${SOURCE_LOGO}`);
 
-  const logo = await Jimp.read(TMP_PATH);
+  const logo = await Jimp.read(SOURCE_LOGO);
   console.log(`Logo: ${logo.bitmap.width}x${logo.bitmap.height}`);
 
   // 1) icon.png — 1024x1024 čtverec, bílé pozadí, logo vycentrované (max 80% šíře)
@@ -69,7 +56,6 @@ async function main() {
   await splash.writeAsync(path.join(ASSETS_DIR, 'splash.png'));
   console.log('splash.png hotovo');
 
-  fs.unlinkSync(TMP_PATH);
   console.log('Hotovo. Pro načtení nových ikon spusť expo run:android.');
 }
 
