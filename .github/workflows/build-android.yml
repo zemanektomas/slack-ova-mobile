@@ -86,6 +86,7 @@ jobs:
                   }
               }`;
 
+          // 1) Inject `release { ... }` into signingConfigs block (idempotent)
           src = src.replace(
               /signingConfigs\s*\{([\s\S]*?)\n\s{4}\}/,
               (m, body) => {
@@ -94,12 +95,32 @@ jobs:
               }
           );
 
+          // 2) In buildTypes.release { ... }, set signingConfig to release.
+          //    Anchored regex: matches ONLY the release { ... } block (no nested braces),
+          //    not the whole buildTypes prefix (which would trip on debug { ... } first).
+          const buildTypesReleaseRe = /(buildTypes\s*\{[\s\S]*?release\s*\{)([^{}]*?)(signingConfig\s+signingConfigs\.\w+)/;
+          if (!buildTypesReleaseRe.test(src)) {
+              console.error('FATAL: could not locate buildTypes.release signingConfig line');
+              process.exit(1);
+          }
           src = src.replace(
-              /buildTypes\s*\{[\s\S]*?release\s*\{[\s\S]*?signingConfig\s+signingConfigs\.\w+/,
-              (m) => m.replace(/signingConfig\s+signingConfigs\.\w+/, 'signingConfig signingConfigs.release')
+              buildTypesReleaseRe,
+              (m, prefix, body, sig) => `${prefix}${body}signingConfig signingConfigs.release`
           );
 
           fs.writeFileSync(path, src);
+
+          // 3) Sanity-check the resulting file. The release buildtype must now
+          //    point at signingConfigs.release, and signingConfigs must contain
+          //    the release { storeFile ... } block we injected.
+          const out = fs.readFileSync(path, 'utf8');
+          const releaseBlockOk = /release\s*\{[^{}]*?signingConfig\s+signingConfigs\.release/.test(out);
+          const signingDefOk = /signingConfigs\s*\{[\s\S]*?release\s*\{[\s\S]*?storeFile\s+file\(MYAPP_RELEASE_STORE_FILE\)/.test(out);
+          if (!releaseBlockOk || !signingDefOk) {
+              console.error('FATAL: build.gradle injection sanity-check failed', { releaseBlockOk, signingDefOk });
+              process.exit(1);
+          }
+          console.log('Signing injection OK: buildTypes.release -> signingConfigs.release');
           EOF
 
       - name: Gradle assembleRelease
