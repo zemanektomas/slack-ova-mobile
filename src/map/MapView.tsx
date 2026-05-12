@@ -2,7 +2,7 @@
 // Sleduje bounds změny → mapStore, kreslí markery z viditelných slacklines.
 
 import { useMemo, useRef } from 'react';
-import { StyleSheet, View, Pressable, Text } from 'react-native';
+import { StyleSheet, View, Pressable, Text, Image } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import MapLibreGL, { MapView, Camera, ShapeSource, CircleLayer, LineLayer } from '@maplibre/maplibre-react-native';
 import { useMapStore, MapKind } from '../store/mapStore';
@@ -248,6 +248,14 @@ export default function MapViewComponent({ markers, selectedId, onMarkerPress }:
         </ShapeSource>
       </MapView>
 
+      <View style={styles.logoBox} pointerEvents="none">
+        <Image
+          source={require('../../assets/source/sl-ova-logo.png')}
+          style={styles.logo}
+          resizeMode="contain"
+        />
+      </View>
+
       <View style={[styles.kindBar, { backgroundColor: t.surface }]} pointerEvents="box-none">
         {KINDS.length > 1 && KINDS.map((k) => (
           <Pressable
@@ -342,4 +350,14 @@ const styles = StyleSheet.create({
   },
   sourceBtn: { paddingHorizontal: 10, paddingVertical: 6 },
   sourceBtnText: { fontSize: 11, fontWeight: '500' },
+  logoBox: {
+    position: 'absolute',
+    top: 8,
+    left: 8,
+    width: 56,
+    height: 56,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  logo: { width: 56, height: 56 },
 });

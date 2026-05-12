@@ -20,41 +20,37 @@ async function main() {
   const logo = await Jimp.read(SOURCE_LOGO);
   console.log(`Logo: ${logo.bitmap.width}x${logo.bitmap.height}`);
 
-  // Logo má bílé pozadí a kruhový design. Pro icony bílé pozadí necháváme
-  // (Android masky icon na tvar systému). Pro splash NEvkládáme do dalšího
-  // bílého rámu — logo samo je 1024×1024 čtverec a Expo splash s
-  // resizeMode='contain' ho dotáhne na obrazovku zachovávajíc poměr.
+  // Logo má alpha kanál (průhledné rohy okolo kruhu). Canvasy MUSÍME mít
+  // transparentní (0x00000000), jinak Jimp.composite() smaže alpha logo bílou
+  // a kruh získá viditelný čtvercový rám.
 
-  // 1) icon.png — 1024x1024, logo orientačně přes celou plochu
-  // (zoom 95% odřízne tenký bílý rámeček kolem logo SVG).
+  // 1) icon.png — 1024x1024 transparent canvas, logo přes celou plochu
   const SIZE = 1024;
-  const ICON_LOGO_W = Math.floor(SIZE * 0.95);
+  const ICON_LOGO_W = SIZE;
   const iconScaled = logo.clone().resize(ICON_LOGO_W, Jimp.AUTO);
-  const icon = await new Jimp(SIZE, SIZE, 0xffffffff);
+  const icon = await new Jimp(SIZE, SIZE, 0x00000000); // transparent
   icon.composite(iconScaled, (SIZE - iconScaled.bitmap.width) / 2, (SIZE - iconScaled.bitmap.height) / 2);
   await icon.writeAsync(path.join(ASSETS_DIR, 'icon.png'));
-  console.log('icon.png hotovo');
+  console.log('icon.png hotovo (transparent canvas)');
 
-  // 2) adaptive-icon.png — 1024x1024, ale "safe area" je středních ~720×720
-  // (66% bezpečné pro všechny Android masky: circle, squircle, rounded square).
-  // Logo necháváme větší, ať vyplní bezpečnou zónu.
+  // 2) adaptive-icon.png — 1024x1024 transparent canvas, logo v safe zone.
+  // Android použije adaptiveIcon.backgroundColor z app.json jako pozadí
+  // a tuto bitmapu jako foreground v safe zone (~720×720).
   const ADAPTIVE_LOGO_W = Math.floor(SIZE * 0.66);
   const adaptiveScaled = logo.clone().resize(ADAPTIVE_LOGO_W, Jimp.AUTO);
-  const adaptive = await new Jimp(SIZE, SIZE, 0xffffffff);
+  const adaptive = await new Jimp(SIZE, SIZE, 0x00000000); // transparent
   adaptive.composite(
     adaptiveScaled,
     (SIZE - adaptiveScaled.bitmap.width) / 2,
     (SIZE - adaptiveScaled.bitmap.height) / 2,
   );
   await adaptive.writeAsync(path.join(ASSETS_DIR, 'adaptive-icon.png'));
-  console.log('adaptive-icon.png hotovo');
+  console.log('adaptive-icon.png hotovo (transparent canvas)');
 
-  // 3) splash.png — použijeme logo 1:1 jako ČTVEREC 1024×1024 (ne 1242×2436).
-  // Expo splash screen s resizeMode='contain' ho dotáhne podle telefonu,
-  // bílé pozadí zajišťuje app.json.splash.backgroundColor. Bez papírového
-  // padding kolem se logo bude vyplňovat víc obrazovky.
+  // 3) splash.png — copy 1:1 from source (logo už je transparent, Expo splash
+  // s resizeMode='contain' ho dotáhne podle telefonu).
   await logo.clone().writeAsync(path.join(ASSETS_DIR, 'splash.png'));
-  console.log('splash.png hotovo (1024×1024, žádný extra padding)');
+  console.log('splash.png hotovo (source 1:1)');
 
   console.log('Hotovo. Pro načtení nových ikon spusť expo run:android.');
 }
