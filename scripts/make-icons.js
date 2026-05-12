@@ -20,18 +20,25 @@ async function main() {
   const logo = await Jimp.read(SOURCE_LOGO);
   console.log(`Logo: ${logo.bitmap.width}x${logo.bitmap.height}`);
 
-  // 1) icon.png — 1024x1024 čtverec, bílé pozadí, logo vycentrované (max 80% šíře)
+  // Logo má bílé pozadí a kruhový design. Pro icony bílé pozadí necháváme
+  // (Android masky icon na tvar systému). Pro splash NEvkládáme do dalšího
+  // bílého rámu — logo samo je 1024×1024 čtverec a Expo splash s
+  // resizeMode='contain' ho dotáhne na obrazovku zachovávajíc poměr.
+
+  // 1) icon.png — 1024x1024, logo orientačně přes celou plochu
+  // (zoom 95% odřízne tenký bílý rámeček kolem logo SVG).
   const SIZE = 1024;
-  const LOGO_W = Math.floor(SIZE * 0.85);
-  const scaled = logo.clone().resize(LOGO_W, Jimp.AUTO);
+  const ICON_LOGO_W = Math.floor(SIZE * 0.95);
+  const iconScaled = logo.clone().resize(ICON_LOGO_W, Jimp.AUTO);
   const icon = await new Jimp(SIZE, SIZE, 0xffffffff);
-  icon.composite(scaled, (SIZE - scaled.bitmap.width) / 2, (SIZE - scaled.bitmap.height) / 2);
+  icon.composite(iconScaled, (SIZE - iconScaled.bitmap.width) / 2, (SIZE - iconScaled.bitmap.height) / 2);
   await icon.writeAsync(path.join(ASSETS_DIR, 'icon.png'));
   console.log('icon.png hotovo');
 
-  // 2) adaptive-icon.png — 1024x1024, ale "safe area" je středních 432×432.
-  // Logo musí být menší aby se vlezlo do středu.
-  const ADAPTIVE_LOGO_W = Math.floor(SIZE * 0.65);
+  // 2) adaptive-icon.png — 1024x1024, ale "safe area" je středních ~720×720
+  // (66% bezpečné pro všechny Android masky: circle, squircle, rounded square).
+  // Logo necháváme větší, ať vyplní bezpečnou zónu.
+  const ADAPTIVE_LOGO_W = Math.floor(SIZE * 0.66);
   const adaptiveScaled = logo.clone().resize(ADAPTIVE_LOGO_W, Jimp.AUTO);
   const adaptive = await new Jimp(SIZE, SIZE, 0xffffffff);
   adaptive.composite(
@@ -42,19 +49,12 @@ async function main() {
   await adaptive.writeAsync(path.join(ASSETS_DIR, 'adaptive-icon.png'));
   console.log('adaptive-icon.png hotovo');
 
-  // 3) splash.png — 1242x2436 (iPhone X format, Expo doporučení), bílé pozadí, logo vycentrované
-  const SPLASH_W = 1242;
-  const SPLASH_H = 2436;
-  const SPLASH_LOGO_W = Math.floor(SPLASH_W * 0.7);
-  const splashScaled = logo.clone().resize(SPLASH_LOGO_W, Jimp.AUTO);
-  const splash = await new Jimp(SPLASH_W, SPLASH_H, 0xffffffff);
-  splash.composite(
-    splashScaled,
-    (SPLASH_W - splashScaled.bitmap.width) / 2,
-    (SPLASH_H - splashScaled.bitmap.height) / 2,
-  );
-  await splash.writeAsync(path.join(ASSETS_DIR, 'splash.png'));
-  console.log('splash.png hotovo');
+  // 3) splash.png — použijeme logo 1:1 jako ČTVEREC 1024×1024 (ne 1242×2436).
+  // Expo splash screen s resizeMode='contain' ho dotáhne podle telefonu,
+  // bílé pozadí zajišťuje app.json.splash.backgroundColor. Bez papírového
+  // padding kolem se logo bude vyplňovat víc obrazovky.
+  await logo.clone().writeAsync(path.join(ASSETS_DIR, 'splash.png'));
+  console.log('splash.png hotovo (1024×1024, žádný extra padding)');
 
   console.log('Hotovo. Pro načtení nových ikon spusť expo run:android.');
 }
