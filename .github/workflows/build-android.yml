@@ -56,7 +56,9 @@ jobs:
       - name: Decode keystore
         run: |
           mkdir -p android/app
-          echo "${{ secrets.ANDROID_KEYSTORE_BASE64 }}" | base64 -d > android/app/release.keystore
+          printf '%s' "${{ secrets.ANDROID_KEYSTORE_BASE64 }}" | tr -d '\r\n\t ' | base64 -d > android/app/release.keystore
+          test -s android/app/release.keystore || { echo "keystore is empty"; exit 1; }
+          echo "Keystore decoded: $(wc -c < android/app/release.keystore) bytes"
 
       - name: Configure gradle signing
         run: |
