@@ -1,56 +1,62 @@
-# Slackline.Ova — mobile
+# Slackline.Ova — mobil
 
-Offline-first mobilní aplikace pro slackliners. Ukazuje mapu se slacklines (Česko + svět), seznam viditelných linií filtrovaný podle výřezu mapy, detail jednotlivých linií s informacemi o kotvách. Vše bez internetu.
+Tož, naša mobilna apka. V telefonu mapa lajn a seznam co je v okoli — bez signalu, bez netu, bez čekani na 4G. Vlez do lesa, otevři apku, vidiš co kde visi a kolik je to do nejbližšiho špagatu. Včil. A to je všecko, co chceš, ni?
 
-Vznikla na ostravské slackline scéně, ale data jsou globální (slack.cz pro ČR + slackmap.com world).
+Vznikla na ostravske slackline scene (Sl.Ova), ale data su globalni — slack.cz pro Česko + slackmap.com pro celej svět. Tuž špagatisti z Brna, Polska aji Argentyny, vitejte tež.
 
 ![License](https://img.shields.io/badge/license-Apache%202.0-blue)
 ![Platform](https://img.shields.io/badge/platform-Android%20%7C%20iOS-lightgrey)
 ![Expo SDK](https://img.shields.io/badge/Expo%20SDK-51-000020)
 
-## Funkce
+## Co umi
 
-- **Půlka mapy / půlka seznam** s tří-pozičním split toggle (50/50 / mapa velká / list velký)
-- **Bounds-driven filtering** — list ukazuje jen linie ve výřezu mapy
-- **Řazení:** název / délka / výška / rating / vzdálenost od středu mapy
-- **Mapy.cz** letecká / turistická + **OSM** fallback (přepínač s ikonami)
-- **Tmavý / světlý režim** podle nastavení telefonu
-- **Vlastní poloha** (červený bod + halo, tlačítko "Najdi mě")
-- **Inline detail** — tap na linii ji rozbalí pod řádkem + zvýrazní žlutě v mapě i v listu
-- **Plně offline** — SQLite jako source of truth, žádné runtime API requests pro mapová data
+- **Pulka mapy, pulka seznam** — tří-pozični přepinač (50/50 nebo mapa velka nebo list velky, podle nalady)
+- **Filtruje podle vyřezu mapy** — když posuneš mapu k Beskydam, vidiš jen lajny v Beskydach
+- **Řazeni:** název / dluha / vyška / rating / vzdalenost od středu mapy
+- **Mapy.cz** letecka / turisticka + **OSM** jako zaloha (přepinač s ikonkami)
+- **Tmavy / světly motiv** podle telefonu (sam si vibere)
+- **Tvoja poloha** — červeny bod + halo, tlačítko "Najdi mě" tě zacentruje
+- **Inline detail** — klikneš na lajnu v seznamu a vyroluje se ti pod ní karta s kotvami, omezenim a popisem. V mapě a v listu se ti rozsviti žlutě, ať vidiš o čem je řeč
+- **Hledani + filtry** — najdeš lajnu podle nazvu, regionu nebo sektoru. Kaskadove filtry stat → region → sektor, pro lidi co maj radi pořadek
+- **GPS auto-detekce** — při prvnim spušteni si apka tichoučko zystí v jake jsi zemi a nastavi ti filter. Žadny obtěžovani povolenkami, jen pokud sis GPS dal dřiv pro „Najdi mě"
+- **Plně offline** — SQLite jako jediný zdroj pravdy, žadne čekani na server
 
-## Datové zdroje
+## Datove zdroje
 
-| Zdroj | Linie | Detaily | Pokrytí |
+Tuž ja, kde se ty lajny berou.
+
+| Zdroj | Linii | Detaily | Pokryti |
 |---|---|---|---|
-| **slack.cz** | 239 | částečné (kotvy + parametry) | jen ČR |
-| **slackmap.com** | 7810 | všechny (name, description, height, restriction) | celý svět |
+| **slack.cz** | 239 | častečne (kotvy + parametry) | jen Česko |
+| **slackmap.com** | 7810 | všecky (nazev, popis, vyška, omezeni) | celej svět |
 
-Oba zdroje jsou **build-time** zabalené v APK (CSV + JSON v `assets/seed/`). Aplikace funguje úplně offline od první chvíle. Pull-to-refresh dotáhne slackmap geometry aktualizace z `data.slackmap.com`.
+Oba zdroje su zabalene přimo v APK (build-time v `assets/seed/`). Apka funguje **offline od prvni chvile** — ani prvni start nepotřebuje internet. Když potahneš seznam dolů (pull-to-refresh), dotahne se ti čerstvejši slackmap geometry z `data.slackmap.com`, ale to je nadstavba. Bez signalu pojede furt.
 
-Filtrování zdrojů v UI: **Vše** / **slack.cz** / **Slackmap**. Barevné rozlišení v mapě:
-- modrá — slack.cz
-- indigo — Slackmap
-- žlutá — vybraná linie
+Barevne rozliseni v mapě:
+- **modra** — slack.cz
+- **indigo** — Slackmap
+- **žluta** — pravě vybrana lajna
 
-## Stažení (Android)
+## Staženi (Android)
 
-Aktuální APK ke stažení: **[github.com/zemanektomas/slack-ova-mobile/releases/latest](https://github.com/zemanektomas/slack-ova-mobile/releases/latest)**
+Tuž poslechni dobře, neni to slozite:
 
-### Instalace na telefon
+**Aktualni APK ke staženi:** [github.com/zemanektomas/slack-ova-mobile/releases/latest](https://github.com/zemanektomas/slack-ova-mobile/releases/latest)
 
-1. Otevři odkaz výše v Chrome na Androidu
-2. Klikni na `slackline-ova-<verze>.apk` v sekci Assets — stáhne se ~130 MB
-3. Po stažení tap na soubor v Chrome → Android požádá o povolení _„Install unknown apps“_ pro Chrome (jednorázově, povolit)
-4. Tap **Instalovat** → ikona Slackline.Ova se objeví na ploše
+1. Otevři ten link v Chromu na Androidu
+2. Klikneš na `slackline-ova-<verze>.apk` v sekci Assets — stahne se taka kupa bitu, ~130 MB
+3. Po staženi tap na soubor v Chromu → Android se zeptá esli muže instalovat „Z neznameho zdroje" — povol Chromu (jednorazově, šak co)
+4. Tap **Instalovat** → ikona Slackline.Ova se ti objevi na ploše a hotovo
 
-iOS verze zatím není k dispozici (plánováno do F4).
+**iOS verze zatim neni**, plánujem do Faze 4. Apple Developer učet stoji $99/rok a jak by řek mama na ten kufer mineralek — naco to teho kupovat tolik. Až pozdějc.
 
 ### Aktualizace
 
-Nová verze přijde stejnou cestou — stáhni novější APK, Android nabídne přepsání staré instalace. Data v SQLite se zachovají, pokud se neměnilo schema.
+Nova verze přyjde stejnu cestu — stahneš novejši APK, Android nabidne přepis stare instalace. Data v SQLite se ti zachovaju, pokud se nezměnilo schema.
 
-## Tech stack
+---
+
+## Tech stack (pro vyvojaře)
 
 - **React Native + Expo SDK 51** (bare workflow přes `expo prebuild` + `expo run:android`)
 - **TypeScript**
@@ -62,7 +68,7 @@ Nová verze přijde stejnou cestou — stáhni novější APK, Android nabídne 
 - **expo-router** — file-based navigation
 - **papaparse** — CSV parsing pro slack.cz seed
 
-## Setup
+## Setup pro vývoj
 
 ### Požadavky
 - Node.js 18+ (testováno na 22)
@@ -93,7 +99,7 @@ npx expo start --dev-client
 # Stáhne aktuální Slackmap data + detaily (~7800 linií, ~2 MB)
 node scripts/fetch-slackmap.js
 
-# Regeneruje app icon + splash ze slack.cz logo
+# Regeneruje app icon + splash ze Sl.Ova loga
 node scripts/make-icons.js
 ```
 
@@ -103,8 +109,8 @@ node scripts/make-icons.js
 src/
 ├── api/          REST klient, sync engine (zatím nepoužívaný)
 ├── app/          expo-router pages
-├── components/   InlineDetail
-├── db/           SQLite schema, queries, seed (CSV + Slackmap)
+├── components/   InlineDetail, FilterSheet
+├── db/           SQLite schema, queries, seed (CSV + Slackmap), reverseGeocode
 ├── map/          MapLibre integrace, useLocation
 ├── screens/      HomeScreen, DetailScreen
 ├── store/        Zustand (auth, map, sync)
@@ -113,35 +119,56 @@ src/
 
 assets/
 ├── icon.png, splash.png, adaptive-icon.png
+├── source/sl-ova-logo.png                          (zdrojové logo, transparent)
 └── seed/
-    ├── slacklines.csv, points.csv, components.csv   (slack.cz, 239 linií)
+    ├── slacklines.csv, points.csv, components.csv  (slack.cz, 239 linií)
     └── slackmap_world.json                          (Slackmap, 7810 linií + detaily)
 
 scripts/
 ├── fetch-slackmap.js     Stáhne aktuální Slackmap data
-└── make-icons.js          Generuje icon/splash z Sl.Ova loga
+└── make-icons.js         Generuje icon/splash ze Sl.Ova loga
 ```
 
-## Známé limity
+## Známe limity
 
-- **Žádné mutace** — apka je read-only. Vytváření crossings, edit linií, OAuth login zatím neimplementováno (F3).
-- **Online tiles** — offline MBTiles zatím není (vyžaduje hosting tiles serveru). Mapy.cz / OSM tedy potřebují signál.
-- **expo-sqlite Windows dev quirk** — na Windows + Node 22+ může Metro dev server hlásit chybějící `.js` extensions v `node_modules/expo-sqlite/build/`. CI Linux build i hotové APK jsou OK. Pokud naroníš lokálně, doplň `.js` ručně k relativním importům v těch souborech.
+Šak nic neni dokonale, tož co se ti teda nelibi:
+
+- **Žádné mutace** — apka jen čte. Crossings, edit lajn, OAuth login = ještě neni (čeká na Fázi 3). Až přijde, řešime přes deeplink na web nebo lokální outbox.
+- **Online tiles** — offline MBTiles ještě neni, Mapy.cz / OSM tile servery potřebuju signal. V lese to znamená šedu plochu, dokud se nedostaneš ku 4G.
+- **expo-sqlite Windows dev quirk** — pokud vyvíjíš na Windows + Node 22+, Metro dev server může brečet na chybějící `.js` extensions v `node_modules/expo-sqlite/build/`. CI build na Linuxu i hotové APK jsou OK. Tož řešeni: ručně přidat `.js` k relativním importům v těch souborech. (V CI to nepatchujeme — udělali jsme tu chybu jednou a Hermes JSI install na release buildu padl, vyřešeno odstraněním patche z workflow.)
 
 ## Roadmap
 
-Detail v [issues](https://github.com/zemanektomas/slack-ova-mobile/issues) a [milestones](https://github.com/zemanektomas/slack-ova-mobile/milestones).
+Detaily v [issues](https://github.com/zemanektomas/slack-ova-mobile/issues) a [milestones](https://github.com/zemanektomas/slack-ova-mobile/milestones).
 
-**Hotovo (F2 — MVP):** kompletní offline prohlížecí UI s oběma datovými zdroji.
+**Hotovo (F2 — MVP):**
+- Kompletni offline UI s dvěma datovymi zdroji
+- Search + cascading filtry
+- GPS auto-detect výchozího filteru
+- CI/CD pipeline + první veřejny release v0.3.0
 
-**Další (F3):** Google OAuth, crossings UI, sync mutací zpět na server.
+**Dál (F3):**
+- Google OAuth (proč by mama nemohla videt, kdo jí přidal lajnu)
+- Crossings UI — kdo a kdy lajnu chodil
+- Sync mutací na server (s rozumem, ne každy update spěšně)
 
-## Datové zdroje a atribuce
+**Pozdějc (F4):**
+- iOS přes EAS Build → TestFlight
+- Offline MBTiles pro Česko (vyžaduje hosting tile balíčku)
+- Detail tabs: Crossings, Photos, History, Statistics
+- Image caching pro fotky lajn
 
-- **slack.cz** — slack.cz komunita ([web](https://slack.cz)). Stará data exportovaná z webové aplikace [kratocpa/slackline-app](https://github.com/kratocpa/slackline-app).
-- **Slackmap** — [slackmap.com](https://slackmap.com) provozuje International Slackline Association. Veřejný GeoJSON na `data.slackmap.com`, detaily přes `api.slackmap.com` (bez auth pro read).
+## Datove zdroje a atribuce
+
+- **slack.cz** — slack.cz komunita ([web](https://slack.cz)). Historicka data exportovana z webove aplikace [kratocpa/slackline-app](https://github.com/kratocpa/slackline-app). Tomas Krato je legenda.
+- **Slackmap** — [slackmap.com](https://slackmap.com), provozuje International Slackline Association. Veřejny GeoJSON na `data.slackmap.com`, detaily přes `api.slackmap.com` (bez auth pro read).
 - **Mapy.cz** — Seznam.cz a.s., podklady © OpenStreetMap contributors.
+- **Reverse geocoding** — OpenStreetMap Nominatim (jen pro auto-detekci země při prvnim startu, max 1 req/sec, fair use).
 
 ## Licence
 
-Apache License 2.0 — viz [LICENSE](LICENSE).
+Apache License 2.0 — viz [LICENSE](LICENSE). Tož čerpaj, hraj sy, jen jak něco predelaš, zostan se s nama o spolupracu.
+
+---
+
+*Autor: Tomáš Zemánek. S láskou a paru piviskama pro slackliny v Ostravě a celosvětově.*
