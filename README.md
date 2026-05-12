@@ -35,7 +35,7 @@ Filtrování zdrojů v UI: **Vše** / **slack.cz** / **Slackmap**. Barevné rozl
 
 ## Stažení (Android)
 
-Aktuální APK ke stažení: **[github.com/zemanektomas/slack-cz-mobile/releases/latest](https://github.com/zemanektomas/slack-cz-mobile/releases/latest)**
+Aktuální APK ke stažení: **[github.com/zemanektomas/slack-ova-mobile/releases/latest](https://github.com/zemanektomas/slack-ova-mobile/releases/latest)**
 
 ### Instalace na telefon
 
@@ -119,7 +119,7 @@ assets/
 
 scripts/
 ├── fetch-slackmap.js     Stáhne aktuální Slackmap data
-└── make-icons.js          Generuje icon/splash z slack1.png
+└── make-icons.js          Generuje icon/splash z Sl.Ova loga
 ```
 
 ## Známé limity
@@ -130,7 +130,7 @@ scripts/
 
 ## Roadmap
 
-Detail v [issues](https://github.com/zemanektomas/slack-cz-mobile/issues) a [milestones](https://github.com/zemanektomas/slack-cz-mobile/milestones).
+Detail v [issues](https://github.com/zemanektomas/slack-ova-mobile/issues) a [milestones](https://github.com/zemanektomas/slack-ova-mobile/milestones).
 
 **Hotovo (F2 — MVP):** kompletní offline prohlížecí UI s oběma datovými zdroji.
 

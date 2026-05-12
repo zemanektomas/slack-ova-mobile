@@ -25,7 +25,7 @@ export async function reverseGeocodeCountry(lat: number, lon: number): Promise<s
     const res = await fetch(url, {
       headers: {
         // Nominatim usage policy: identify yourself
-        'User-Agent': 'slack-cz-mobile (https://github.com/zemanektomas/slack-cz-mobile)',
+        'User-Agent': 'slack-ova-mobile (https://github.com/zemanektomas/slack-ova-mobile)',
       },
       signal: controller.signal,
     });
