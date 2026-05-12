@@ -160,7 +160,7 @@ Detaily v [issues](https://github.com/zemanektomas/slack-ova-mobile/issues) a [m
 
 ## Datove zdroje a atribuce
 
-- **slack.cz** — slack.cz komunita ([web](https://slack.cz)). Historicka data exportovana z webove aplikace [kratocpa/slackline-app](https://github.com/kratocpa/slackline-app). Tomas Krato je legenda.
+- **slack.cz** — slack.cz komunita ([web](https://slack.cz)). Historicka data exportovana z puvodni webove aplikace.
 - **Slackmap** — [slackmap.com](https://slackmap.com), provozuje International Slackline Association. Veřejny GeoJSON na `data.slackmap.com`, detaily přes `api.slackmap.com` (bez auth pro read).
 - **Mapy.cz** — Seznam.cz a.s., podklady © OpenStreetMap contributors.
 - **Reverse geocoding** — OpenStreetMap Nominatim (jen pro auto-detekci země při prvnim startu, max 1 req/sec, fair use).
