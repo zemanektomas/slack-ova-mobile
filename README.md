@@ -31,6 +31,23 @@ Filtrování zdrojů v UI: **Vše** / **slack.cz** / **Slackmap**. Barevné rozl
 - indigo — Slackmap
 - žlutá — vybraná linie
 
+## Stažení (Android)
+
+Aktuální APK ke stažení: **[github.com/zemanektomas/slack-cz-mobile/releases/latest](https://github.com/zemanektomas/slack-cz-mobile/releases/latest)**
+
+### Instalace na telefon
+
+1. Otevři odkaz výše v Chrome na Androidu
+2. Klikni na `slackline-cz-<verze>.apk` v sekci Assets — stáhne se ~130 MB
+3. Po stažení tap na soubor v Chrome → Android požádá o povolení _„Install unknown apps“_ pro Chrome (jednorázově, povolit)
+4. Tap **Instalovat** → ikona Slackline CZ se objeví na ploše
+
+iOS verze zatím není k dispozici (plánováno do F4).
+
+### Aktualizace
+
+Nová verze přijde stejnou cestou — stáhni novější APK, Android nabídne přepsání staré instalace. Data v SQLite se zachovají, pokud se neměnilo schema.
+
 ## Tech stack
 
 - **React Native + Expo SDK 51** (bare workflow přes `expo prebuild` + `expo run:android`)
@@ -105,9 +122,9 @@ scripts/
 
 ## Známé limity
 
-- **expo-sqlite ESM bug** — `~14.0.x` chybí `.js` extensions v importech, selže na Windows + Node 22+. Po každém `npm install` je třeba ručně patchnout `node_modules/expo-sqlite/build/*.js` (přidat `.js` k relativním importům). TODO: použít `patch-package`.
-- **Žádné mutace** — apka je read-only. Vytváření crossings, edit linií, OAuth login zatím neimplementováno.
-- **Online tiles** — offline MBTiles zatím není (vyžaduje hosting tiles serveru).
+- **Žádné mutace** — apka je read-only. Vytváření crossings, edit linií, OAuth login zatím neimplementováno (F3).
+- **Online tiles** — offline MBTiles zatím není (vyžaduje hosting tiles serveru). Mapy.cz / OSM tedy potřebují signál.
+- **expo-sqlite Windows dev quirk** — na Windows + Node 22+ může Metro dev server hlásit chybějící `.js` extensions v `node_modules/expo-sqlite/build/`. CI Linux build i hotové APK jsou OK. Pokud naroníš lokálně, doplň `.js` ručně k relativním importům v těch souborech.
 
 ## Roadmap
 
