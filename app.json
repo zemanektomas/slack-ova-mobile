@@ -17,14 +17,16 @@
     ],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "cz.slackline.ova"
+      "bundleIdentifier": "cz.slackline.ova",
+      "buildNumber": "1"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#0f172a"
       },
-      "package": "cz.slackline.ova"
+      "package": "cz.slackline.ova",
+      "versionCode": 1
     },
     "plugins": [
       "expo-router",

@@ -1,4 +1,4 @@
-name: Build Android APK
+name: Build Android APK + AAB
 
 on:
   push:
@@ -125,37 +125,50 @@ jobs:
           console.log('Signing injection OK: buildTypes.release -> signingConfigs.release');
           EOF
 
-      - name: Gradle assembleRelease
+      - name: Gradle assembleRelease + bundleRelease
         env:
           # Metro bakes EXPO_PUBLIC_* env vars into the JS bundle at build time.
           # Anything sensitive cannot live here (visible in the APK).
           EXPO_PUBLIC_MAPY_CZ_API_KEY: ${{ secrets.EXPO_PUBLIC_MAPY_CZ_API_KEY }}
         run: |
           cd android
-          ./gradlew app:assembleRelease -x lint -x test --no-daemon --stacktrace
+          # assembleRelease → APK (přímé sdílení, sideload)
+          # bundleRelease   → AAB (Google Play Store upload — od 2021 povinné)
+          ./gradlew app:assembleRelease app:bundleRelease -x lint -x test --no-daemon --stacktrace
 
-      - name: Rename APK
+      - name: Rename artifacts
         id: rename
         run: |
           VERSION="${GITHUB_REF_NAME#v}"
-          SRC="android/app/build/outputs/apk/release/app-release.apk"
-          DEST="slackline-ova-${VERSION}.apk"
-          cp "$SRC" "$DEST"
-          ls -la "$DEST"
-          echo "apk=$DEST" >> "$GITHUB_OUTPUT"
 
-      - name: Upload artifact (workflow_dispatch)
+          APK_SRC="android/app/build/outputs/apk/release/app-release.apk"
+          APK_DEST="slackline-ova-${VERSION}.apk"
+          cp "$APK_SRC" "$APK_DEST"
+          echo "apk=$APK_DEST" >> "$GITHUB_OUTPUT"
+
+          AAB_SRC="android/app/build/outputs/bundle/release/app-release.aab"
+          AAB_DEST="slackline-ova-${VERSION}.aab"
+          cp "$AAB_SRC" "$AAB_DEST"
+          echo "aab=$AAB_DEST" >> "$GITHUB_OUTPUT"
+
+          ls -la "$APK_DEST" "$AAB_DEST"
+
+      - name: Upload artifacts (workflow_dispatch)
         if: github.event_name == 'workflow_dispatch'
         uses: actions/upload-artifact@v4
         with:
-          name: slackline-ova-apk
-          path: ${{ steps.rename.outputs.apk }}
+          name: slackline-ova-android
+          path: |
+            ${{ steps.rename.outputs.apk }}
+            ${{ steps.rename.outputs.aab }}
           retention-days: 14
 
       - name: Publish to GitHub Release
         if: startsWith(github.ref, 'refs/tags/v')
         uses: softprops/action-gh-release@v2
         with:
-          files: ${{ steps.rename.outputs.apk }}
+          files: |
+            ${{ steps.rename.outputs.apk }}
+            ${{ steps.rename.outputs.aab }}
           generate_release_notes: true
           fail_on_unmatched_files: true
