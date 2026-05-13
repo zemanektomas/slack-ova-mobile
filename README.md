@@ -10,15 +10,20 @@ Vznikla na ostravske slackline scene (Sl.Ova), ale data su globalni — slack.cz
 
 ## Co umi
 
-- **Pulka mapy, pulka seznam** — tří-pozični přepinač (50/50 nebo mapa velka nebo list velky, podle nalady)
+- **Mapa přes celu obrazovku + bottom sheet se seznamem** — vytáhneš ho palcem zespoda (drag handle). Tři velikosti: skoro skovany pod mapou, půl na půl, list přes celu plochu
 - **Filtruje podle vyřezu mapy** — když posuneš mapu k Beskydam, vidiš jen lajny v Beskydach
-- **Řazeni:** název / dluha / vyška / rating / vzdalenost od středu mapy
-- **Mapy.cz** letecka / turisticka + **OSM** jako zaloha (přepinač s ikonkami)
+- **Tabulkovy seznam** — delka, vyška, rating pod sebou v sloupcich, ať muže člověk vizualně porovnavat
+- **Řazeni:** Nazev / Delka / Vyška / ★ / Vzdalenost (od středu mapy, živě)
+- **Mapy.cz** letecka / turisticka + **OSM** (default) — přepneš v Nastaveni (ozubene kolo vedle filtru)
+- **Filtr zdroju** Všecko / slack.cz / Slackmap — taky v Nastaveni
+- **Černobila paleta** sladěna s logem — žadne modry, žadny žlute, jen šedy v Ostravsky stylu
 - **Tmavy / světly motiv** podle telefonu (sam si vibere)
-- **Tvoja poloha** — červeny bod + halo, tlačítko "Najdi mě" tě zacentruje
-- **Inline detail** — klikneš na lajnu v seznamu a vyroluje se ti pod ní karta s kotvami, omezenim a popisem. V mapě a v listu se ti rozsviti žlutě, ať vidiš o čem je řeč
+- **Tvoja poloha** — černy čtverečk s rameček (v dark mode bily), tap na **logo v levem rohu mapy** tě zacentruje
+- **Inline detail** — klikneš na lajnu v seznamu a vyroluje se ti pod ňou karta s kotvami, omezenim a popisem. V mapě a v listu se ti rozsviti bile, ať vidiš o čem je řeč
 - **Hledani + filtry** — najdeš lajnu podle nazvu, regionu nebo sektoru. Kaskadove filtry stat → region → sektor, pro lidi co maj radi pořadek
 - **GPS auto-detekce** — při prvnim spušteni si apka tichoučko zystí v jake jsi zemi a nastavi ti filter. Žadny obtěžovani povolenkami, jen pokud sis GPS dal dřiv pro „Najdi mě"
+- **Čeština / English** přepinač v Nastaveni — apka pozna systemovy jazyk a vybere si sama, jen kdyby tě napadlo si ji přepnut
+- **Vychozi mista: Ostrava** zoom 10 (no šak co bys čekal v Sl.Ova apce)
 - **Plně offline** — SQLite jako jediný zdroj pravdy, žadne čekani na server
 
 ## Datove zdroje
@@ -32,10 +37,11 @@ Tuž ja, kde se ty lajny berou.
 
 Oba zdroje su zabalene přimo v APK (build-time v `assets/seed/`). Apka funguje **offline od prvni chvile** — ani prvni start nepotřebuje internet. Když potahneš seznam dolů (pull-to-refresh), dotahne se ti čerstvejši slackmap geometry z `data.slackmap.com`, ale to je nadstavba. Bez signalu pojede furt.
 
-Barevne rozliseni v mapě:
-- **modra** — slack.cz
-- **indigo** — Slackmap
-- **žluta** — pravě vybrana lajna
+Barevne rozliseni v mapě (čerň-bila paleta sladěna s logem):
+- **tmavě šeda** (slate-800) — slack.cz
+- **světle šeda** (slate-400) — Slackmap
+- **bila s černym rameckem** — pravě vybrana lajna
+- **černy čtverečk** (v dark mode bily) — tvoja poloha
 
 ## Staženi (Android)
 
@@ -48,7 +54,9 @@ Tuž poslechni dobře, neni to slozite:
 3. Po staženi tap na soubor v Chromu → Android se zeptá esli muže instalovat „Z neznameho zdroje" — povol Chromu (jednorazově, šak co)
 4. Tap **Instalovat** → ikona Slackline.Ova se ti objevi na ploše a hotovo
 
-**iOS verze zatim neni**, plánujem do Faze 4. Apple Developer učet stoji $99/rok a jak by řek mama na ten kufer mineralek — naco to teho kupovat tolik. Až pozdějc.
+**iOS verze zatim neni**, plánujem do Faze 4. Apple Developer učet stoji $99/rok a jak by řek mama na ten kufer mineralek — naco to teho kupovat tolik. Az se ukaže že iPhone slackliny tež chcou, tož pojedem EAS Build → TestFlight → App Store.
+
+**Google Play Store** — Internal Testing track v přípravě, soubor [docs/store-listing.md](docs/store-listing.md) ma připravene texty CS+EN a [docs/privacy.md](docs/privacy.md) je Privacy Policy ([hostovana online](https://zemanektomas.github.io/slack-ova-mobile/privacy)). Az to projde Google identity verify, AAB pojede do Internal Testing.
 
 ### Aktualizace
 
@@ -61,10 +69,14 @@ Nova verze přyjde stejnu cestu — stahneš novejši APK, Android nabidne přep
 - **React Native + Expo SDK 51** (bare workflow přes `expo prebuild` + `expo run:android`)
 - **TypeScript**
 - **MapLibre GL** (`@maplibre/maplibre-react-native` v10) — raster tiles
+- **@gorhom/bottom-sheet v4.6** — bottom sheet pattern pro seznam (3 snap pointy, drag handle). v4, ne v5 — v5 chce reanimated 3.16+ což SDK 51 nemá.
+- **react-native-gesture-handler 2.16** + **react-native-reanimated 3.10** — povinné pro Gorhom; `GestureHandlerRootView` v `_layout.tsx`
 - **expo-sqlite** — lokální SQLite, source of truth
 - **expo-location** — GPS poloha
+- **expo-localization ~15** — detekce systémového jazyka. Pozor: latest `@55` chce SDK 55+
+- **react-i18next + i18next** — překlady CS/EN, persist v AsyncStorage
 - **@expo/vector-icons** (MaterialCommunityIcons)
-- **Zustand** — state management (mapa, filter, theme, auth)
+- **Zustand** — state management (mapa, filter, theme, auth, lang)
 - **expo-router** — file-based navigation
 - **papaparse** — CSV parsing pro slack.cz seed
 
@@ -108,18 +120,19 @@ node scripts/make-icons.js
 ```
 src/
 ├── api/          REST klient, sync engine (zatím nepoužívaný)
-├── app/          expo-router pages
-├── components/   InlineDetail, FilterSheet
+├── app/          expo-router pages, _layout.tsx s i18n initem + GestureHandlerRootView
+├── components/   InlineDetail, FilterSheet, SettingsSheet
 ├── db/           SQLite schema, queries, seed (CSV + Slackmap), reverseGeocode
+├── i18n/         cs.json + en.json překlady + i18next init
 ├── map/          MapLibre integrace, useLocation
-├── screens/      HomeScreen, DetailScreen
-├── store/        Zustand (auth, map, sync)
+├── screens/      HomeScreen (bottom sheet hostí FlatList + search + sort)
+├── store/        Zustand (auth, map, sync, lang)
 ├── types/        TS interfaces
-└── theme.ts      Dark/light theme tokens
+└── theme.ts      Černobíla paleta s tokeny per-theme + per-marker
 
 assets/
 ├── icon.png, splash.png, adaptive-icon.png
-├── source/sl-ova-logo.png                          (zdrojové logo, transparent)
+├── source/sl-ova-logo.png                          (zdrojové logo, kruh s Ostravou)
 └── seed/
     ├── slacklines.csv, points.csv, components.csv  (slack.cz, 239 linií)
     └── slackmap_world.json                          (Slackmap, 7810 linií + detaily)
@@ -127,6 +140,11 @@ assets/
 scripts/
 ├── fetch-slackmap.js     Stáhne aktuální Slackmap data
 └── make-icons.js         Generuje icon/splash ze Sl.Ova loga
+
+docs/                     GitHub Pages (https://zemanektomas.github.io/slack-ova-mobile/)
+├── index.md              Landing page
+├── privacy.md            Privacy Policy CS+EN (povinné pro store submission)
+└── store-listing.md      Připravené texty pro Google Play + App Store
 ```
 
 ## Známe limity
@@ -136,16 +154,29 @@ scripts/
 - **Žádné mutace** — apka jen čte. Crossings, edit lajn, OAuth login = ještě neni (čeká na Fázi 3). Až přijde, řešime přes deeplink na web nebo lokální outbox.
 - **Online tiles** — offline MBTiles ještě neni, Mapy.cz / OSM tile servery potřebuju signal. V lese to znamená šedu plochu, dokud se nedostaneš ku 4G.
 - **expo-sqlite Windows dev quirk** — pokud vyvíjíš na Windows + Node 22+, Metro dev server může brečet na chybějící `.js` extensions v `node_modules/expo-sqlite/build/`. CI build na Linuxu i hotové APK jsou OK. Tož řešeni: ručně přidat `.js` k relativním importům v těch souborech. (V CI to nepatchujeme — udělali jsme tu chybu jednou a Hermes JSI install na release buildu padl, vyřešeno odstraněním patche z workflow.)
+- **Verze knihoven jsou pinnuté** — Gorhom bottom-sheet `@^4` (ne v5) a expo-localization `@~15` (ne v55). Latest verze chcou Expo SDK 55+, my máme SDK 51. Při `npm install` knihoven bez verze sahne npm po latest a build padne.
 
 ## Roadmap
 
 Detaily v [issues](https://github.com/zemanektomas/slack-ova-mobile/issues) a [milestones](https://github.com/zemanektomas/slack-ova-mobile/milestones).
 
-**Hotovo (F2 — MVP):**
-- Kompletni offline UI s dvěma datovymi zdroji
-- Search + cascading filtry
+**Hotovo (F2 — MVP, ~99 %):**
+- Kompletni offline UI s dvěma datovymi zdroji (slack.cz + Slackmap, 8049 lajn)
+- Search + cascading filtry (Stat → Region → Sektor)
 - GPS auto-detect výchozího filteru
-- CI/CD pipeline + první veřejny release v0.3.0
+- **Bottom sheet pattern** (Gorhom) místo splitu — mapa přes celu obrazovku
+- **Černobila paleta** sladěna s logom (ADR-028)
+- **Settings sheet** za ozubenym kolem — podklad mapy + zdroj dat + jazyk
+- **i18n EN/CS** přepinač
+- **Sloupcova tabulka** v listu — porovnavej delky pod sebou
+- **Tap na logo = GPS** — žadny crosshair button vpravo dole
+- CI/CD pipeline (APK + AAB pro Google Play submission)
+- Veřejne release v0.2.1 (12.5.), v0.3.0 (rebrand), **v0.4.0 (UX redesign 13.5.)**
+
+**Zbyva v F2:**
+- Offline MBTiles pro Česko (vyžaduje hosting)
+- Detail tabs Photos / History / Statistics — samostatne obrazovky mimo inline detail
+- Pull-to-refresh pro Slackmap detaily
 
 **Dál (F3):**
 - Google OAuth (proč by mama nemohla videt, kdo jí přidal lajnu)
@@ -153,9 +184,8 @@ Detaily v [issues](https://github.com/zemanektomas/slack-ova-mobile/issues) a [m
 - Sync mutací na server (s rozumem, ne každy update spěšně)
 
 **Pozdějc (F4):**
+- Google Play Store submission (Internal Testing → Production)
 - iOS přes EAS Build → TestFlight
-- Offline MBTiles pro Česko (vyžaduje hosting tile balíčku)
-- Detail tabs: Crossings, Photos, History, Statistics
 - Image caching pro fotky lajn
 
 ## Datove zdroje a atribuce
