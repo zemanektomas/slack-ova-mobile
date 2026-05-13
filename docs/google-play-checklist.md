@@ -16,7 +16,7 @@ Přesný postup k získání aplikace do Internal Testing tracku. Po dokončení
 - **$25 jednorázový poplatek** (~600 Kč), platba kartou
 - Vyber: **Individual** (osobní účet, ne firma) — pro hobby projekt jednoznačně
 - Vyber **země: Czech Republic**
-- Účet bude vázaný na tvůj Google email (zemanektomas@centrum.cz pravděpodobně ne, použij Google účet — pokud nemáš, vytvoř)
+- Účet bude vázaný na tvůj Google email (pokud nemáš Gmail, vytvoř — kontakt v Play Console = tomas.zemanek@tz3.cz)
 
 ### 2. Identity verification
 
@@ -63,7 +63,7 @@ Vlevo navigace → **Grow → Store presence → Main store listing**:
 - **Application type:** App
 - **Category:** Sports → Outdoor Recreation
 - **Tags:** ✅ Outdoor, Sports, Maps & Navigation
-- **Contact email:** zemanektomas@centrum.cz
+- **Contact email:** tomas.zemanek@tz3.cz
 - **External marketing:** nevyplňovat
 
 ### 6. Vyplnit anglickou verzi (Add translations)

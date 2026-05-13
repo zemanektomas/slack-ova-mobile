@@ -7,7 +7,7 @@ title: Privacy Policy — Slackline.Ova
 **Last updated:** 13 May 2026
 **Effective date:** 13 May 2026
 **App:** Slackline.Ova (Android package `cz.slackline.ova`, iOS bundle `cz.slackline.ova`)
-**Operator:** Tomáš Zemánek, Czech Republic — contact: zemanektomas at centrum dot cz
+**Operator:** Tomáš Zemánek, Czech Republic — contact: tomas.zemanek at tz3 dot cz
 
 ---
 
@@ -62,7 +62,7 @@ The app is not directed at children under 13, but contains no age-gated content 
 ### Contact
 
 If you have any questions about this privacy policy, contact:
-**Tomáš Zemánek** — zemanektomas at centrum dot cz
+**Tomáš Zemánek** — tomas.zemanek at tz3 dot cz
 
 ---
 
@@ -111,4 +111,4 @@ Aplikace není cílená na děti do 13 let, ale neobsahuje obsah omezený věkem
 ### Kontakt
 
 V případě dotazů ohledně této privacy policy kontaktuj:
-**Tomáš Zemánek** — zemanektomas at centrum dot cz
+**Tomáš Zemánek** — tomas.zemanek at tz3 dot cz
