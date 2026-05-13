@@ -1,10 +1,10 @@
 // MapLibre integrace. Mapy.cz raster tiles (aerial/outdoor) + OSM fallback.
 // Sleduje bounds změny → mapStore, kreslí markery z viditelných slacklines.
 
-import { useMemo, useRef } from 'react';
-import { StyleSheet, View, Pressable, Text, Image } from 'react-native';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
-import MapLibreGL, { MapView, Camera, ShapeSource, CircleLayer, LineLayer } from '@maplibre/maplibre-react-native';
+import { useEffect, useMemo, useRef } from 'react';
+import { StyleSheet, View, Pressable, Image } from 'react-native';
+import { useTranslation } from 'react-i18next';
+import MapLibreGL, { MapView, Camera, ShapeSource, CircleLayer, LineLayer, PointAnnotation } from '@maplibre/maplibre-react-native';
 import { useMapStore, MapKind } from '../store/mapStore';
 import { useTheme } from '../theme';
 import { useUserLocation } from './useLocation';
@@ -46,17 +46,6 @@ function buildStyle(kind: MapKind) {
   };
 }
 
-const KIND_ICONS: Record<MapKind, keyof typeof MaterialCommunityIcons.glyphMap> = {
-  aerial: 'satellite-variant',
-  outdoor: 'terrain',
-  osm: 'map-outline',
-};
-const KIND_LABELS: Record<MapKind, string> = {
-  aerial: 'Letecká',
-  outdoor: 'Turistická',
-  osm: 'Mapa',
-};
-
 interface Props {
   markers: SlacklineListItem[];
   selectedId?: number | null;
@@ -65,10 +54,9 @@ interface Props {
 
 export default function MapViewComponent({ markers, selectedId, onMarkerPress }: Props) {
   const t = useTheme();
+  const { t: tr } = useTranslation();
   const kind = useMapStore((s) => s.kind);
-  const setKind = useMapStore((s) => s.setKind);
-  const sourceFilter = useMapStore((s) => s.sourceFilter);
-  const setSourceFilter = useMapStore((s) => s.setSourceFilter);
+  const sheetHeight = useMapStore((s) => s.sheetHeight);
   const setBounds = useMapStore((s) => s.setBounds);
   const setCenter = useMapStore((s) => s.setCenter);
   const initialCenter = useMapStore((s) => s.center);
@@ -98,8 +86,25 @@ export default function MapViewComponent({ markers, selectedId, onMarkerPress }:
     cameraRef.current.setCamera({
       centerCoordinate: [userLoc.lon, userLoc.lat],
       animationDuration: 600,
+      padding: { paddingBottom: sheetHeight, paddingTop: 0, paddingLeft: 0, paddingRight: 0 },
     });
   };
+
+  // Při prvním mountu posuň kameru na initialCenter s ohledem na výšku sheetu,
+  // aby se výchozí lokalita (Ostrava) zobrazila ve viditelné části mapy nad sheetem.
+  // defaultSettings v <Camera> tohle neumí — centruje vždy na střed MapView.
+  const initialCenterApplied = useRef(false);
+  useEffect(() => {
+    if (initialCenterApplied.current) return;
+    if (!cameraRef.current || sheetHeight === 0) return;
+    cameraRef.current.setCamera({
+      centerCoordinate: [initialCenter.lon, initialCenter.lat],
+      zoomLevel: initialZoom,
+      animationDuration: 0,
+      padding: { paddingBottom: sheetHeight, paddingTop: 0, paddingLeft: 0, paddingRight: 0 },
+    });
+    initialCenterApplied.current = true;
+  }, [sheetHeight, initialCenter, initialZoom]);
 
   const userGeojson = userLoc
     ? {
@@ -152,8 +157,6 @@ export default function MapViewComponent({ markers, selectedId, onMarkerPress }:
   const lineGeojson = { type: 'FeatureCollection' as const, features: lineFeatures };
   const pointGeojson = { type: 'FeatureCollection' as const, features: pointFeatures };
 
-  const KINDS: MapKind[] = MAPY_KEY ? ['aerial', 'outdoor', 'osm'] : ['osm'];
-
   return (
     <View
       style={styles.container}
@@ -194,9 +197,9 @@ export default function MapViewComponent({ markers, selectedId, onMarkerPress }:
             style={{
               lineColor: [
                 'case',
-                ['==', ['get', 'selected'], 1], '#facc15',
-                ['==', ['get', 'source'], 'slackmap'], '#6366f1', // indigo
-                t.accent, // default = slack.cz modrá
+                ['==', ['get', 'selected'], 1], t.markerSelected,
+                ['==', ['get', 'source'], 'slackmap'], t.markerSlackmap,
+                t.markerCsv,
               ],
               lineWidth: ['case', ['==', ['get', 'selected'], 1], 4, 2],
               lineOpacity: 0.95,
@@ -217,12 +220,16 @@ export default function MapViewComponent({ markers, selectedId, onMarkerPress }:
               circleRadius: ['case', ['==', ['get', 'selected'], 1], 9, 6],
               circleColor: [
                 'case',
-                ['==', ['get', 'selected'], 1], '#facc15',
-                ['==', ['get', 'source'], 'slackmap'], '#6366f1',
-                t.accent,
+                ['==', ['get', 'selected'], 1], t.markerSelected,
+                ['==', ['get', 'source'], 'slackmap'], t.markerSlackmap,
+                t.markerCsv,
               ],
               circleStrokeWidth: 2,
-              circleStrokeColor: t.surface,
+              circleStrokeColor: [
+                'case',
+                ['==', ['get', 'selected'], 1], t.markerSelectedStroke,
+                t.markerStroke,
+              ],
             }}
           />
         </ShapeSource>
@@ -231,88 +238,44 @@ export default function MapViewComponent({ markers, selectedId, onMarkerPress }:
           <CircleLayer
             id="user-location-halo"
             style={{
-              circleRadius: 14,
-              circleColor: '#ef4444',
+              circleRadius: 16,
+              circleColor: t.userDot,
               circleOpacity: 0.18,
             }}
           />
-          <CircleLayer
-            id="user-location-dot"
-            style={{
-              circleRadius: 7,
-              circleColor: '#ef4444',
-              circleStrokeWidth: 2,
-              circleStrokeColor: '#fff',
-            }}
-          />
         </ShapeSource>
+        {userLoc && (
+          <PointAnnotation
+            key={`user-${t.userDot}-${t.markerStroke}`}
+            id="user-location-marker"
+            coordinate={[userLoc.lon, userLoc.lat]}
+          >
+            <View style={styles.userMarker}>
+              <View
+                style={[
+                  styles.userMarkerSquare,
+                  { backgroundColor: t.userDot, borderColor: t.markerStroke },
+                ]}
+              />
+            </View>
+          </PointAnnotation>
+        )}
       </MapView>
 
-      <View style={styles.logoBox} pointerEvents="none">
+      <Pressable
+        onPress={flyToUser}
+        style={[
+          styles.logoBox,
+          userLoc && { borderColor: t.userDot, borderWidth: 2, borderRadius: 30 },
+        ]}
+        accessibilityLabel={tr('home.gpsLabel')}
+      >
         <Image
           source={require('../../assets/source/sl-ova-logo.png')}
           style={styles.logo}
           resizeMode="contain"
         />
-      </View>
-
-      <View style={[styles.kindBar, { backgroundColor: t.surface }]} pointerEvents="box-none">
-        {KINDS.length > 1 && KINDS.map((k) => (
-          <Pressable
-            key={k}
-            onPress={() => setKind(k)}
-            style={[
-              styles.kindBtn,
-              kind === k && { backgroundColor: t.accent },
-            ]}
-            accessibilityLabel={KIND_LABELS[k]}
-          >
-            <MaterialCommunityIcons
-              name={KIND_ICONS[k]}
-              size={22}
-              color={kind === k ? '#fff' : t.text}
-            />
-          </Pressable>
-        ))}
-        <Pressable
-          onPress={flyToUser}
-          disabled={!userLoc}
-          style={styles.kindBtn}
-          accessibilityLabel="Najdi mě"
-        >
-          <MaterialCommunityIcons
-            name="crosshairs-gps"
-            size={22}
-            color={userLoc ? '#ef4444' : t.textDim}
-          />
-        </Pressable>
-      </View>
-
-      <View style={[styles.sourceBar, { backgroundColor: t.surface }]} pointerEvents="box-none">
-        {([
-          { key: 'all', label: 'Vše' },
-          { key: 'csv', label: 'slack.cz' },
-          { key: 'slackmap', label: 'Slackmap' },
-        ] as { key: typeof sourceFilter; label: string }[]).map((s) => (
-          <Pressable
-            key={s.key}
-            onPress={() => setSourceFilter(s.key)}
-            style={[
-              styles.sourceBtn,
-              sourceFilter === s.key && { backgroundColor: t.accent },
-            ]}
-          >
-            <Text
-              style={[
-                styles.sourceBtnText,
-                { color: sourceFilter === s.key ? '#fff' : t.text },
-              ]}
-            >
-              {s.label}
-            </Text>
-          </Pressable>
-        ))}
-      </View>
+      </Pressable>
     </View>
   );
 }
@@ -320,36 +283,19 @@ export default function MapViewComponent({ markers, selectedId, onMarkerPress }:
 const styles = StyleSheet.create({
   container: { flex: 1 },
   map: { flex: 1 },
-  kindBar: {
+  gpsBtn: {
     position: 'absolute',
     bottom: 12,
     right: 12,
-    flexDirection: 'row',
+    paddingHorizontal: 12,
+    paddingVertical: 10,
     borderRadius: 8,
-    overflow: 'hidden',
     elevation: 4,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.25,
     shadowRadius: 3,
   },
-  kindBtn: { paddingHorizontal: 12, paddingVertical: 8 },
-  kindBtnText: { fontSize: 12, fontWeight: '500' },
-  sourceBar: {
-    position: 'absolute',
-    top: 8,
-    right: 8,
-    flexDirection: 'row',
-    borderRadius: 8,
-    overflow: 'hidden',
-    elevation: 4,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.25,
-    shadowRadius: 3,
-  },
-  sourceBtn: { paddingHorizontal: 10, paddingVertical: 6 },
-  sourceBtnText: { fontSize: 11, fontWeight: '500' },
   logoBox: {
     position: 'absolute',
     top: 8,
@@ -360,4 +306,15 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   logo: { width: 56, height: 56 },
+  userMarker: {
+    width: 24,
+    height: 24,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  userMarkerSquare: {
+    width: 14,
+    height: 14,
+    borderWidth: 2,
+  },
 });
