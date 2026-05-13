@@ -9,6 +9,7 @@ import {
   ActivityIndicator,
 } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { useTranslation } from 'react-i18next';
 import { useMapStore } from '../store/mapStore';
 import { useTheme } from '../theme';
 import {
@@ -24,6 +25,7 @@ interface FilterSheetProps {
 
 export function FilterSheet({ visible, onClose }: FilterSheetProps) {
   const t = useTheme();
+  const { t: tr } = useTranslation();
   const stateFilter = useMapStore((s) => s.stateFilter);
   const regionFilter = useMapStore((s) => s.regionFilter);
   const sectorFilter = useMapStore((s) => s.sectorFilter);
@@ -66,7 +68,7 @@ export function FilterSheet({ visible, onClose }: FilterSheetProps) {
         <Pressable style={styles.backdropDismiss} onPress={onClose} />
         <View style={[styles.sheet, { backgroundColor: t.surface }]}>
           <View style={styles.header}>
-            <Text style={[styles.title, { color: t.text }]}>Filtry</Text>
+            <Text style={[styles.title, { color: t.text }]}>{tr('filter.title')}</Text>
             <Pressable onPress={onClose} hitSlop={10}>
               <MaterialCommunityIcons name="close" size={24} color={t.textMuted} />
             </Pressable>
@@ -77,14 +79,16 @@ export function FilterSheet({ visible, onClose }: FilterSheetProps) {
           ) : (
             <ScrollView style={styles.scroll} contentContainerStyle={{ paddingBottom: 16 }}>
               <FilterRow
-                label="Stát"
+                label={tr('filter.state')}
+                allLabel={tr('common.all')}
                 value={stateFilter}
                 options={states}
                 onChange={setStateFilter}
                 theme={t}
               />
               <FilterRow
-                label="Region"
+                label={tr('filter.region')}
+                allLabel={tr('common.all')}
                 value={regionFilter}
                 options={regions}
                 onChange={setRegionFilter}
@@ -92,7 +96,8 @@ export function FilterSheet({ visible, onClose }: FilterSheetProps) {
                 disabled={!stateFilter && states.length > 1}
               />
               <FilterRow
-                label="Sektor"
+                label={tr('filter.sector')}
+                allLabel={tr('common.all')}
                 value={sectorFilter}
                 options={sectors}
                 onChange={setSectorFilter}
@@ -109,13 +114,13 @@ export function FilterSheet({ visible, onClose }: FilterSheetProps) {
               }}
               style={[styles.footerBtn, { borderColor: t.border }]}
             >
-              <Text style={{ color: t.textMuted }}>Resetovat</Text>
+              <Text style={{ color: t.textMuted }}>{tr('common.reset')}</Text>
             </Pressable>
             <Pressable
               onPress={onClose}
               style={[styles.footerBtn, { backgroundColor: t.accent }]}
             >
-              <Text style={{ color: '#fff', fontWeight: '600' }}>Hotovo</Text>
+              <Text style={{ color: t.accentOn, fontWeight: '600' }}>{tr('common.done')}</Text>
             </Pressable>
           </View>
         </View>
@@ -126,6 +131,7 @@ export function FilterSheet({ visible, onClose }: FilterSheetProps) {
 
 interface FilterRowProps {
   label: string;
+  allLabel: string;
   value: string | null;
   options: string[];
   onChange: (v: string | null) => void;
@@ -133,13 +139,13 @@ interface FilterRowProps {
   disabled?: boolean;
 }
 
-function FilterRow({ label, value, options, onChange, theme, disabled }: FilterRowProps) {
+function FilterRow({ label, allLabel, value, options, onChange, theme, disabled }: FilterRowProps) {
   return (
     <View style={[styles.row, disabled && { opacity: 0.4 }]} pointerEvents={disabled ? 'none' : 'auto'}>
       <Text style={[styles.rowLabel, { color: theme.textMuted }]}>{label}</Text>
       <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ paddingRight: 16 }}>
         <Chip
-          label="Vše"
+          label={allLabel}
           active={value === null}
           onPress={() => onChange(null)}
           theme={theme}
@@ -180,7 +186,7 @@ function Chip({
         },
       ]}
     >
-      <Text style={{ color: active ? '#fff' : theme.text, fontSize: 13 }}>{label}</Text>
+      <Text style={{ color: active ? theme.accentOn : theme.text, fontSize: 13 }}>{label}</Text>
     </Pressable>
   );
 }

@@ -3,6 +3,7 @@
 
 import { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, Pressable, Linking } from 'react-native';
+import { useTranslation } from 'react-i18next';
 import { getSlacklineDetail } from '../db/queries';
 import { fetchAndCacheSlackmapDetail } from '../db/slackmap';
 import { useTheme, Theme } from '../theme';
@@ -10,6 +11,7 @@ import type { SlacklineDetail, PointResponse } from '../types';
 
 export default function InlineDetail({ slacklineId }: { slacklineId: number }) {
   const t = useTheme();
+  const { t: tr } = useTranslation();
   const [detail, setDetail] = useState<SlacklineDetail | null>(null);
 
   useEffect(() => {
@@ -33,7 +35,7 @@ export default function InlineDetail({ slacklineId }: { slacklineId: number }) {
   if (!detail) {
     return (
       <View style={[styles.box, { backgroundColor: t.surfaceAlt }]}>
-        <Text style={{ color: t.textDim }}>Načítám…</Text>
+        <Text style={{ color: t.textDim }}>{tr('common.loading')}</Text>
       </View>
     );
   }
@@ -41,10 +43,10 @@ export default function InlineDetail({ slacklineId }: { slacklineId: number }) {
   return (
     <View style={[styles.box, { backgroundColor: t.surfaceAlt, borderColor: t.border }]}>
       <View style={styles.statsRow}>
-        <Stat t={t} label="Délka" value={detail.length ? `${detail.length} m` : '—'} />
-        <Stat t={t} label="Výška" value={detail.height ? `${detail.height} m` : '—'} />
-        <Stat t={t} label="Rating" value={detail.rating ? '★'.repeat(detail.rating) : '—'} />
-        <Stat t={t} label="Typ" value={detail.type ?? '—'} />
+        <Stat t={t} label={tr('detail.length')} value={detail.length ? `${detail.length} m` : '—'} />
+        <Stat t={t} label={tr('detail.height')} value={detail.height ? `${detail.height} m` : '—'} />
+        <Stat t={t} label={tr('detail.rating')} value={detail.rating ? '★'.repeat(detail.rating) : '—'} />
+        <Stat t={t} label={tr('detail.type')} value={detail.type ?? '—'} />
       </View>
 
       {detail.description && (
@@ -57,9 +59,9 @@ export default function InlineDetail({ slacklineId }: { slacklineId: number }) {
         </Text>
       )}
 
-      <PointBlock t={t} label="Kotva 1" point={detail.first_anchor_point} />
-      <PointBlock t={t} label="Kotva 2" point={detail.second_anchor_point} />
-      <PointBlock t={t} label="Parkoviště" point={detail.parking_spot} />
+      <PointBlock t={t} label={tr('detail.anchor1')} point={detail.first_anchor_point} />
+      <PointBlock t={t} label={tr('detail.anchor2')} point={detail.second_anchor_point} />
+      <PointBlock t={t} label={tr('detail.parking')} point={detail.parking_spot} />
 
       {(detail.state || detail.region || detail.sector) && (
         <Text style={[styles.location, { color: t.textMuted }]}>
@@ -68,11 +70,13 @@ export default function InlineDetail({ slacklineId }: { slacklineId: number }) {
       )}
 
       {detail.author && (
-        <Text style={[styles.author, { color: t.textMuted }]}>Autor: {detail.author}</Text>
+        <Text style={[styles.author, { color: t.textMuted }]}>
+          {tr('detail.author', { name: detail.author })}
+        </Text>
       )}
 
       <Text style={[styles.attribution, { color: t.textDim }]}>
-        Zdroj: {detail.source === 'slackmap' ? 'slackmap.com' : 'slack.cz'}
+        {tr('detail.source', { name: detail.source === 'slackmap' ? 'slackmap.com' : 'slack.cz' })}
       </Text>
     </View>
   );

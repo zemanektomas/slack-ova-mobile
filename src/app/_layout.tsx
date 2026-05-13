@@ -1,9 +1,12 @@
 import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { useEffect } from 'react';
-import { useColorScheme } from 'react-native';
+import { useEffect, useState } from 'react';
+import { useColorScheme, View } from 'react-native';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { initI18n } from '../i18n';
+import { useLangStore } from '../store/langStore';
 import * as Location from 'expo-location';
 import { getDb, getMeta } from '../db';
 import { getSlacklineCount } from '../db/queries';
@@ -23,6 +26,20 @@ export default function RootLayout() {
   const scheme = useColorScheme();
   const hydrate = useAuthStore((s) => s.hydrate);
   const hydrateMap = useMapStore((s) => s.hydrate);
+  const [i18nReady, setI18nReady] = useState(false);
+
+  useEffect(() => {
+    initI18n()
+      .then((lang) => {
+        // Synchronizuj store s detekovaným jazykem (bez persist callbacku)
+        useLangStore.setState({ lang });
+        setI18nReady(true);
+      })
+      .catch((e) => {
+        console.warn('[init] i18n failed', String(e));
+        setI18nReady(true); // pokračuj i kdyby selhala, máme fallback
+      });
+  }, []);
 
   useEffect(() => {
     (async () => {
@@ -105,19 +122,25 @@ export default function RootLayout() {
     })();
   }, [hydrate]);
 
+  if (!i18nReady) {
+    return <View style={{ flex: 1, backgroundColor: t.bg }} />;
+  }
+
   return (
-    <QueryClientProvider client={queryClient}>
-      <StatusBar style={scheme === 'dark' ? 'light' : 'dark'} />
-      <Stack
-        screenOptions={{
-          headerStyle: { backgroundColor: t.surface },
-          headerTintColor: t.text,
-          headerTitleStyle: { color: t.text },
-          contentStyle: { backgroundColor: t.bg },
-        }}
-      >
-        <Stack.Screen name="index" options={{ headerShown: false }} />
-      </Stack>
-    </QueryClientProvider>
+    <GestureHandlerRootView style={{ flex: 1 }}>
+      <QueryClientProvider client={queryClient}>
+        <StatusBar style={scheme === 'dark' ? 'light' : 'dark'} />
+        <Stack
+          screenOptions={{
+            headerStyle: { backgroundColor: t.surface },
+            headerTintColor: t.text,
+            headerTitleStyle: { color: t.text },
+            contentStyle: { backgroundColor: t.bg },
+          }}
+        >
+          <Stack.Screen name="index" options={{ headerShown: false }} />
+        </Stack>
+      </QueryClientProvider>
+    </GestureHandlerRootView>
   );
 }

@@ -1,0 +1,48 @@
+{
+  "common": {
+    "all": "All",
+    "done": "Done",
+    "reset": "Reset",
+    "loading": "Loading…"
+  },
+  "home": {
+    "searchPlaceholder": "Search name, region, sector...",
+    "syncing": "Downloading…",
+    "empty": "No slacklines. Pull to refresh.",
+    "settingsLabel": "Map settings",
+    "gpsLabel": "Find me"
+  },
+  "sort": {
+    "name": "Name",
+    "length": "Length",
+    "height": "Height",
+    "rating": "★",
+    "distance": "Distance"
+  },
+  "filter": {
+    "title": "Filters",
+    "state": "Country",
+    "region": "Region",
+    "sector": "Sector"
+  },
+  "settings": {
+    "title": "Map settings",
+    "mapKind": "Map style",
+    "source": "Data source",
+    "language": "Language",
+    "mapAerial": "Satellite",
+    "mapOutdoor": "Outdoor",
+    "mapOsm": "Map"
+  },
+  "detail": {
+    "length": "Length",
+    "height": "Height",
+    "rating": "Rating",
+    "type": "Type",
+    "anchor1": "Anchor 1",
+    "anchor2": "Anchor 2",
+    "parking": "Parking",
+    "author": "Author: {{name}}",
+    "source": "Source: {{name}}"
+  }
+}

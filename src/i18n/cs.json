@@ -1,0 +1,48 @@
+{
+  "common": {
+    "all": "Vše",
+    "done": "Hotovo",
+    "reset": "Resetovat",
+    "loading": "Načítám…"
+  },
+  "home": {
+    "searchPlaceholder": "Hledat název, region, sektor...",
+    "syncing": "Stahuji data…",
+    "empty": "Žádné slacklines. Potáhni pro obnovu.",
+    "settingsLabel": "Nastavení mapy",
+    "gpsLabel": "Najdi mě"
+  },
+  "sort": {
+    "name": "Název",
+    "length": "Délka",
+    "height": "Výška",
+    "rating": "★",
+    "distance": "Vzdálenost"
+  },
+  "filter": {
+    "title": "Filtry",
+    "state": "Stát",
+    "region": "Region",
+    "sector": "Sektor"
+  },
+  "settings": {
+    "title": "Nastavení mapy",
+    "mapKind": "Podklad mapy",
+    "source": "Zdroj dat",
+    "language": "Jazyk",
+    "mapAerial": "Letecká",
+    "mapOutdoor": "Turistická",
+    "mapOsm": "Mapa"
+  },
+  "detail": {
+    "length": "Délka",
+    "height": "Výška",
+    "rating": "Hodnocení",
+    "type": "Typ",
+    "anchor1": "Kotva 1",
+    "anchor2": "Kotva 2",
+    "parking": "Parkoviště",
+    "author": "Autor: {{name}}",
+    "source": "Zdroj: {{name}}"
+  }
+}
