@@ -18,6 +18,9 @@ interface MapState {
   bounds: MapBounds | null;
   center: { lat: number; lon: number };
   zoom: number;
+  // Výška bottom sheetu (v px), aby mapa věděla kolik z viewportu je překryté
+  // a mohla centrovat na střed VIDITELNÉ plochy, ne celého MapView.
+  sheetHeight: number;
   kind: MapKind;
   sourceFilter: SourceFilter;
   // Text + cascading filtry pro seznam linií (persistují jen v paměti — po restartu reset).
@@ -28,6 +31,7 @@ interface MapState {
   setBounds: (b: MapBounds | null) => void;
   setCenter: (lat: number, lon: number) => void;
   setZoom: (z: number) => void;
+  setSheetHeight: (h: number) => void;
   setKind: (k: MapKind) => void;
   setSourceFilter: (s: SourceFilter) => void;
   setSearch: (q: string) => void;
@@ -40,9 +44,10 @@ interface MapState {
 
 export const useMapStore = create<MapState>((set) => ({
   bounds: null,
-  center: { lat: 49.8, lon: 15.5 },
-  zoom: 7,
-  kind: 'aerial',
+  center: { lat: 49.8347, lon: 18.2820 },
+  zoom: 10,
+  sheetHeight: 0,
+  kind: 'osm',
   sourceFilter: 'all',
   search: '',
   stateFilter: null,
@@ -51,6 +56,7 @@ export const useMapStore = create<MapState>((set) => ({
   setBounds: (bounds) => set({ bounds }),
   setCenter: (lat, lon) => set({ center: { lat, lon } }),
   setZoom: (zoom) => set({ zoom }),
+  setSheetHeight: (sheetHeight) => set({ sheetHeight }),
   setKind: (kind) => {
     set({ kind });
     AsyncStorage.setItem(KIND_KEY, kind).catch(() => {});
