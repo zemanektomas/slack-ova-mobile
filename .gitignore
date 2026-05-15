@@ -31,3 +31,13 @@ Thumbs.db
 
 # Build artifact downloads from CI
 artifacts/
+
+# Marketing assets and Play Store internal docs — patří do pm/mobile-store/ mimo veřejný repo
+docs/screenshots/
+docs/feature-graphic.png
+docs/feature-graphic.md
+docs/donation-qr.png
+docs/store-listing.md
+docs/screenshots.md
+docs/google-play-checklist.md
+docs/release-notes.md
