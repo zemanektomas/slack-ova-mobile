@@ -199,6 +199,14 @@ Detaily v [issues](https://github.com/zemanektomas/slack-ova-mobile/issues) a [m
 
 Apache License 2.0 — viz [LICENSE](LICENSE). Tož čerpaj, hraj sy, jen jak něco predelaš, zostan se s nama o spolupracu.
 
+## Podpora
+
+Apka je zadara a otevřeny zdroj — všecko zustane jak je. Pokud ti pomahá v terenu a chceš přispět na poplatky pro Google Play ($25 jednorazově) a Apple App Store ($99 rožně), tož muža kafe:
+
+[**buymeacoffee.com/slacklineova**](https://buymeacoffee.com/slacklineova)
+
+Žadny tlak. Aji jen jak by ses chtěl mrknuť že tu sme.
+
 ---
 
 *Autor: Tomáš Zemánek. S láskou a paru piviskama pro slackliny v Ostravě a celosvětově.*
