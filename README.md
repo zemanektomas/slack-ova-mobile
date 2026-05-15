@@ -56,7 +56,7 @@ Tuž poslechni dobře, neni to slozite:
 
 **iOS verze zatim neni**, plánujem do Faze 4. Apple Developer učet stoji $99/rok a jak by řek mama na ten kufer mineralek — naco to teho kupovat tolik. Az se ukaže že iPhone slackliny tež chcou, tož pojedem EAS Build → TestFlight → App Store.
 
-**Google Play Store** — Internal Testing track v přípravě, soubor [docs/store-listing.md](docs/store-listing.md) ma připravene texty CS+EN a [docs/privacy.md](docs/privacy.md) je Privacy Policy ([hostovana online](https://zemanektomas.github.io/slack-ova-mobile/privacy)). Az to projde Google identity verify, AAB pojede do Internal Testing.
+**Google Play Store** — Internal Testing track v přípravě. Privacy Policy je [hostovana online na slacklineova.cz/privacy](https://slacklineova.cz/privacy). Az to projde Google identity verify, AAB pojede do Internal Testing.
 
 ### Aktualizace
 
@@ -138,13 +138,14 @@ assets/
     └── slackmap_world.json                          (Slackmap, 7810 linií + detaily)
 
 scripts/
-├── fetch-slackmap.js     Stáhne aktuální Slackmap data
-└── make-icons.js         Generuje icon/splash ze Sl.Ova loga
+├── fetch-slackmap.js          Stáhne aktuální Slackmap data
+├── make-icons.js              Generuje icon/splash ze Sl.Ova loga
+└── make-feature-graphic.js    Generuje 1024×500 banner pro Play Store
 
-docs/                     GitHub Pages (https://zemanektomas.github.io/slack-ova-mobile/)
-├── index.md              Landing page
-├── privacy.md            Privacy Policy CS+EN (povinné pro store submission)
-└── store-listing.md      Připravené texty pro Google Play + App Store
+docs/                          GitHub Pages (https://slacklineova.cz/)
+├── index.md                   Landing page
+├── privacy.md                 Privacy Policy CS+EN (povinné pro store submission)
+└── CNAME                      slacklineova.cz pro custom doménu
 ```
 
 ## Známe limity
