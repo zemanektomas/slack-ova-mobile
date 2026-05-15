@@ -70,6 +70,11 @@ jobs:
           MYAPP_RELEASE_STORE_PASSWORD=${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
           MYAPP_RELEASE_KEY_PASSWORD=${{ secrets.ANDROID_KEY_PASSWORD }}
           EOF
+          # Debug — ověřit že properties jsou validní
+          echo "=== gradle.properties tail ==="
+          tail -10 android/gradle.properties
+          echo "=== keystore exists ==="
+          ls -la android/app/release.keystore
 
       - name: Inject release signingConfig into build.gradle
         run: |
@@ -78,14 +83,16 @@ jobs:
           const path = 'android/app/build.gradle';
           let src = fs.readFileSync(path, 'utf8');
 
+          // No `if (hasProperty)` check — values jsou v gradle.properties (krok výše),
+          // pokud chybí Gradle selže v execution phase s jasnou chybou. Předchozí
+          // verze s `if` blokem působila že po prebuildu se evaluovala jako prázdná
+          // (storeFile missing v packageRelease).
           const signingBlock = `
               release {
-                  if (project.hasProperty('MYAPP_RELEASE_STORE_FILE')) {
-                      storeFile file(MYAPP_RELEASE_STORE_FILE)
-                      storePassword MYAPP_RELEASE_STORE_PASSWORD
-                      keyAlias MYAPP_RELEASE_KEY_ALIAS
-                      keyPassword MYAPP_RELEASE_KEY_PASSWORD
-                  }
+                  storeFile file(MYAPP_RELEASE_STORE_FILE)
+                  storePassword MYAPP_RELEASE_STORE_PASSWORD
+                  keyAlias MYAPP_RELEASE_KEY_ALIAS
+                  keyPassword MYAPP_RELEASE_KEY_PASSWORD
               }`;
 
           // 1) Inject `release { ... }` into signingConfigs block (idempotent)
@@ -123,6 +130,11 @@ jobs:
               process.exit(1);
           }
           console.log('Signing injection OK: buildTypes.release -> signingConfigs.release');
+
+          // 4) Debug print final build.gradle around signingConfigs (~30 lines)
+          const dbgStart = out.indexOf('signingConfigs');
+          console.log('=== build.gradle around signingConfigs ===');
+          console.log(out.substring(dbgStart, dbgStart + 1200));
           EOF
 
       - name: Gradle assembleRelease + bundleRelease
