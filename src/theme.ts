@@ -14,8 +14,8 @@ export interface Theme {
   textDim: string;     // labelky, "uppercase" hinty
   accent: string;      // UI aktivní stav (chip background, sort btn)
   accentOn: string;    // text na accent backgroundu
-  markerCsv: string;       // marker slack.cz
-  markerSlackmap: string;  // marker slackmap
+  markerHighline: string;  // marker highline (světle šedá — vyniká na mapě, hlavní fokus)
+  markerOther: string;     // marker ostatní typy (longline, waterline, midline, ...) — tmavá
   markerSelected: string;  // vybraná lajna (marker + line)
   markerStroke: string;    // okraj markeru (kontrast vs. mapa)
   markerSelectedStroke: string; // okraj vybrané (musí být kontrast)
@@ -36,8 +36,8 @@ const light: Theme = {
   textDim: '#9ca3af',
   accent: '#111827',
   accentOn: '#ffffff',
-  markerCsv: '#1f2937',
-  markerSlackmap: '#9ca3af',
+  markerHighline: '#9ca3af',  // světle šedá — vyniká na podkladu mapy
+  markerOther: '#1f2937',     // tmavě šedá — pro longline / waterline / ...
   markerSelected: '#ffffff',
   markerStroke: '#ffffff',
   markerSelectedStroke: '#000000',
@@ -58,8 +58,8 @@ const dark: Theme = {
   textDim: '#6b7280',
   accent: '#f3f4f6',
   accentOn: '#0b0f17',
-  markerCsv: '#d1d5db',
-  markerSlackmap: '#6b7280',
+  markerHighline: '#d1d5db',  // světlejší = highlight v dark mode taky
+  markerOther: '#6b7280',     // tmavší pro ostatní typy
   markerSelected: '#ffffff',
   markerStroke: '#000000',
   markerSelectedStroke: '#000000',

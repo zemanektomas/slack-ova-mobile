@@ -140,12 +140,14 @@ export default function MapViewComponent({ markers, selectedId, onMarkerPress }:
   for (const m of markers) {
     if (!m.first_anchor) continue;
     const selected = selectedId === m.id ? 1 : 0;
-    const source = m.source ?? 'csv';
+    // isHighline = 1 pro highline, 0 pro vše ostatní (longline/waterline/midline/null/...).
+    // Marker barva pak MapLibre expressional `case` rozhodne z této property.
+    const isHighline = m.type === 'highline' ? 1 : 0;
     const a1 = [m.first_anchor.longitude, m.first_anchor.latitude];
     pointFeatures.push({
       type: 'Feature',
       id: `${m.id}-1`,
-      properties: { slacklineId: m.id, name: m.name, role: 'anchor1', selected, source },
+      properties: { slacklineId: m.id, name: m.name, role: 'anchor1', selected, isHighline },
       geometry: { type: 'Point', coordinates: a1 },
     });
     if (m.second_anchor) {
@@ -153,13 +155,13 @@ export default function MapViewComponent({ markers, selectedId, onMarkerPress }:
       pointFeatures.push({
         type: 'Feature',
         id: `${m.id}-2`,
-        properties: { slacklineId: m.id, name: m.name, role: 'anchor2', selected, source },
+        properties: { slacklineId: m.id, name: m.name, role: 'anchor2', selected, isHighline },
         geometry: { type: 'Point', coordinates: a2 },
       });
       lineFeatures.push({
         type: 'Feature',
         id: `${m.id}-line`,
-        properties: { slacklineId: m.id, name: m.name, selected, source },
+        properties: { slacklineId: m.id, name: m.name, selected, isHighline },
         geometry: { type: 'LineString', coordinates: [a1, a2] },
       });
     }
@@ -209,8 +211,8 @@ export default function MapViewComponent({ markers, selectedId, onMarkerPress }:
               lineColor: [
                 'case',
                 ['==', ['get', 'selected'], 1], t.markerSelected,
-                ['==', ['get', 'source'], 'slackmap'], t.markerSlackmap,
-                t.markerCsv,
+                ['==', ['get', 'isHighline'], 1], t.markerHighline,
+                t.markerOther,
               ],
               lineWidth: ['case', ['==', ['get', 'selected'], 1], 4, 2],
               lineOpacity: 0.95,
@@ -232,8 +234,8 @@ export default function MapViewComponent({ markers, selectedId, onMarkerPress }:
               circleColor: [
                 'case',
                 ['==', ['get', 'selected'], 1], t.markerSelected,
-                ['==', ['get', 'source'], 'slackmap'], t.markerSlackmap,
-                t.markerCsv,
+                ['==', ['get', 'isHighline'], 1], t.markerHighline,
+                t.markerOther,
               ],
               circleStrokeWidth: 2,
               circleStrokeColor: [

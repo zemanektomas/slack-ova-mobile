@@ -18,6 +18,7 @@ export interface SlacklineListItem {
   rating?: number | null;
   date_tense?: string | null;
   source?: 'csv' | 'slackmap';
+  type?: string | null;  // 'highline' / 'longline' / 'waterline' / 'midline' / 'other' / ...
   first_anchor?: PointResponse | null;
   second_anchor?: PointResponse | null;
 }

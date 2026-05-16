@@ -102,6 +102,20 @@ export function SettingsSheet({ visible, onClose }: SettingsSheetProps) {
                   />
                 ))}
               </ScrollView>
+              <View style={styles.legend}>
+                <View style={styles.legendItem}>
+                  <View style={[styles.legendDot, { backgroundColor: t.markerHighline }]} />
+                  <Text style={[styles.legendText, { color: t.textMuted }]}>{tr('settings.legendHighline')}</Text>
+                </View>
+                <View style={styles.legendItem}>
+                  <View style={[styles.legendDot, { backgroundColor: t.markerOther }]} />
+                  <Text style={[styles.legendText, { color: t.textMuted }]}>{tr('settings.legendOther')}</Text>
+                </View>
+                <View style={styles.legendItem}>
+                  <View style={[styles.legendDot, { backgroundColor: t.markerSelected, borderWidth: 1, borderColor: t.markerSelectedStroke }]} />
+                  <Text style={[styles.legendText, { color: t.textMuted }]}>{tr('settings.selected')}</Text>
+                </View>
+              </View>
             </View>
 
             <View style={styles.row}>
@@ -224,6 +238,23 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     marginRight: 8,
   },
+  legend: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 12,
+    marginTop: 8,
+  },
+  legendItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
+  },
+  legendDot: {
+    width: 10,
+    height: 10,
+    borderRadius: 5,
+  },
+  legendText: { fontSize: 11 },
   version: {
     fontSize: 11,
     textAlign: 'center',
