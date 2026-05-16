@@ -178,6 +178,12 @@ export default function HomeScreen() {
         onChange={handleSheetChange}
         backgroundStyle={{ backgroundColor: t.surface }}
         handleIndicatorStyle={{ backgroundColor: t.textMuted }}
+        // Klávesnice obecně: sheet se roztáhne na max snap point, content
+        // bottom-padding se přizpůsobí výšce klávesnice. Bez tohohle Android
+        // překryje search input a uživatel nevidí co píše (#41).
+        keyboardBehavior="extend"
+        keyboardBlurBehavior="restore"
+        android_keyboardInputMode="adjustResize"
       >
         <View style={[styles.searchRow, { borderColor: t.border, backgroundColor: t.surfaceAlt }]}>
           <MaterialCommunityIcons name="magnify" size={18} color={t.textMuted} />
@@ -190,6 +196,10 @@ export default function HomeScreen() {
             autoCorrect={false}
             autoCapitalize="none"
             returnKeyType="search"
+            // Při tap do search auto-rozjet sheet na max snap — keyboardBehavior="extend"
+            // řeší Android resize, ale když je sheet v Collapsed (15%), drag handle
+            // sedí těsně nad keyboardem a vypadá to ošklivě. Lepší pre-emptive snap.
+            onFocus={() => sheetRef.current?.snapToIndex(2)}
           />
           {search.length > 0 && (
             <Pressable onPress={() => setSearch('')} hitSlop={8}>
@@ -225,6 +235,10 @@ export default function HomeScreen() {
           data={items}
           keyExtractor={(item) => String((item as SlacklineListItem).id)}
           renderItem={renderItem as any}
+          // Drag listu zavře keyboard — řeší Petrův case "tahám sheet a klávesnice
+          // mi překryje text". `on-drag` blur na první scroll gesto.
+          keyboardDismissMode="on-drag"
+          keyboardShouldPersistTaps="handled"
           refreshControl={<RefreshControl refreshing={syncing} onRefresh={async () => {
             // Pull-to-refresh = re-seed z bundled JSON souborů (slackcz.json + slackmap_world.json).
             // Žádný net fetch — net fetch by smazal rich slackmap details (anchorsInfo/accessInfo)
