@@ -25,6 +25,9 @@
     "title": "Nastavení mapy",
     "mapKind": "Podklad mapy",
     "source": "Zdroj dat",
+    "selected": "Vybraná",
+    "legendHighline": "Highline",
+    "legendOther": "Ostatní typy",
     "display": "Zobrazení",
     "showLogo": "Logo",
     "showControls": "Ovládání mapy",
@@ -48,6 +51,7 @@
     "nameHistory": "Historické názvy",
     "anchorsInfo": "Kotvy",
     "accessInfo": "Přístup",
-    "notMeasured": "Délka/výška nebyla ověřena"
+    "notMeasured": "Délka/výška nebyla ověřena",
+    "navigate": "Navigovat"
   }
 }

@@ -25,6 +25,9 @@
     "title": "Map settings",
     "mapKind": "Map style",
     "source": "Data source",
+    "selected": "Selected",
+    "legendHighline": "Highline",
+    "legendOther": "Other types",
     "display": "Display",
     "showLogo": "Logo",
     "showControls": "Map controls",
@@ -48,6 +51,7 @@
     "nameHistory": "Previous names",
     "anchorsInfo": "Anchors",
     "accessInfo": "Access",
-    "notMeasured": "Length/height not verified"
+    "notMeasured": "Length/height not verified",
+    "navigate": "Navigate"
   }
 }

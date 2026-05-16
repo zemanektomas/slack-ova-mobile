@@ -83,6 +83,28 @@ export default function InlineDetail({ slacklineId }: { slacklineId: number }) {
       <PointBlock t={t} label={tr('detail.anchor2')} point={detail.second_anchor_point} />
       <PointBlock t={t} label={tr('detail.parking')} point={detail.parking_spot} />
 
+      {(() => {
+        // Navigate button — cíl je parking (preferred) nebo anchor1 (fallback).
+        // Otevře `geo:` intent, Android pak nabídne system picker (Mapy.cz,
+        // Google Maps, Sygic, Locus, Waze, atd. — všechny apky co umí `geo:` URI).
+        const target = detail.parking_spot ?? detail.first_anchor_point;
+        if (!target) return null;
+        const openNavigate = () => {
+          const lat = target.latitude;
+          const lon = target.longitude;
+          // `geo:LAT,LON?q=LAT,LON` — `q` parametr donutí Android zobrazit picker
+          // místo automatického otevření default map app (typicky Google Maps).
+          Linking.openURL(`geo:${lat},${lon}?q=${lat},${lon}`);
+        };
+        return (
+          <Pressable onPress={openNavigate} style={[styles.navigateBtn, { borderColor: t.accent }]}>
+            <Text style={[styles.navigateText, { color: t.accent }]}>
+              ↗ {tr('detail.navigate')}
+            </Text>
+          </Pressable>
+        );
+      })()}
+
       {(detail.time_approach || detail.time_tensioning) && (
         <View style={styles.accessRow}>
           {detail.time_approach && (
@@ -171,11 +193,13 @@ function Stat({ t, label, value }: { t: Theme; label: string; value: string }) {
 
 function PointBlock({ t, label, point }: { t: Theme; label: string; point: PointResponse | null | undefined }) {
   if (!point) return null;
-  const openInMaps = () => {
+  // Tap na coords = preview bodu na mapě (Mapy.cz turistická). Pro plnohodnotnou
+  // navigaci slouží samostatný "Navigovat" button mimo PointBlock — viz hlavní render.
+  const openPreview = () => {
     Linking.openURL(`https://mapy.cz/turisticka?q=${point.latitude},${point.longitude}`);
   };
   return (
-    <Pressable onPress={openInMaps} style={styles.pointRow}>
+    <Pressable onPress={openPreview} style={styles.pointRow}>
       <Text style={[styles.pointLabel, { color: t.textMuted }]}>{label}</Text>
       <Text style={[styles.pointCoords, { color: t.accent }]}>
         {point.latitude.toFixed(5)}, {point.longitude.toFixed(5)} →
@@ -204,6 +228,15 @@ const styles = StyleSheet.create({
   pointRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingVertical: 2 },
   pointLabel: { fontSize: 12 },
   pointCoords: { fontSize: 12, fontFamily: 'monospace' },
+  navigateBtn: {
+    marginTop: 8,
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+    borderRadius: 6,
+    borderWidth: 1,
+    alignSelf: 'flex-start',
+  },
+  navigateText: { fontSize: 13, fontWeight: '600' },
   warning: { fontSize: 11, marginTop: 4, fontStyle: 'italic' },
   section: { marginTop: 8 },
   sectionLabel: { fontSize: 11, textTransform: 'uppercase', letterSpacing: 0.5, marginBottom: 2 },

@@ -25,6 +25,9 @@
     "title": "Ustawienia mapy",
     "mapKind": "Styl mapy",
     "source": "Źródło danych",
+    "selected": "Wybrana",
+    "legendHighline": "Highline",
+    "legendOther": "Inne typy",
     "display": "Wyświetlanie",
     "showLogo": "Logo",
     "showControls": "Sterowanie mapą",
@@ -48,6 +51,7 @@
     "nameHistory": "Poprzednie nazwy",
     "anchorsInfo": "Kotwice",
     "accessInfo": "Dojście",
-    "notMeasured": "Długość/wysokość nie potwierdzona"
+    "notMeasured": "Długość/wysokość nie potwierdzona",
+    "navigate": "Nawiguj"
   }
 }
