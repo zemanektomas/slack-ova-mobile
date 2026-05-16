@@ -8,7 +8,7 @@ import { initI18n } from '../i18n';
 import { useLangStore } from '../store/langStore';
 import { getDb, getMeta } from '../db';
 import { getSlacklineCount } from '../db/queries';
-import { seedFromCsv } from '../db/seed';
+import { seedFromSlackcz } from '../db/seedSlackcz';
 import { seedFromSlackmap } from '../db/slackmap';
 import { useAuthStore } from '../store/authStore';
 import { useMapStore } from '../store/mapStore';
@@ -53,14 +53,17 @@ export default function RootLayout() {
 
       try {
         const count = await getSlacklineCount();
-        const seededCsv = await getMeta('seeded_from_csv');
-        console.log('[init] csv pre-seed: count=', count, 'marker=', seededCsv);
-        if (count === 0 || !seededCsv) {
-          const r = await seedFromCsv();
-          console.log('[init] csv seed result:', r);
+        const seededSlackcz = await getMeta('seeded_from_csv');
+        console.log('[init] slackcz pre-seed: count=', count, 'marker=', seededSlackcz);
+        // slackcz-v1 = fresh slack.cz JSON scraper (254 lajn, point2 + parking pro 52 %).
+        // Predtim jsme nacitali z CSV (csv-v2, csv-v1, ISO timestamp z davnejsiho dev).
+        // Bump na slackcz-v1 -> jednorazovy re-seed pro vsechny existujici instalace.
+        if (count === 0 || !seededSlackcz || !seededSlackcz.startsWith('slackcz-v')) {
+          const r = await seedFromSlackcz();
+          console.log('[init] slackcz seed result:', r);
         }
       } catch (e) {
-        console.warn('[seed-csv] failed', String(e));
+        console.warn('[seed-slackcz] failed', String(e));
       }
 
       // Slackmap — naseedujeme z bundled JSON (assets/seed/slackmap_world.json).

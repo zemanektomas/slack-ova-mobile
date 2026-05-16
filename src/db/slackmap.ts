@@ -143,11 +143,12 @@ export async function seedFromSlackmap(opts: { fromNetwork?: boolean } = {}): Pr
     try { await db.execAsync('ROLLBACK'); } catch {}
 
     // Smaž předchozí slackmap data.
-    // Krok 1: zjisti, které body patří ke slackmap (přes components → slacklines.source).
-    // Slackmap body mají id < 0 (synthetic), CSV body mají id > 0. Stačí mazat negative IDs.
+    // Slackmap synthetic IDs jsou všechny záporné (id < 0) — CSV slack.cz má kladná
+    // intové ID. Mazání podle `id < 0` je robustnější než `source = 'slackmap'`
+    // protože po předchozím failed seedu mohly zůstat záznamy s NULL source.
     await db.runAsync(`DELETE FROM components WHERE slackline_id < 0`);
     await db.runAsync(`DELETE FROM points WHERE id < 0`);
-    await db.runAsync(`DELETE FROM slacklines WHERE source = 'slackmap'`);
+    await db.runAsync(`DELETE FROM slacklines WHERE id < 0`);
 
     // Min existing IDs po vyčištění (mimo transakci)
     const minRow = await db.getFirstAsync<{ m: number | null }>(`SELECT MIN(id) AS m FROM slacklines`);
