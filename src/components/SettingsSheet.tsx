@@ -8,10 +8,16 @@ import {
 } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
+import Constants from 'expo-constants';
 import { useMapStore, MapKind, SourceFilter } from '../store/mapStore';
 import { useLangStore } from '../store/langStore';
 import type { Lang } from '../i18n';
 import { useTheme } from '../theme';
+
+// Verze z app.json — během dev mode `Constants.expoConfig`, v release přes
+// `Application` API. Pro náš účel ukázat uživateli stačí Constants (funguje vždy).
+const APP_VERSION = Constants.expoConfig?.version ?? '?.?.?';
+const APP_BUILD = Constants.expoConfig?.android?.versionCode ?? '?';
 
 interface SettingsSheetProps {
   visible: boolean;
@@ -32,9 +38,12 @@ const SOURCES: { key: SourceFilter; label: string; useTranslation?: boolean }[] 
   { key: 'slackmap', label: 'Slackmap' },
 ];
 
+// Pořadí abecedně podle endonymu, vlaječky přes Unicode regional indicator
+// (renderuje OS — žádné image assety potřeba).
 const LANGUAGES: { key: Lang; label: string }[] = [
-  { key: 'cs', label: 'Čeština' },
-  { key: 'en', label: 'English' },
+  { key: 'cs', label: '🇨🇿 Čeština' },
+  { key: 'en', label: '🇬🇧 English' },
+  { key: 'pl', label: '🇵🇱 Polski' },
 ];
 
 export function SettingsSheet({ visible, onClose }: SettingsSheetProps) {
@@ -44,6 +53,10 @@ export function SettingsSheet({ visible, onClose }: SettingsSheetProps) {
   const setKind = useMapStore((s) => s.setKind);
   const sourceFilter = useMapStore((s) => s.sourceFilter);
   const setSourceFilter = useMapStore((s) => s.setSourceFilter);
+  const hideLogo = useMapStore((s) => s.hideLogo);
+  const setHideLogo = useMapStore((s) => s.setHideLogo);
+  const hideControls = useMapStore((s) => s.hideControls);
+  const setHideControls = useMapStore((s) => s.setHideControls);
   const lang = useLangStore((s) => s.lang);
   const setLang = useLangStore((s) => s.setLang);
 
@@ -92,6 +105,26 @@ export function SettingsSheet({ visible, onClose }: SettingsSheetProps) {
             </View>
 
             <View style={styles.row}>
+              <Text style={[styles.rowLabel, { color: t.textMuted }]}>{tr('settings.display')}</Text>
+              <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
+                <Chip
+                  label={tr('settings.showLogo')}
+                  icon={hideLogo ? 'checkbox-blank-outline' : 'checkbox-marked'}
+                  active={!hideLogo}
+                  onPress={() => setHideLogo(!hideLogo)}
+                  theme={t}
+                />
+                <Chip
+                  label={tr('settings.showControls')}
+                  icon={hideControls ? 'checkbox-blank-outline' : 'checkbox-marked'}
+                  active={!hideControls}
+                  onPress={() => setHideControls(!hideControls)}
+                  theme={t}
+                />
+              </View>
+            </View>
+
+            <View style={styles.row}>
               <Text style={[styles.rowLabel, { color: t.textMuted }]}>{tr('settings.language')}</Text>
               <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ paddingRight: 16 }}>
                 {LANGUAGES.map((l) => (
@@ -105,6 +138,9 @@ export function SettingsSheet({ visible, onClose }: SettingsSheetProps) {
                 ))}
               </ScrollView>
             </View>
+            <Text style={[styles.version, { color: t.textDim }]}>
+              Slackline.Ova {APP_VERSION} (build {APP_BUILD})
+            </Text>
           </ScrollView>
 
           <View style={[styles.footer, { borderTopColor: t.border }]}>
@@ -187,6 +223,13 @@ const styles = StyleSheet.create({
     borderRadius: 16,
     borderWidth: 1,
     marginRight: 8,
+  },
+  version: {
+    fontSize: 11,
+    textAlign: 'center',
+    paddingHorizontal: 16,
+    paddingTop: 8,
+    paddingBottom: 4,
   },
   footer: {
     flexDirection: 'row',

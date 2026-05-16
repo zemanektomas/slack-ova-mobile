@@ -10,7 +10,9 @@
     "syncing": "Downloading…",
     "empty": "No slacklines. Pull to refresh.",
     "settingsLabel": "Map settings",
-    "gpsLabel": "Find me"
+    "gpsLabel": "Find me",
+    "zoomInLabel": "Zoom in",
+    "zoomOutLabel": "Zoom out"
   },
   "sort": {
     "name": "Name",
@@ -19,16 +21,13 @@
     "rating": "★",
     "distance": "Distance"
   },
-  "filter": {
-    "title": "Filters",
-    "state": "Country",
-    "region": "Region",
-    "sector": "Sector"
-  },
   "settings": {
     "title": "Map settings",
     "mapKind": "Map style",
     "source": "Data source",
+    "display": "Display",
+    "showLogo": "Logo",
+    "showControls": "Map controls",
     "language": "Language",
     "mapAerial": "Satellite",
     "mapOutdoor": "Outdoor",
@@ -43,6 +42,12 @@
     "anchor2": "Anchor 2",
     "parking": "Parking",
     "author": "Author: {{name}}",
-    "source": "Source: {{name}}"
+    "source": "Source: {{name}}",
+    "timeApproach": "Approach",
+    "timeTensioning": "Tensioning",
+    "nameHistory": "Previous names",
+    "anchorsInfo": "Anchors",
+    "accessInfo": "Access",
+    "notMeasured": "Length/height not verified"
   }
 }

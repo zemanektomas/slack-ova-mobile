@@ -10,6 +10,22 @@ const SORT_COLUMNS: Record<SortKey, string> = {
   distance: 'distance', // computed
 };
 
+// Fallback název pro lajny s prázdným `name` — typicky 50 % Slackmap lajn.
+// Skládá `type · state · length` z toho co máme. Příklady:
+//   "highline · Česká republika · 170m"
+//   "longline · Polsko · 49m"
+//   "Slackmap" (poslední záchranná síť pokud nic není)
+function nameFallback(r: { name?: string | null; type?: string | null; state?: string | null; length?: number | null }): string {
+  const trimmed = r.name?.trim();
+  if (trimmed && trimmed.length > 0) return trimmed;
+  const parts = [
+    r.type || null,
+    r.state || null,
+    r.length ? `${Math.round(r.length)}m` : null,
+  ].filter(Boolean);
+  return parts.length > 0 ? parts.join(' · ') : 'Slackline';
+}
+
 interface QueryByBoundsArgs {
   bounds: MapBounds | null;     // null = bez bbox filtru (zobrazit vše) — používá se dokud není mapa
   sortBy: SortKey;
@@ -18,9 +34,6 @@ interface QueryByBoundsArgs {
   limit?: number;
   search?: string;
   sourceFilter?: SourceFilter;
-  stateFilter?: string | null;   // přesné porovnání s slacklines.state
-  regionFilter?: string | null;  // přesné porovnání s slacklines.region
-  sectorFilter?: string | null;  // přesné porovnání s slacklines.sector
 }
 
 // Vrátí slacklines, jejichž first_anchor_point je uvnitř bbox (nebo všechny pokud bounds === null).
@@ -35,9 +48,6 @@ export async function queryByBounds(args: QueryByBoundsArgs): Promise<SlacklineL
     limit = 1000,
     search,
     sourceFilter = 'all',
-    stateFilter,
-    regionFilter,
-    sectorFilter,
   } = args;
   const col = SORT_COLUMNS[sortBy] ?? 's.name';
   const dir = sortDir === 'desc' ? 'DESC' : 'ASC';
@@ -61,18 +71,9 @@ export async function queryByBounds(args: QueryByBoundsArgs): Promise<SlacklineL
   const sourceClause = sourceFilter !== 'all' ? `AND s.source = ?` : '';
   const sourceParams = sourceFilter !== 'all' ? [sourceFilter] : [];
 
-  const stateClause = stateFilter ? `AND s.state = ?` : '';
-  const stateParams = stateFilter ? [stateFilter] : [];
-
-  const regionClause = regionFilter ? `AND s.region = ?` : '';
-  const regionParams = regionFilter ? [regionFilter] : [];
-
-  const sectorClause = sectorFilter ? `AND s.sector = ?` : '';
-  const sectorParams = sectorFilter ? [sectorFilter] : [];
-
   const sql = `
     SELECT
-      s.id, s.name, s.state, s.region, s.length, s.height, s.rating, s.date_tense, s.source,
+      s.id, s.name, s.state, s.region, s.length, s.height, s.rating, s.date_tense, s.source, s.type,
       p.id AS a1_id, p.latitude AS a1_lat, p.longitude AS a1_lon, p.description AS a1_desc,
       p2.id AS a2_id, p2.latitude AS a2_lat, p2.longitude AS a2_lon, p2.description AS a2_desc,
       ${distanceExpr} AS distance
@@ -85,9 +86,6 @@ export async function queryByBounds(args: QueryByBoundsArgs): Promise<SlacklineL
       ${boundsClause}
       ${searchClause}
       ${sourceClause}
-      ${stateClause}
-      ${regionClause}
-      ${sectorClause}
     ORDER BY ${col} ${dir} NULLS LAST
     LIMIT ?
   `;
@@ -96,9 +94,6 @@ export async function queryByBounds(args: QueryByBoundsArgs): Promise<SlacklineL
     ...boundsParams,
     ...searchParams,
     ...sourceParams,
-    ...stateParams,
-    ...regionParams,
-    ...sectorParams,
     limit,
   ];
 
@@ -106,7 +101,7 @@ export async function queryByBounds(args: QueryByBoundsArgs): Promise<SlacklineL
 
   return rows.map((r) => ({
     id: r.id,
-    name: r.name,
+    name: nameFallback(r),
     state: r.state,
     region: r.region,
     length: r.length,
@@ -157,7 +152,7 @@ export async function getSlacklineDetail(id: number): Promise<SlacklineDetail | 
 
   return {
     id: sl.id,
-    name: sl.name,
+    name: nameFallback(sl),
     description: sl.description,
     state: sl.state,
     region: sl.region,
@@ -175,6 +170,9 @@ export async function getSlacklineDetail(id: number): Promise<SlacklineDetail | 
     type: sl.type,
     source: (sl.source as 'csv' | 'slackmap') ?? 'csv',
     external_id: sl.external_id ?? null,
+    anchors_info: sl.anchors_info ?? null,
+    access_info: sl.access_info ?? null,
+    is_measured: sl.is_measured ?? null,
     first_anchor_point: findPoint('first_anchor_point'),
     second_anchor_point: findPoint('second_anchor_point'),
     parking_spot: findPoint('parking_spot'),
@@ -193,49 +191,3 @@ export async function hasDetailCached(id: number): Promise<boolean> {
   return row?.description !== null && row?.description !== undefined;
 }
 
-// --- Filtr helpery: distinct state/region/sector pro cascading picker ---
-
-export async function getDistinctStates(): Promise<string[]> {
-  const db = await getDb();
-  const rows = await db.getAllAsync<{ state: string }>(
-    `SELECT DISTINCT state FROM slacklines
-     WHERE state IS NOT NULL AND state != ''
-     ORDER BY state`,
-  );
-  return rows.map((r) => r.state);
-}
-
-export async function getDistinctRegions(state?: string | null): Promise<string[]> {
-  const db = await getDb();
-  const sql = state
-    ? `SELECT DISTINCT region FROM slacklines
-       WHERE region IS NOT NULL AND region != '' AND state = ?
-       ORDER BY region`
-    : `SELECT DISTINCT region FROM slacklines
-       WHERE region IS NOT NULL AND region != ''
-       ORDER BY region`;
-  const rows = await db.getAllAsync<{ region: string }>(sql, state ? [state] : []);
-  return rows.map((r) => r.region);
-}
-
-export async function getDistinctSectors(
-  state?: string | null,
-  region?: string | null,
-): Promise<string[]> {
-  const db = await getDb();
-  const clauses: string[] = ["sector IS NOT NULL", "sector != ''"];
-  const params: string[] = [];
-  if (state) {
-    clauses.push('state = ?');
-    params.push(state);
-  }
-  if (region) {
-    clauses.push('region = ?');
-    params.push(region);
-  }
-  const sql = `SELECT DISTINCT sector FROM slacklines
-               WHERE ${clauses.join(' AND ')}
-               ORDER BY sector`;
-  const rows = await db.getAllAsync<{ sector: string }>(sql, params);
-  return rows.map((r) => r.sector);
-}

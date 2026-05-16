@@ -10,7 +10,9 @@
     "syncing": "Stahuji data…",
     "empty": "Žádné slacklines. Potáhni pro obnovu.",
     "settingsLabel": "Nastavení mapy",
-    "gpsLabel": "Najdi mě"
+    "gpsLabel": "Najdi mě",
+    "zoomInLabel": "Přiblížit",
+    "zoomOutLabel": "Oddálit"
   },
   "sort": {
     "name": "Název",
@@ -19,16 +21,13 @@
     "rating": "★",
     "distance": "Vzdálenost"
   },
-  "filter": {
-    "title": "Filtry",
-    "state": "Stát",
-    "region": "Region",
-    "sector": "Sektor"
-  },
   "settings": {
     "title": "Nastavení mapy",
     "mapKind": "Podklad mapy",
     "source": "Zdroj dat",
+    "display": "Zobrazení",
+    "showLogo": "Logo",
+    "showControls": "Ovládání mapy",
     "language": "Jazyk",
     "mapAerial": "Letecká",
     "mapOutdoor": "Turistická",
@@ -43,6 +42,12 @@
     "anchor2": "Kotva 2",
     "parking": "Parkoviště",
     "author": "Autor: {{name}}",
-    "source": "Zdroj: {{name}}"
+    "source": "Zdroj: {{name}}",
+    "timeApproach": "Přístup",
+    "timeTensioning": "Natažení",
+    "nameHistory": "Historické názvy",
+    "anchorsInfo": "Kotvy",
+    "accessInfo": "Přístup",
+    "notMeasured": "Délka/výška nebyla ověřena"
   }
 }

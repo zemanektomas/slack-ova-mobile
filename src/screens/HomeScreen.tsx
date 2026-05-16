@@ -17,7 +17,6 @@ import { seedFromCsv } from '../db/seed';
 import { seedFromSlackmap } from '../db/slackmap';
 import MapViewComponent from '../map/MapView';
 import InlineDetail from '../components/InlineDetail';
-import { FilterSheet } from '../components/FilterSheet';
 import { SettingsSheet } from '../components/SettingsSheet';
 import { useTheme } from '../theme';
 import type { SlacklineListItem, SortKey, SortDir } from '../types';
@@ -32,9 +31,6 @@ export default function HomeScreen() {
   const sourceFilter = useMapStore((s) => s.sourceFilter);
   const search = useMapStore((s) => s.search);
   const setSearch = useMapStore((s) => s.setSearch);
-  const stateFilter = useMapStore((s) => s.stateFilter);
-  const regionFilter = useMapStore((s) => s.regionFilter);
-  const sectorFilter = useMapStore((s) => s.sectorFilter);
   const syncing = useSyncStore((s) => s.syncing);
   const lastSyncAt = useSyncStore((s) => s.lastSyncAt);
 
@@ -63,7 +59,6 @@ export default function HomeScreen() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const [filterSheetOpen, setFilterSheetOpen] = useState(false);
   const [settingsSheetOpen, setSettingsSheetOpen] = useState(false);
 
   // Debounced search — drží SQLite klidnou při rychlém psaní
@@ -81,9 +76,6 @@ export default function HomeScreen() {
       center,
       sourceFilter,
       search: debouncedSearch.trim() || undefined,
-      stateFilter,
-      regionFilter,
-      sectorFilter,
     }).then(setItems);
   }, [
     bounds,
@@ -93,13 +85,7 @@ export default function HomeScreen() {
     lastSyncAt,
     sourceFilter,
     debouncedSearch,
-    stateFilter,
-    regionFilter,
-    sectorFilter,
   ]);
-
-  const activeFilterCount =
-    (stateFilter ? 1 : 0) + (regionFilter ? 1 : 0) + (sectorFilter ? 1 : 0);
 
   const toggleSort = (key: SortKey) => {
     if (sortBy === key) setSortDir((d) => (d === 'asc' ? 'desc' : 'asc'));
@@ -174,7 +160,6 @@ export default function HomeScreen() {
         />
       </View>
 
-      <FilterSheet visible={filterSheetOpen} onClose={() => setFilterSheetOpen(false)} />
       <SettingsSheet visible={settingsSheetOpen} onClose={() => setSettingsSheetOpen(false)} />
 
       <BottomSheet
@@ -203,24 +188,8 @@ export default function HomeScreen() {
             </Pressable>
           )}
           <Pressable
-            onPress={() => setFilterSheetOpen(true)}
-            style={styles.filterBtn}
-            hitSlop={8}
-          >
-            <MaterialCommunityIcons
-              name="filter-variant"
-              size={20}
-              color={activeFilterCount > 0 ? t.accent : t.textMuted}
-            />
-            {activeFilterCount > 0 && (
-              <View style={[styles.filterBadge, { backgroundColor: t.accent }]}>
-                <Text style={[styles.filterBadgeText, { color: t.accentOn }]}>{activeFilterCount}</Text>
-              </View>
-            )}
-          </Pressable>
-          <Pressable
             onPress={() => setSettingsSheetOpen(true)}
-            style={styles.filterBtn}
+            style={styles.iconBtn}
             hitSlop={8}
             accessibilityLabel={tr('home.settingsLabel')}
           >
@@ -285,25 +254,8 @@ const styles = StyleSheet.create({
     fontSize: 14,
     padding: 0,
   },
-  filterBtn: {
+  iconBtn: {
     padding: 4,
-    position: 'relative',
-  },
-  filterBadge: {
-    position: 'absolute',
-    top: -2,
-    right: -2,
-    minWidth: 16,
-    height: 16,
-    borderRadius: 8,
-    paddingHorizontal: 4,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  filterBadgeText: {
-    color: '#fff',
-    fontSize: 10,
-    fontWeight: '700',
   },
   row: {
     flexDirection: 'row',

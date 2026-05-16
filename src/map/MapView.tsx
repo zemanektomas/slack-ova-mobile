@@ -4,6 +4,7 @@
 import { useEffect, useMemo, useRef } from 'react';
 import { StyleSheet, View, Pressable, Image } from 'react-native';
 import { useTranslation } from 'react-i18next';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 import MapLibreGL, { MapView, Camera, ShapeSource, CircleLayer, LineLayer, PointAnnotation } from '@maplibre/maplibre-react-native';
 import { useMapStore, MapKind } from '../store/mapStore';
 import { useTheme } from '../theme';
@@ -61,6 +62,8 @@ export default function MapViewComponent({ markers, selectedId, onMarkerPress }:
   const setCenter = useMapStore((s) => s.setCenter);
   const initialCenter = useMapStore((s) => s.center);
   const initialZoom = useMapStore((s) => s.zoom);
+  const hideLogo = useMapStore((s) => s.hideLogo);
+  const hideControls = useMapStore((s) => s.hideControls);
   const userLoc = useUserLocation();
   const cameraRef = useRef<any>(null);
   const mapRef = useRef<any>(null);
@@ -88,6 +91,14 @@ export default function MapViewComponent({ markers, selectedId, onMarkerPress }:
       animationDuration: 600,
       padding: { paddingBottom: sheetHeight, paddingTop: 0, paddingLeft: 0, paddingRight: 0 },
     });
+  };
+
+  const zoomBy = async (delta: number) => {
+    if (!mapRef.current || !cameraRef.current) return;
+    try {
+      const z = await mapRef.current.getZoom();
+      cameraRef.current.zoomTo(Math.max(1, Math.min(20, z + delta)), 200);
+    } catch {}
   };
 
   // Při prvním mountu posuň kameru na initialCenter s ohledem na výšku sheetu,
@@ -262,20 +273,45 @@ export default function MapViewComponent({ markers, selectedId, onMarkerPress }:
         )}
       </MapView>
 
-      <Pressable
-        onPress={flyToUser}
-        style={[
-          styles.logoBox,
-          userLoc && { borderColor: t.userDot, borderWidth: 2, borderRadius: 30 },
-        ]}
-        accessibilityLabel={tr('home.gpsLabel')}
-      >
-        <Image
-          source={require('../../assets/source/sl-ova-logo.png')}
-          style={styles.logo}
-          resizeMode="contain"
-        />
-      </Pressable>
+      {!hideLogo && (
+        <View style={styles.logoBox} pointerEvents="none">
+          <Image
+            source={require('../../assets/source/sl-ova-logo.png')}
+            style={styles.logo}
+            resizeMode="contain"
+          />
+        </View>
+      )}
+
+      {!hideControls && (
+        <View style={[styles.controls, { bottom: sheetHeight + 12 }]} pointerEvents="box-none">
+          <Pressable
+            onPress={() => zoomBy(1)}
+            style={[styles.ctrlBtn, { backgroundColor: t.surface, borderColor: t.border }]}
+            accessibilityLabel={tr('home.zoomInLabel')}
+          >
+            <MaterialCommunityIcons name="plus" size={22} color={t.text} />
+          </Pressable>
+          <Pressable
+            onPress={() => zoomBy(-1)}
+            style={[styles.ctrlBtn, { backgroundColor: t.surface, borderColor: t.border }]}
+            accessibilityLabel={tr('home.zoomOutLabel')}
+          >
+            <MaterialCommunityIcons name="minus" size={22} color={t.text} />
+          </Pressable>
+          <Pressable
+            onPress={flyToUser}
+            style={[
+              styles.ctrlBtn,
+              { backgroundColor: t.surface, borderColor: t.border },
+              userLoc && { borderColor: t.userDot, borderWidth: 2 },
+            ]}
+            accessibilityLabel={tr('home.gpsLabel')}
+          >
+            <MaterialCommunityIcons name="crosshairs-gps" size={20} color={userLoc ? t.userDot : t.text} />
+          </Pressable>
+        </View>
+      )}
     </View>
   );
 }
@@ -283,19 +319,6 @@ export default function MapViewComponent({ markers, selectedId, onMarkerPress }:
 const styles = StyleSheet.create({
   container: { flex: 1 },
   map: { flex: 1 },
-  gpsBtn: {
-    position: 'absolute',
-    bottom: 12,
-    right: 12,
-    paddingHorizontal: 12,
-    paddingVertical: 10,
-    borderRadius: 8,
-    elevation: 4,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.25,
-    shadowRadius: 3,
-  },
   logoBox: {
     position: 'absolute',
     top: 8,
@@ -306,6 +329,25 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   logo: { width: 56, height: 56 },
+  controls: {
+    position: 'absolute',
+    // bottom = sheetHeight + 12 (dynamicky) aby ovládání plavalo nad bottom sheetem
+    right: 8,
+    gap: 8,
+  },
+  ctrlBtn: {
+    width: 44,
+    height: 44,
+    borderRadius: 22,
+    borderWidth: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    elevation: 3,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.2,
+    shadowRadius: 2,
+  },
   userMarker: {
     width: 24,
     height: 24,
