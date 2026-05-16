@@ -1,7 +1,7 @@
 // SQLite schema pro lokální mirror serverové DB + lokální stav (outbox, cache).
 // Spouští se při startu, idempotentně (CREATE IF NOT EXISTS).
 
-export const SCHEMA_VERSION = 2;
+export const SCHEMA_VERSION = 3;
 
 export const SCHEMA_SQL = `
 CREATE TABLE IF NOT EXISTS slacklines (
@@ -26,7 +26,11 @@ CREATE TABLE IF NOT EXISTS slacklines (
   updated_by_id TEXT,
   server_updated_at TEXT,
   source TEXT NOT NULL DEFAULT 'csv',
-  external_id TEXT
+  external_id TEXT,
+  -- v3: slackmap-specific rich fields (api.slackmap.com/line/{id}/details)
+  anchors_info TEXT,    -- popis kotev
+  access_info TEXT,     -- popis přístupu
+  is_measured INTEGER   -- 0/1/NULL (NULL = neuvedeno; false = "Not Measured" warning)
 );
 
 CREATE TABLE IF NOT EXISTS points (

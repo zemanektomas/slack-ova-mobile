@@ -25,6 +25,9 @@ interface BundledDetail {
   length: number | null;
   type: string | null;
   restriction: string | null;
+  anchorsInfo: string | null;
+  accessInfo: string | null;
+  isMeasured: boolean | null;
 }
 
 interface BundledPayload {
@@ -174,22 +177,31 @@ export async function seedFromSlackmap(opts: { fromNetwork?: boolean } = {}): Pr
         const lineLength = detail?.length ?? lengthFromString(f.l);
         const lineType = detail?.type ?? mapLineType(f.lt);
 
-        // Použij reálný název z bundled detailu, jinak placeholder "Česká republika · 170m"
+        // Použij reálný název z bundled detailu, jinak placeholder "Česká republika · highline · 170m".
+        // 50 % slackmap lajn má name === "" (prázdný string, ne null) — `??` na to nereaguje,
+        // proto explicit trim() check.
         const placeholderParts = [
           stateName,
           lineType === 'highline' ? 'highline' : null,
           lineLength ? `${lineLength}m` : null,
         ].filter(Boolean);
-        const name = detail?.name
-          ?? (placeholderParts.length > 0 ? placeholderParts.join(' · ') : `Slackmap ${externalId}`);
+        const realName = detail?.name?.trim();
+        const name = (realName && realName.length > 0)
+          ? realName
+          : (placeholderParts.length > 0 ? placeholderParts.join(' · ') : `Slackmap ${externalId}`);
 
         await db.runAsync(
           `INSERT INTO slacklines
-           (id, name, description, state, length, height, type, restriction, source, external_id, server_updated_at)
-           VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'slackmap', ?, ?)`,
+           (id, name, description, state, length, height, type, restriction,
+            anchors_info, access_info, is_measured,
+            source, external_id, server_updated_at)
+           VALUES (?, ?, ?, ?, ?, ?, ?, ?,  ?, ?, ?,  'slackmap', ?, ?)`,
           [
             slId, name, detail?.description ?? null, stateName,
             lineLength, detail?.height ?? null, lineType, detail?.restriction ?? null,
+            detail?.anchorsInfo ?? null,
+            detail?.accessInfo ?? null,
+            detail?.isMeasured === true ? 1 : (detail?.isMeasured === false ? 0 : null),
             externalId, new Date().toISOString(),
           ],
         );
@@ -225,7 +237,7 @@ export async function seedFromSlackmap(opts: { fromNetwork?: boolean } = {}): Pr
       }
     });
 
-    await setMeta('seeded_from_slackmap', 'bundled-v2');
+    await setMeta('seeded_from_slackmap', 'bundled-v3');
     syncStore.setLastSyncAt(new Date().toISOString());
 
     return { slacklines: insertedSlacklines, points: insertedPoints, components: insertedComponents };

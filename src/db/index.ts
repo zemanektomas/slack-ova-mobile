@@ -24,6 +24,12 @@ async function migrate(db: SQLite.SQLiteDatabase): Promise<void> {
       await db.execAsync(`ALTER TABLE slacklines ADD COLUMN external_id TEXT`);
     } catch {}
   }
+  if (current < 3) {
+    // v3: rich slackmap fields (anchors / access popis + isMeasured warning)
+    try { await db.execAsync(`ALTER TABLE slacklines ADD COLUMN anchors_info TEXT`); } catch {}
+    try { await db.execAsync(`ALTER TABLE slacklines ADD COLUMN access_info TEXT`); } catch {}
+    try { await db.execAsync(`ALTER TABLE slacklines ADD COLUMN is_measured INTEGER`); } catch {}
+  }
   // Index na source — vytvoříme až po migraci (sloupec teď určitě existuje)
   try {
     await db.execAsync(`CREATE INDEX IF NOT EXISTS ix_slacklines_source ON slacklines(source)`);

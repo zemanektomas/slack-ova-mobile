@@ -49,19 +49,60 @@ export default function InlineDetail({ slacklineId }: { slacklineId: number }) {
         <Stat t={t} label={tr('detail.type')} value={detail.type ?? '—'} />
       </View>
 
+      {detail.is_measured === 0 && (
+        <Text style={[styles.warning, { color: t.textMuted }]}>
+          ⚠ {tr('detail.notMeasured')}
+        </Text>
+      )}
+
       {detail.description && (
         <Text style={[styles.body, { color: t.text }]}>{detail.description}</Text>
       )}
 
-      {detail.restriction && (
+      {detail.restriction && !isNoRestriction(detail.restriction) && (
         <Text style={[styles.restriction, { color: t.danger, backgroundColor: t.dangerBg }]}>
           ⚠ {detail.restriction}
         </Text>
       )}
 
+      {detail.anchors_info && (
+        <View style={styles.section}>
+          <Text style={[styles.sectionLabel, { color: t.textMuted }]}>{tr('detail.anchorsInfo')}</Text>
+          <Text style={[styles.sectionBody, { color: t.text }]}>{detail.anchors_info}</Text>
+        </View>
+      )}
+
+      {detail.access_info && (
+        <View style={styles.section}>
+          <Text style={[styles.sectionLabel, { color: t.textMuted }]}>{tr('detail.accessInfo')}</Text>
+          <Text style={[styles.sectionBody, { color: t.text }]}>{detail.access_info}</Text>
+        </View>
+      )}
+
       <PointBlock t={t} label={tr('detail.anchor1')} point={detail.first_anchor_point} />
       <PointBlock t={t} label={tr('detail.anchor2')} point={detail.second_anchor_point} />
       <PointBlock t={t} label={tr('detail.parking')} point={detail.parking_spot} />
+
+      {(detail.time_approach || detail.time_tensioning) && (
+        <View style={styles.accessRow}>
+          {detail.time_approach && (
+            <Text style={[styles.accessItem, { color: t.textMuted }]}>
+              {tr('detail.timeApproach')}: <Text style={{ color: t.text }}>{detail.time_approach}</Text>
+            </Text>
+          )}
+          {detail.time_tensioning && (
+            <Text style={[styles.accessItem, { color: t.textMuted }]}>
+              {tr('detail.timeTensioning')}: <Text style={{ color: t.text }}>{detail.time_tensioning}</Text>
+            </Text>
+          )}
+        </View>
+      )}
+
+      {detail.name_history && (
+        <Text style={[styles.nameHistory, { color: t.textMuted }]}>
+          {tr('detail.nameHistory')}: <Text style={{ color: t.text }}>{detail.name_history}</Text>
+        </Text>
+      )}
 
       {(detail.state || detail.region || detail.sector) && (
         <Text style={[styles.location, { color: t.textMuted }]}>
@@ -75,11 +116,48 @@ export default function InlineDetail({ slacklineId }: { slacklineId: number }) {
         </Text>
       )}
 
-      <Text style={[styles.attribution, { color: t.textDim }]}>
-        {tr('detail.source', { name: detail.source === 'slackmap' ? 'slackmap.com' : 'slack.cz' })}
-      </Text>
+      {(() => {
+        const url = detailSourceUrl(detail);
+        const sourceLabel = detail.source === 'slackmap' ? 'slackmap.com' : 'slack.cz';
+        if (!url) {
+          return (
+            <Text style={[styles.attribution, { color: t.textDim }]}>
+              {tr('detail.source', { name: sourceLabel })}
+            </Text>
+          );
+        }
+        return (
+          <Pressable onPress={() => Linking.openURL(url)}>
+            <Text style={[styles.attribution, { color: t.accent, textDecorationLine: 'underline' }]}>
+              {tr('detail.source', { name: sourceLabel })} →
+            </Text>
+          </Pressable>
+        );
+      })()}
     </View>
   );
+}
+
+// Slackmap restriction `"none"` / `"none: ..."` znamená "žádná omezení" — nepatří
+// do červeného warningu. Skutečná varování začínají `"partial"` nebo `"full"`.
+function isNoRestriction(r: string): boolean {
+  const lower = r.trim().toLowerCase();
+  return lower === 'none' || lower.startsWith('none:') || lower.startsWith('none ');
+}
+
+// Sestaví URL na zdroj lajny.
+//   slackmap:   https://slackmap.com/line/{external_id}  (external_id je hash, přímý link na detail)
+//   slack.cz:   https://slack.cz/highlines/?search={name} (CSV id ≠ slack.cz public id,
+//               proto fallback na search; user pak klikne na svou lajnu v seznamu)
+// Vrátí null pokud chybí potřebné identifikátory.
+function detailSourceUrl(d: SlacklineDetail): string | null {
+  if (d.source === 'slackmap') {
+    if (!d.external_id) return null;
+    return `https://slackmap.com/line/${d.external_id}`;
+  }
+  // slack.cz — search místo direct detail kvůli ID mismatch
+  if (!d.name || d.name.trim().length === 0) return null;
+  return `https://slack.cz/highlines/?search=${encodeURIComponent(d.name)}`;
 }
 
 function Stat({ t, label, value }: { t: Theme; label: string; value: string }) {
@@ -126,6 +204,13 @@ const styles = StyleSheet.create({
   pointRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingVertical: 2 },
   pointLabel: { fontSize: 12 },
   pointCoords: { fontSize: 12, fontFamily: 'monospace' },
+  warning: { fontSize: 11, marginTop: 4, fontStyle: 'italic' },
+  section: { marginTop: 8 },
+  sectionLabel: { fontSize: 11, textTransform: 'uppercase', letterSpacing: 0.5, marginBottom: 2 },
+  sectionBody: { fontSize: 13, lineHeight: 18 },
+  accessRow: { marginTop: 6, gap: 2 },
+  accessItem: { fontSize: 12 },
+  nameHistory: { fontSize: 11, marginTop: 4, fontStyle: 'italic' },
   location: { fontSize: 11, marginTop: 4 },
   author: { fontSize: 11 },
   attribution: { fontSize: 10, marginTop: 4, fontStyle: 'italic' },

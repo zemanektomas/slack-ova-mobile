@@ -84,7 +84,22 @@ async function main() {
         height: d.height ?? null,
         length: d.length ?? null,
         type: d.type ?? null,
-        restriction: [d.restrictionLevel, d.restrictionInfo].filter(Boolean).join(': ') || null,
+        // restrictionLevel 'none' (bez doplňujícího info) = žádné omezení — neukládat
+        // jako varování. Skutečné warningy mají level 'partial' nebo 'full', případně
+        // 'none' s doplňujícím komentářem (např. "none: Check BMC for nesting bird info").
+        restriction: (() => {
+          const lvl = d.restrictionLevel;
+          const info = d.restrictionInfo;
+          if (lvl === 'none' && !info) return null;
+          return [lvl, info].filter(Boolean).join(': ') || null;
+        })(),
+        // Rozšířená pole z slackmap API (api.slackmap.com/line/{id}/details):
+        //   anchorsInfo — popis kotev (např. "1. side: 2 bolts for main, backup to the tree")
+        //   accessInfo — popis přístupu (např. "Path on both sides")
+        //   isMeasured — false = upozornění "Not Measured" v UI
+        anchorsInfo: d.anchorsInfo ?? null,
+        accessInfo: d.accessInfo ?? null,
+        isMeasured: d.isMeasured ?? null,
       };
     }
     process.stdout.write(`  ${Math.min(i + BATCH, targets.length)}/${targets.length}\r`);

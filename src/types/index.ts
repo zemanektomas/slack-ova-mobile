@@ -42,6 +42,10 @@ export interface SlacklineDetail {
   type?: string | null;
   source?: 'csv' | 'slackmap';
   external_id?: string | null;
+  // v3: rich slackmap fields (api.slackmap.com/line/{id}/details)
+  anchors_info?: string | null;
+  access_info?: string | null;
+  is_measured?: number | null;  // 0/1/null (SQLite ukládá INTEGER, ne boolean)
   first_anchor_point?: PointResponse | null;
   second_anchor_point?: PointResponse | null;
   parking_spot?: PointResponse | null;
