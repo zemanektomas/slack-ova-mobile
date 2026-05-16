@@ -5,7 +5,7 @@ import { useEffect, useMemo, useRef } from 'react';
 import { StyleSheet, View, Pressable, Image } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import MapLibreGL, { MapView, Camera, ShapeSource, CircleLayer, LineLayer, PointAnnotation } from '@maplibre/maplibre-react-native';
+import MapLibreGL, { MapView, Camera, ShapeSource, CircleLayer, LineLayer, PointAnnotation, SymbolLayer } from '@maplibre/maplibre-react-native';
 import { useMapStore, MapKind } from '../store/mapStore';
 import { useTheme } from '../theme';
 import { useUserLocation } from './useLocation';
@@ -15,12 +15,18 @@ MapLibreGL.setAccessToken(null);
 
 const MAPY_KEY = process.env.EXPO_PUBLIC_MAPY_CZ_API_KEY ?? '';
 
+// Font glyphs URL pro SymbolLayer text rendering (cluster count). MapLibre potřebuje
+// glyphs endpoint pro `textField` v SymbolLayer. Použijem OpenMapTiles free font CDN
+// (Open Sans Regular, fungujе s každým MapLibre style i bez vlastních fontů).
+const GLYPHS_URL = 'https://orangemug.github.io/font-glyphs/glyphs/{fontstack}/{range}.pbf';
+
 function buildStyle(kind: MapKind) {
   // Mapy.cz: aerial = letecká, outdoor = turistická s vrstevnicemi
   if (kind !== 'osm' && MAPY_KEY) {
     const slug = kind === 'outdoor' ? 'outdoor' : 'aerial';
     return {
       version: 8,
+      glyphs: GLYPHS_URL,
       sources: {
         mapy: {
           type: 'raster',
@@ -35,6 +41,7 @@ function buildStyle(kind: MapKind) {
   // OSM (vybráno ručně nebo fallback bez klíče)
   return {
     version: 8,
+    glyphs: GLYPHS_URL,
     sources: {
       osm: {
         type: 'raster',
@@ -67,6 +74,9 @@ export default function MapViewComponent({ markers, selectedId, onMarkerPress }:
   const userLoc = useUserLocation();
   const cameraRef = useRef<any>(null);
   const mapRef = useRef<any>(null);
+  // ShapeSource ref — potřebujem pro `getClusterExpansionZoom(feature)` při tap
+  // na cluster (zoom in dokud se cluster nerozpadne na single markery).
+  const pointsSourceRef = useRef<any>(null);
 
   const refreshBounds = async () => {
     try {
@@ -132,10 +142,14 @@ export default function MapViewComponent({ markers, selectedId, onMarkerPress }:
 
   // Tři vrstvy:
   //  - lines: LineString mezi anchor1 a anchor2 (jen kde druhá kotva existuje)
-  //  - pointsAll: všechny kotvy (první vždy, druhá kde je) — vykresluje se jako tečka
-  //  - klik na bod → otevře detail příslušné slackline
+  //  - pointFeatures (s clusterem): JEN anchor1 — jeden bod per lajna, aby cluster
+  //    počty odpovídaly počtu lajn (a ne kotev).
+  //  - anchor2Features (bez clusteru, drobnější marker): druhá kotva jen pro vizuální
+  //    completeness — uživatel vidí oba konce lajny, ale cluster jí nepočítá.
+  //  - klik na anchor1 → detail; klik na anchor2 → také detail (UX symetrie).
   const lineFeatures: any[] = [];
-  const pointFeatures: any[] = [];
+  const pointFeatures: any[] = [];      // anchor1 (clusterované)
+  const anchor2Features: any[] = [];    // anchor2 (drobné, bez clusteru)
 
   for (const m of markers) {
     if (!m.first_anchor) continue;
@@ -152,7 +166,7 @@ export default function MapViewComponent({ markers, selectedId, onMarkerPress }:
     });
     if (m.second_anchor) {
       const a2 = [m.second_anchor.longitude, m.second_anchor.latitude];
-      pointFeatures.push({
+      anchor2Features.push({
         type: 'Feature',
         id: `${m.id}-2`,
         properties: { slacklineId: m.id, name: m.name, role: 'anchor2', selected, isHighline },
@@ -169,6 +183,7 @@ export default function MapViewComponent({ markers, selectedId, onMarkerPress }:
 
   const lineGeojson = { type: 'FeatureCollection' as const, features: lineFeatures };
   const pointGeojson = { type: 'FeatureCollection' as const, features: pointFeatures };
+  const anchor2Geojson = { type: 'FeatureCollection' as const, features: anchor2Features };
 
   return (
     <View
@@ -207,6 +222,9 @@ export default function MapViewComponent({ markers, selectedId, onMarkerPress }:
         <ShapeSource id="slacklines-lines-src" shape={lineGeojson}>
           <LineLayer
             id="slacklines-lines"
+            // Lines viditelné od zoom 9+ — souhlasí s clusterMaxZoomLevel: 8.
+            // Pod tím (zoom 0-8) jsou clusters, čáry by jen rušily vizuál odzoomované mapy.
+            minZoomLevel={9}
             style={{
               lineColor: [
                 'case',
@@ -221,14 +239,74 @@ export default function MapViewComponent({ markers, selectedId, onMarkerPress }:
         </ShapeSource>
         <ShapeSource
           id="slacklines-points-src"
+          ref={pointsSourceRef}
           shape={pointGeojson}
-          onPress={(e: any) => {
-            const id = e?.features?.[0]?.properties?.slacklineId;
+          cluster
+          clusterRadius={40}
+          clusterMaxZoomLevel={8}
+          onPress={async (e: any) => {
+            const feat = e?.features?.[0];
+            if (!feat) return;
+            if (feat.properties?.cluster) {
+              // Cluster tap — zoom in do oblasti kde se rozpadne na single markery.
+              // MapLibre vrací zoom level kde MapBox clusters už nepřežijí.
+              try {
+                const zoom = await pointsSourceRef.current?.getClusterExpansionZoom(feat);
+                const coords = feat.geometry?.coordinates;
+                if (zoom && coords && cameraRef.current) {
+                  cameraRef.current.setCamera({
+                    centerCoordinate: coords,
+                    zoomLevel: zoom,
+                    animationDuration: 400,
+                    padding: { paddingBottom: sheetHeight, paddingTop: 0, paddingLeft: 0, paddingRight: 0 },
+                  });
+                }
+              } catch {}
+              return;
+            }
+            const id = feat.properties?.slacklineId;
             if (id && onMarkerPress) onMarkerPress(id);
           }}
         >
+          {/* Cluster background circle — větší než single marker, kontrast vs. mapa */}
+          <CircleLayer
+            id="slacklines-clusters"
+            filter={['has', 'point_count']}
+            style={{
+              circleRadius: [
+                'step',
+                ['get', 'point_count'],
+                14,    // < 10 lajn → 14 px
+                10, 18,    // 10-99 → 18 px
+                100, 22,   // 100-999 → 22 px
+                1000, 28,  // 1000+ → 28 px
+              ],
+              circleColor: t.markerHighline,
+              circleStrokeWidth: 2,
+              circleStrokeColor: t.markerStroke,
+              circleOpacity: 0.92,
+            }}
+          />
+          {/* Cluster count text — uvnitř kruhu */}
+          <SymbolLayer
+            id="slacklines-cluster-count"
+            filter={['has', 'point_count']}
+            style={{
+              textField: ['get', 'point_count_abbreviated'],
+              // Open Sans Regular je k dispozici v orangemug font glyphs CDN (viz GLYPHS_URL).
+              // Bez textFont MapLibre defaultne na ["Open Sans Regular","Arial Unicode MS Regular"]
+              // a šahá pro `Arial Unicode MS Regular` který v CDN není → fail.
+              textFont: ['Open Sans Regular'],
+              textSize: 12,
+              textColor: t.markerSelectedStroke,
+              textIgnorePlacement: true,
+              textAllowOverlap: true,
+            }}
+          />
+          {/* Single pins (mimo cluster) — stejný jako předtím */}
           <CircleLayer
             id="slacklines-pins"
+            filter={['!', ['has', 'point_count']]}
             style={{
               circleRadius: ['case', ['==', ['get', 'selected'], 1], 9, 6],
               circleColor: [
@@ -238,6 +316,40 @@ export default function MapViewComponent({ markers, selectedId, onMarkerPress }:
                 t.markerOther,
               ],
               circleStrokeWidth: 2,
+              circleStrokeColor: [
+                'case',
+                ['==', ['get', 'selected'], 1], t.markerSelectedStroke,
+                t.markerStroke,
+              ],
+            }}
+          />
+        </ShapeSource>
+
+        {/* Anchor2 markery — bez clusteru, menší kruhy. Cluster count v points-src je
+           jen z anchor1 (1 lajna = 1 počet). Anchor2 je vizuální completeness pro
+           lajny s dvěma kotvami. */}
+        <ShapeSource
+          id="slacklines-anchor2-src"
+          shape={anchor2Geojson}
+          onPress={(e: any) => {
+            const id = e?.features?.[0]?.properties?.slacklineId;
+            if (id && onMarkerPress) onMarkerPress(id);
+          }}
+        >
+          <CircleLayer
+            id="slacklines-anchor2-pins"
+            // Anchor2 markery jen od zoom 9+ (stejně jako lines). V cluster zoom
+            // jsou by jen ruseni — viditelný je jen anchor1 v clusteru.
+            minZoomLevel={9}
+            style={{
+              circleRadius: ['case', ['==', ['get', 'selected'], 1], 7, 4],
+              circleColor: [
+                'case',
+                ['==', ['get', 'selected'], 1], t.markerSelected,
+                ['==', ['get', 'isHighline'], 1], t.markerHighline,
+                t.markerOther,
+              ],
+              circleStrokeWidth: 1.5,
               circleStrokeColor: [
                 'case',
                 ['==', ['get', 'selected'], 1], t.markerSelectedStroke,
