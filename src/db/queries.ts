@@ -109,6 +109,7 @@ export async function queryByBounds(args: QueryByBoundsArgs): Promise<SlacklineL
     rating: r.rating,
     date_tense: r.date_tense,
     source: r.source as 'csv' | 'slackmap',
+    type: r.type ?? null,
     first_anchor: {
       id: r.a1_id,
       description: r.a1_desc,

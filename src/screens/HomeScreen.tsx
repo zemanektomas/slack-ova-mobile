@@ -13,11 +13,12 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { useMapStore } from '../store/mapStore';
 import { useSyncStore } from '../store/syncStore';
 import { queryByBounds } from '../db/queries';
-import { seedFromCsv } from '../db/seed';
+import { seedFromSlackcz } from '../db/seedSlackcz';
 import { seedFromSlackmap } from '../db/slackmap';
 import MapViewComponent from '../map/MapView';
 import InlineDetail from '../components/InlineDetail';
 import { SettingsSheet } from '../components/SettingsSheet';
+import { useUserLocation } from '../map/useLocation';
 import { useTheme } from '../theme';
 import type { SlacklineListItem, SortKey, SortDir } from '../types';
 
@@ -31,10 +32,17 @@ export default function HomeScreen() {
   const sourceFilter = useMapStore((s) => s.sourceFilter);
   const search = useMapStore((s) => s.search);
   const setSearch = useMapStore((s) => s.setSearch);
+  const userLoc = useUserLocation();
   const syncing = useSyncStore((s) => s.syncing);
   const lastSyncAt = useSyncStore((s) => s.lastSyncAt);
 
-  const [sortBy, setSortBy] = useState<SortKey>('name');
+  // Default sort = distance. Pokud má user GPS fix, počítáme vzdálenost
+  // od jeho polohy. Bez GPS spadne na střed mapy (původní chování).
+  const distanceOrigin = userLoc
+    ? { lat: userLoc.lat, lon: userLoc.lon }
+    : center;
+
+  const [sortBy, setSortBy] = useState<SortKey>('distance');
   const [sortDir, setSortDir] = useState<SortDir>('asc');
   const [items, setItems] = useState<SlacklineListItem[]>([]);
 
@@ -73,7 +81,7 @@ export default function HomeScreen() {
       bounds,
       sortBy,
       sortDir,
-      center,
+      center: distanceOrigin,
       sourceFilter,
       search: debouncedSearch.trim() || undefined,
     }).then(setItems);
@@ -81,7 +89,8 @@ export default function HomeScreen() {
     bounds,
     sortBy,
     sortDir,
-    center,
+    distanceOrigin.lat,
+    distanceOrigin.lon,
     lastSyncAt,
     sourceFilter,
     debouncedSearch,
@@ -217,7 +226,7 @@ export default function HomeScreen() {
           keyExtractor={(item) => String((item as SlacklineListItem).id)}
           renderItem={renderItem as any}
           refreshControl={<RefreshControl refreshing={syncing} onRefresh={async () => {
-            await seedFromCsv();
+            await seedFromSlackcz();
             try { await seedFromSlackmap({ fromNetwork: true }); } catch {}
           }} tintColor={t.accent} />}
           onScrollToIndexFailed={(e) => {
