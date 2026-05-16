@@ -1,0 +1,53 @@
+{
+  "common": {
+    "all": "Wszystko",
+    "done": "Gotowe",
+    "reset": "Resetuj",
+    "loading": "Ładowanie…"
+  },
+  "home": {
+    "searchPlaceholder": "Szukaj nazwy, regionu, sektora...",
+    "syncing": "Pobieranie…",
+    "empty": "Brak slackline'ów. Pociągnij, aby odświeżyć.",
+    "settingsLabel": "Ustawienia mapy",
+    "gpsLabel": "Znajdź mnie",
+    "zoomInLabel": "Przybliż",
+    "zoomOutLabel": "Oddal"
+  },
+  "sort": {
+    "name": "Nazwa",
+    "length": "Długość",
+    "height": "Wysokość",
+    "rating": "★",
+    "distance": "Odległość"
+  },
+  "settings": {
+    "title": "Ustawienia mapy",
+    "mapKind": "Styl mapy",
+    "source": "Źródło danych",
+    "display": "Wyświetlanie",
+    "showLogo": "Logo",
+    "showControls": "Sterowanie mapą",
+    "language": "Język",
+    "mapAerial": "Satelita",
+    "mapOutdoor": "Turystyczna",
+    "mapOsm": "Mapa"
+  },
+  "detail": {
+    "length": "Długość",
+    "height": "Wysokość",
+    "rating": "Ocena",
+    "type": "Typ",
+    "anchor1": "Kotwica 1",
+    "anchor2": "Kotwica 2",
+    "parking": "Parking",
+    "author": "Autor: {{name}}",
+    "source": "Źródło: {{name}}",
+    "timeApproach": "Dojście",
+    "timeTensioning": "Napinanie",
+    "nameHistory": "Poprzednie nazwy",
+    "anchorsInfo": "Kotwice",
+    "accessInfo": "Dojście",
+    "notMeasured": "Długość/wysokość nie potwierdzona"
+  }
+}
