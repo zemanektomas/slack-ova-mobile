@@ -226,8 +226,12 @@ export default function HomeScreen() {
           keyExtractor={(item) => String((item as SlacklineListItem).id)}
           renderItem={renderItem as any}
           refreshControl={<RefreshControl refreshing={syncing} onRefresh={async () => {
+            // Pull-to-refresh = re-seed z bundled JSON souborů (slackcz.json + slackmap_world.json).
+            // Žádný net fetch — net fetch by smazal rich slackmap details (anchorsInfo/accessInfo)
+            // protože api.slackmap.com/lines GeoJSON je jen geometry. Fresh data si vyžadují
+            // build-time refresh (`apps/slackcz-scraper/` + `scripts/fetch-slackmap.js`).
             await seedFromSlackcz();
-            try { await seedFromSlackmap({ fromNetwork: true }); } catch {}
+            try { await seedFromSlackmap(); } catch {}
           }} tintColor={t.accent} />}
           onScrollToIndexFailed={(e) => {
             setTimeout(() => {
