@@ -52,6 +52,7 @@
     "anchorsInfo": "Anchors",
     "accessInfo": "Access",
     "notMeasured": "Length/height not verified",
-    "navigate": "Navigate"
+    "navigate": "Navigate",
+    "focusOnMap": "Center on map"
   }
 }

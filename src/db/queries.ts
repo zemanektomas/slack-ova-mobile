@@ -110,6 +110,7 @@ export async function queryByBounds(args: QueryByBoundsArgs): Promise<SlacklineL
     date_tense: r.date_tense,
     source: r.source as 'csv' | 'slackmap',
     type: r.type ?? null,
+    distance_km: center ? haversineKm(center.lat, center.lon, r.a1_lat, r.a1_lon) : null,
     first_anchor: {
       id: r.a1_id,
       description: r.a1_desc,
@@ -120,6 +121,19 @@ export async function queryByBounds(args: QueryByBoundsArgs): Promise<SlacklineL
       ? { id: r.a2_id, description: r.a2_desc, latitude: r.a2_lat, longitude: r.a2_lon }
       : null,
   }));
+}
+
+// Haversine v km. SQL distanceExpr je euclidean ve stupních (pro sort dostačující),
+// ale pro UI display potřebujeme reálné km — degree-distance je v různých zeměpisných
+// šířkách různý, řazení by se nelíšilo, ale uživatel chce vidět "12 km", ne "0.18°²".
+function haversineKm(lat1: number, lon1: number, lat2: number, lon2: number): number {
+  const R = 6371;
+  const toRad = (d: number) => (d * Math.PI) / 180;
+  const dLat = toRad(lat2 - lat1);
+  const dLon = toRad(lon2 - lon1);
+  const a = Math.sin(dLat / 2) ** 2 +
+            Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) * Math.sin(dLon / 2) ** 2;
+  return 2 * R * Math.asin(Math.sqrt(a));
 }
 
 export async function getSlacklineCount(): Promise<number> {

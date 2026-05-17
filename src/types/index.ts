@@ -19,6 +19,9 @@ export interface SlacklineListItem {
   date_tense?: string | null;
   source?: 'csv' | 'slackmap';
   type?: string | null;  // 'highline' / 'longline' / 'waterline' / 'midline' / 'other' / ...
+  // Haversine vzdálenost od `center` (km) — počítaná v queries.ts pro display
+  // ve sloupci. null pokud center nebyl předán.
+  distance_km?: number | null;
   first_anchor?: PointResponse | null;
   second_anchor?: PointResponse | null;
 }

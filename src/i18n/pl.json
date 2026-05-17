@@ -52,6 +52,7 @@
     "anchorsInfo": "Kotwice",
     "accessInfo": "Dojście",
     "notMeasured": "Długość/wysokość nie potwierdzona",
-    "navigate": "Nawiguj"
+    "navigate": "Nawiguj",
+    "focusOnMap": "Wyśrodkuj na mapie"
   }
 }

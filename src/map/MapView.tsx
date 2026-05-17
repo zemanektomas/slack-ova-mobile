@@ -5,7 +5,7 @@ import { useEffect, useMemo, useRef } from 'react';
 import { StyleSheet, View, Pressable, Image } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import MapLibreGL, { MapView, Camera, ShapeSource, CircleLayer, LineLayer, PointAnnotation, SymbolLayer } from '@maplibre/maplibre-react-native';
+import MapLibreGL, { MapView, Camera, ShapeSource, CircleLayer, LineLayer, SymbolLayer } from '@maplibre/maplibre-react-native';
 import { useMapStore, MapKind } from '../store/mapStore';
 import { useTheme } from '../theme';
 import { useUserLocation } from './useLocation';
@@ -102,6 +102,20 @@ export default function MapViewComponent({ markers, selectedId, onMarkerPress }:
       padding: { paddingBottom: sheetHeight, paddingTop: 0, paddingLeft: 0, paddingRight: 0 },
     });
   };
+
+  // FlyTo na konkrétní lajnu (vyžádáno z InlineDetail přes mapStore.focusOn).
+  // Zoom 15 = lajna i kotvy vidět detailně. Padding pod sheetem aby cíl nepadl
+  // pod bottom sheet (uživatel má sheet typicky na Half = 50 %).
+  const focusTarget = useMapStore((s) => s.focusTarget);
+  useEffect(() => {
+    if (!focusTarget || !cameraRef.current) return;
+    cameraRef.current.setCamera({
+      centerCoordinate: [focusTarget.lon, focusTarget.lat],
+      zoomLevel: 15,
+      animationDuration: 600,
+      padding: { paddingBottom: sheetHeight, paddingTop: 0, paddingLeft: 0, paddingRight: 0 },
+    });
+  }, [focusTarget?.nonce, sheetHeight]);
 
   const zoomBy = async (delta: number) => {
     if (!mapRef.current || !cameraRef.current) return;
@@ -359,6 +373,12 @@ export default function MapViewComponent({ markers, selectedId, onMarkerPress }:
           />
         </ShapeSource>
 
+        {/* User polohu kreslíme čistě jako CircleLayer (halo + dot). PointAnnotation
+            v MapLibre RN je known issue — po camera move (flyTo, pan, focus na lajnu)
+            občas vypadne z renderu a vrátí se až další coordinate change. CircleLayer
+            přes ShapeSource je stabilní, MapLibre native side jasně mappuje source
+            update na re-render. Vizuálně místo čtverečku máme kruh — na mapě je to
+            srozumitelnější ("tady jsem" vs. waypoint pin). */}
         <ShapeSource id="user-location-src" shape={userGeojson}>
           <CircleLayer
             id="user-location-halo"
@@ -368,23 +388,16 @@ export default function MapViewComponent({ markers, selectedId, onMarkerPress }:
               circleOpacity: 0.18,
             }}
           />
+          <CircleLayer
+            id="user-location-dot"
+            style={{
+              circleRadius: 6,
+              circleColor: t.userDot,
+              circleStrokeColor: t.markerStroke,
+              circleStrokeWidth: 2,
+            }}
+          />
         </ShapeSource>
-        {userLoc && (
-          <PointAnnotation
-            key={`user-${t.userDot}-${t.markerStroke}`}
-            id="user-location-marker"
-            coordinate={[userLoc.lon, userLoc.lat]}
-          >
-            <View style={styles.userMarker}>
-              <View
-                style={[
-                  styles.userMarkerSquare,
-                  { backgroundColor: t.userDot, borderColor: t.markerStroke },
-                ]}
-              />
-            </View>
-          </PointAnnotation>
-        )}
       </MapView>
 
       {!hideLogo && (
@@ -461,16 +474,5 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.2,
     shadowRadius: 2,
-  },
-  userMarker: {
-    width: 24,
-    height: 24,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  userMarkerSquare: {
-    width: 14,
-    height: 14,
-    borderWidth: 2,
   },
 });

@@ -52,6 +52,7 @@
     "anchorsInfo": "Kotvy",
     "accessInfo": "Přístup",
     "notMeasured": "Délka/výška nebyla ověřena",
-    "navigate": "Navigovat"
+    "navigate": "Navigovat",
+    "focusOnMap": "Vystředit na mapě"
   }
 }

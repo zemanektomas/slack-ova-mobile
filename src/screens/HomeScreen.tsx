@@ -22,7 +22,22 @@ import { useUserLocation } from '../map/useLocation';
 import { useTheme } from '../theme';
 import type { SlacklineListItem, SortKey, SortDir } from '../types';
 
-const SORT_KEYS: SortKey[] = ['name', 'length', 'height', 'rating', 'distance'];
+// Sort keys odpovídají sloupcům v listu. Rating odebrán — slack.cz/slackmap má
+// rating zřídka vyplněný (~5 % lajn), pro řazení nedává smysl. Hodnota zůstává
+// viditelná v inline detailu pokud existuje.
+const SORT_KEYS: SortKey[] = ['name', 'length', 'height', 'distance'];
+
+// Lidsky čitelná vzdálenost. Pod 1 km v metrech (zaokrouhleno na 10 m),
+// jinak v km s jedním desetinným místem (do 100 km), pak celé km.
+function formatDistance(km: number | null | undefined): string {
+  if (km == null) return '';
+  if (km < 1) {
+    const m = Math.round((km * 1000) / 10) * 10;
+    return `${m} m`;
+  }
+  if (km < 100) return `${km.toFixed(1)} km`;
+  return `${Math.round(km)} km`;
+}
 
 export default function HomeScreen() {
   const t = useTheme();
@@ -150,8 +165,8 @@ export default function HomeScreen() {
           <Text style={[styles.colHeight, { color: t.text }]} numberOfLines={1}>
             {item.height ? `${item.height} m` : ''}
           </Text>
-          <Text style={[styles.colRating, { color: t.text }]} numberOfLines={1}>
-            {item.rating ? `★${item.rating}` : ''}
+          <Text style={[styles.colDistance, { color: t.text }]} numberOfLines={1}>
+            {formatDistance(item.distance_km)}
           </Text>
         </Pressable>
         {isExpanded && <InlineDetail slacklineId={item.id} />}
@@ -296,6 +311,6 @@ const styles = StyleSheet.create({
   meta: { fontSize: 12, flexShrink: 0 },
   colLength: { width: 56, fontSize: 12, textAlign: 'right' },
   colHeight: { width: 48, fontSize: 12, textAlign: 'right' },
-  colRating: { width: 44, fontSize: 12, textAlign: 'right' },
+  colDistance: { width: 60, fontSize: 12, textAlign: 'right' },
   empty: { padding: 24, textAlign: 'center' },
 });

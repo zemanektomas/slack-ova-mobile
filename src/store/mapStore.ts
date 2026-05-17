@@ -26,6 +26,10 @@ interface MapState {
   // Volby viditelnosti UI prvků na mapě (persistují).
   hideLogo: boolean;
   hideControls: boolean;
+  // Cíl pro "vystředit na lajně" tlačítko v InlineDetail. MapView na něj reaguje
+  // useEffectem (flyTo). `nonce` se zvyšuje při každém požadavku, aby se efekt
+  // odpálil i když souřadnice zůstanou stejné (tap stejné lajny po move mapy).
+  focusTarget: { lat: number; lon: number; nonce: number } | null;
   setBounds: (b: MapBounds | null) => void;
   setCenter: (lat: number, lon: number) => void;
   setZoom: (z: number) => void;
@@ -35,6 +39,7 @@ interface MapState {
   setSearch: (q: string) => void;
   setHideLogo: (h: boolean) => void;
   setHideControls: (h: boolean) => void;
+  focusOn: (lat: number, lon: number) => void;
   hydrate: () => Promise<void>;
 }
 
@@ -48,6 +53,7 @@ export const useMapStore = create<MapState>((set) => ({
   search: '',
   hideLogo: false,
   hideControls: false,
+  focusTarget: null,
   setBounds: (bounds) => set({ bounds }),
   setCenter: (lat, lon) => set({ center: { lat, lon } }),
   setZoom: (zoom) => set({ zoom }),
@@ -69,6 +75,9 @@ export const useMapStore = create<MapState>((set) => ({
     set({ hideControls });
     AsyncStorage.setItem(HIDE_CONTROLS_KEY, hideControls ? '1' : '0').catch(() => {});
   },
+  focusOn: (lat, lon) => set((state) => ({
+    focusTarget: { lat, lon, nonce: (state.focusTarget?.nonce ?? 0) + 1 },
+  })),
   hydrate: async () => {
     try {
       const k = await AsyncStorage.getItem(KIND_KEY);

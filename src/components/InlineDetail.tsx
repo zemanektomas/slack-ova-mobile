@@ -1,17 +1,23 @@
 // Detail slackline vyrolovaný pod jejím řádkem v seznamu.
 // Čte ze SQLite, žádná nová obrazovka. Kompaktní layout.
+// Pořadí sekcí: akce (souřadnice + Navigovat) nad popisem, metadata na konec —
+// uživatel co tappne řádek typicky řeší "kde to je / jak se tam dostanu",
+// ne "co o tom psal autor".
 
 import { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, Pressable, Linking } from 'react-native';
 import { useTranslation } from 'react-i18next';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { getSlacklineDetail } from '../db/queries';
 import { fetchAndCacheSlackmapDetail } from '../db/slackmap';
+import { useMapStore } from '../store/mapStore';
 import { useTheme, Theme } from '../theme';
 import type { SlacklineDetail, PointResponse } from '../types';
 
 export default function InlineDetail({ slacklineId }: { slacklineId: number }) {
   const t = useTheme();
   const { t: tr } = useTranslation();
+  const focusOn = useMapStore((s) => s.focusOn);
   const [detail, setDetail] = useState<SlacklineDetail | null>(null);
 
   useEffect(() => {
@@ -40,53 +46,40 @@ export default function InlineDetail({ slacklineId }: { slacklineId: number }) {
     );
   }
 
+  const focusAnchor1 = () => {
+    const p = detail.first_anchor_point;
+    if (p) focusOn(p.latitude, p.longitude);
+  };
+
   return (
     <View style={[styles.box, { backgroundColor: t.surfaceAlt, borderColor: t.border }]}>
+      {/* 1) Stats — quick scan parametrů (rating přesunutý do metadata) */}
       <View style={styles.statsRow}>
         <Stat t={t} label={tr('detail.length')} value={detail.length ? `${detail.length} m` : '—'} />
         <Stat t={t} label={tr('detail.height')} value={detail.height ? `${detail.height} m` : '—'} />
-        <Stat t={t} label={tr('detail.rating')} value={detail.rating ? '★'.repeat(detail.rating) : '—'} />
         <Stat t={t} label={tr('detail.type')} value={detail.type ?? '—'} />
       </View>
 
-      {detail.is_measured === 0 && (
-        <Text style={[styles.warning, { color: t.textMuted }]}>
-          ⚠ {tr('detail.notMeasured')}
-        </Text>
-      )}
-
-      {detail.description && (
-        <Text style={[styles.body, { color: t.text }]}>{detail.description}</Text>
-      )}
-
+      {/* 2) Restriction warning — varování nahoře, ať není přehlédnutelné */}
       {detail.restriction && !isNoRestriction(detail.restriction) && (
         <Text style={[styles.restriction, { color: t.danger, backgroundColor: t.dangerBg }]}>
           ⚠ {detail.restriction}
         </Text>
       )}
 
-      {detail.anchors_info && (
-        <View style={styles.section}>
-          <Text style={[styles.sectionLabel, { color: t.textMuted }]}>{tr('detail.anchorsInfo')}</Text>
-          <Text style={[styles.sectionBody, { color: t.text }]}>{detail.anchors_info}</Text>
-        </View>
-      )}
-
-      {detail.access_info && (
-        <View style={styles.section}>
-          <Text style={[styles.sectionLabel, { color: t.textMuted }]}>{tr('detail.accessInfo')}</Text>
-          <Text style={[styles.sectionBody, { color: t.text }]}>{detail.access_info}</Text>
-        </View>
-      )}
-
-      <PointBlock t={t} label={tr('detail.anchor1')} point={detail.first_anchor_point} />
+      {/* 3) Souřadnice — anchor1 s focus tlačítkem na mapě */}
+      <PointBlock
+        t={t}
+        label={tr('detail.anchor1')}
+        point={detail.first_anchor_point}
+        onFocusMap={focusAnchor1}
+        focusLabel={tr('detail.focusOnMap')}
+      />
       <PointBlock t={t} label={tr('detail.anchor2')} point={detail.second_anchor_point} />
       <PointBlock t={t} label={tr('detail.parking')} point={detail.parking_spot} />
 
+      {/* 4) Navigovat — primární akce (geo: intent → system picker) */}
       {(() => {
-        // Navigate button — cíl je parking (preferred) nebo anchor1 (fallback).
-        // Otevře `geo:` intent, Android pak nabídne system picker (Mapy.cz,
-        // Google Maps, Sygic, Locus, Waze, atd. — všechny apky co umí `geo:` URI).
         const target = detail.parking_spot ?? detail.first_anchor_point;
         if (!target) return null;
         const openNavigate = () => {
@@ -105,6 +98,26 @@ export default function InlineDetail({ slacklineId }: { slacklineId: number }) {
         );
       })()}
 
+      {/* 5) Description */}
+      {detail.description && (
+        <Text style={[styles.body, { color: t.text }]}>{detail.description}</Text>
+      )}
+
+      {/* 6) Terénní info — kotvy / přístup / časy */}
+      {detail.anchors_info && (
+        <View style={styles.section}>
+          <Text style={[styles.sectionLabel, { color: t.textMuted }]}>{tr('detail.anchorsInfo')}</Text>
+          <Text style={[styles.sectionBody, { color: t.text }]}>{detail.anchors_info}</Text>
+        </View>
+      )}
+
+      {detail.access_info && (
+        <View style={styles.section}>
+          <Text style={[styles.sectionLabel, { color: t.textMuted }]}>{tr('detail.accessInfo')}</Text>
+          <Text style={[styles.sectionBody, { color: t.text }]}>{detail.access_info}</Text>
+        </View>
+      )}
+
       {(detail.time_approach || detail.time_tensioning) && (
         <View style={styles.accessRow}>
           {detail.time_approach && (
@@ -120,6 +133,13 @@ export default function InlineDetail({ slacklineId }: { slacklineId: number }) {
         </View>
       )}
 
+      {detail.is_measured === 0 && (
+        <Text style={[styles.warning, { color: t.textMuted }]}>
+          ⚠ {tr('detail.notMeasured')}
+        </Text>
+      )}
+
+      {/* 7) Metadata — historie / lokace / autor / rating */}
       {detail.name_history && (
         <Text style={[styles.nameHistory, { color: t.textMuted }]}>
           {tr('detail.nameHistory')}: <Text style={{ color: t.text }}>{detail.name_history}</Text>
@@ -138,6 +158,13 @@ export default function InlineDetail({ slacklineId }: { slacklineId: number }) {
         </Text>
       )}
 
+      {detail.rating != null && detail.rating > 0 && (
+        <Text style={[styles.author, { color: t.textMuted }]}>
+          {tr('detail.rating')}: <Text style={{ color: t.text }}>{'★'.repeat(detail.rating)}</Text>
+        </Text>
+      )}
+
+      {/* 8) Source link */}
       {(() => {
         const url = detailSourceUrl(detail);
         const sourceLabel = detail.source === 'slackmap' ? 'slackmap.com' : 'slack.cz';
@@ -191,7 +218,15 @@ function Stat({ t, label, value }: { t: Theme; label: string; value: string }) {
   );
 }
 
-function PointBlock({ t, label, point }: { t: Theme; label: string; point: PointResponse | null | undefined }) {
+interface PointBlockProps {
+  t: Theme;
+  label: string;
+  point: PointResponse | null | undefined;
+  onFocusMap?: () => void;
+  focusLabel?: string;
+}
+
+function PointBlock({ t, label, point, onFocusMap, focusLabel }: PointBlockProps) {
   if (!point) return null;
   // Tap na coords = preview bodu na mapě (Mapy.cz turistická). Pro plnohodnotnou
   // navigaci slouží samostatný "Navigovat" button mimo PointBlock — viz hlavní render.
@@ -199,12 +234,24 @@ function PointBlock({ t, label, point }: { t: Theme; label: string; point: Point
     Linking.openURL(`https://mapy.cz/turisticka?q=${point.latitude},${point.longitude}`);
   };
   return (
-    <Pressable onPress={openPreview} style={styles.pointRow}>
+    <View style={styles.pointRow}>
       <Text style={[styles.pointLabel, { color: t.textMuted }]}>{label}</Text>
-      <Text style={[styles.pointCoords, { color: t.accent }]}>
-        {point.latitude.toFixed(5)}, {point.longitude.toFixed(5)} →
-      </Text>
-    </Pressable>
+      <Pressable onPress={openPreview} style={styles.pointCoordsBtn}>
+        <Text style={[styles.pointCoords, { color: t.accent }]}>
+          {point.latitude.toFixed(5)}, {point.longitude.toFixed(5)} →
+        </Text>
+      </Pressable>
+      {onFocusMap && (
+        <Pressable
+          onPress={onFocusMap}
+          hitSlop={8}
+          accessibilityLabel={focusLabel}
+          style={styles.focusBtn}
+        >
+          <MaterialCommunityIcons name="crosshairs-gps" size={18} color={t.accent} />
+        </Pressable>
+      )}
+    </View>
   );
 }
 
@@ -220,14 +267,16 @@ const styles = StyleSheet.create({
     flexWrap: 'wrap',
     marginHorizontal: -4,
   },
-  stat: { flexBasis: '25%', paddingHorizontal: 4 },
+  stat: { flexBasis: '33.333%', paddingHorizontal: 4 },
   statLabel: { fontSize: 9, textTransform: 'uppercase', letterSpacing: 0.5 },
   statValue: { fontSize: 13, fontWeight: '600', marginTop: 1 },
   body: { fontSize: 13, lineHeight: 18 },
   restriction: { fontSize: 12, padding: 8, borderRadius: 4 },
-  pointRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingVertical: 2 },
-  pointLabel: { fontSize: 12 },
-  pointCoords: { fontSize: 12, fontFamily: 'monospace' },
+  pointRow: { flexDirection: 'row', alignItems: 'center', paddingVertical: 2, gap: 8 },
+  pointLabel: { fontSize: 12, flexShrink: 0 },
+  pointCoordsBtn: { flex: 1 },
+  pointCoords: { fontSize: 12, fontFamily: 'monospace', textAlign: 'right' },
+  focusBtn: { padding: 2 },
   navigateBtn: {
     marginTop: 8,
     paddingHorizontal: 12,
