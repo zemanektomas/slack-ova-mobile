@@ -34,7 +34,18 @@
     "language": "Język",
     "mapAerial": "Satelita",
     "mapOutdoor": "Turystyczna",
-    "mapOsm": "Mapa"
+    "mapOsm": "Mapa",
+    "updates": "Aktualizacje",
+    "appVersion": "Aplikacja {{version}} (build {{build}})",
+    "openPlayStore": "Play Store",
+    "dataLines": "Dane lajn",
+    "dataBundled": "Z ostatniej wersji aplikacji",
+    "lastRefresh": "Zaktualizowano: {{date}}",
+    "refreshSlackmap": "Aktualizuj",
+    "refreshDone": "Gotowe",
+    "refreshSummary": "Dodano: {{added}}\nZaktualizowano: {{updated}}\nBez zmian: {{unchanged}}",
+    "refreshFailed": "Aktualizacja nieudana",
+    "offlineHint": "Potrzebny internet do aktualizacji."
   },
   "detail": {
     "length": "Długość",

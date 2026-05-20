@@ -251,6 +251,158 @@ export async function seedFromSlackmap(opts: { fromNetwork?: boolean } = {}): Pr
   }
 }
 
+// Stáhne čerstvou GeoJSON ze Slackmap a UPDATUJE geometrii + přidá nové lajny.
+// Rich detaily (anchors_info, access_info, is_measured) zachová u existujících
+// lajn — `seedFromSlackmap({fromNetwork: true})` by je smazal, protože network
+// fetch nemá detail endpoint v jednom call. Lazy fetch detailu pro nové lajny
+// proběhne až uživatel otevře jejich inline detail.
+//
+// Návrat: kolik lajn přibylo / kolik se updatovalo / kolik zůstalo beze změny.
+export async function refreshGeometryFromSlackmap(): Promise<{ added: number; updated: number; unchanged: number }> {
+  const syncStore = useSyncStore.getState();
+  syncStore.setSyncing(true);
+  syncStore.setError(null);
+
+  try {
+    const payload = await fetchPayloadFromNetwork();
+    const db = await getDb();
+
+    // Existující slackmap lajny: mapa external_id → {slId, a1_id, a2_id, current lat/lon}.
+    // Joinujeme přes components abychom dostali point IDs (potřebujem pro UPDATE).
+    const existingRows = await db.getAllAsync<{
+      sl_id: number;
+      external_id: string;
+      a1_id: number | null;
+      a2_id: number | null;
+      a1_lat: number | null;
+      a1_lon: number | null;
+      a2_lat: number | null;
+      a2_lon: number | null;
+    }>(`
+      SELECT
+        s.id AS sl_id, s.external_id,
+        p1.id AS a1_id, p1.latitude AS a1_lat, p1.longitude AS a1_lon,
+        p2.id AS a2_id, p2.latitude AS a2_lat, p2.longitude AS a2_lon
+      FROM slacklines s
+      LEFT JOIN components c1 ON c1.slackline_id = s.id AND c1.component_type = 'first_anchor_point'
+      LEFT JOIN points p1 ON p1.id = c1.point_id
+      LEFT JOIN components c2 ON c2.slackline_id = s.id AND c2.component_type = 'second_anchor_point'
+      LEFT JOIN points p2 ON p2.id = c2.point_id
+      WHERE s.source = 'slackmap' AND s.external_id IS NOT NULL
+    `);
+    const byExternalId = new Map(existingRows.map((r) => [r.external_id, r]));
+
+    // Min existing IDs pro nové synthetic záporné insert
+    const minRow = await db.getFirstAsync<{ m: number | null }>(`SELECT MIN(id) AS m FROM slacklines`);
+    let nextSlId = Math.min(-1, (minRow?.m ?? 0) - 1);
+    const minPointRow = await db.getFirstAsync<{ m: number | null }>(`SELECT MIN(id) AS m FROM points`);
+    let nextPointId = Math.min(-1, (minPointRow?.m ?? 0) - 1);
+    const minCompRow = await db.getFirstAsync<{ m: number | null }>(`SELECT MIN(id) AS m FROM components`);
+    let nextCompId = Math.min(-1, (minCompRow?.m ?? 0) - 1);
+
+    let added = 0;
+    let updated = 0;
+    let unchanged = 0;
+
+    // Pojistka proti otevřené transakci z předchozího fail/hot-reload
+    try { await db.execAsync('ROLLBACK'); } catch {}
+
+    await db.withTransactionAsync(async () => {
+      for (const f of payload.lines) {
+        const coords = f.coords;
+        if (!coords || coords.length < 2) continue;
+        const [a1, a2] = coords;
+        if (!a1 || !a2) continue;
+
+        const externalId = f.id;
+        const existing = byExternalId.get(externalId);
+
+        if (existing && existing.a1_id != null && existing.a2_id != null) {
+          // UPDATE existing — jen jestli se souřadnice opravdu změnily.
+          // (Většina lajn se nemění mezi releasy; šetřit SQLite writes.)
+          const a1Changed = existing.a1_lat !== a1[1] || existing.a1_lon !== a1[0];
+          const a2Changed = existing.a2_lat !== a2[1] || existing.a2_lon !== a2[0];
+          if (!a1Changed && !a2Changed) {
+            unchanged++;
+            continue;
+          }
+          if (a1Changed) {
+            await db.runAsync(
+              `UPDATE points SET latitude = ?, longitude = ? WHERE id = ?`,
+              [a1[1], a1[0], existing.a1_id],
+            );
+          }
+          if (a2Changed) {
+            await db.runAsync(
+              `UPDATE points SET latitude = ?, longitude = ? WHERE id = ?`,
+              [a2[1], a2[0], existing.a2_id],
+            );
+          }
+          updated++;
+        } else {
+          // NEW — insert všechno, detaily zůstávají null (lazy fetch při otevření)
+          const slId = nextSlId--;
+          const isoCountry = f.c;
+          const stateName = isoToCountryName(isoCountry);
+          const lineLength = lengthFromString(f.l);
+          const lineType = mapLineType(f.lt);
+
+          const placeholderParts = [
+            stateName,
+            lineType === 'highline' ? 'highline' : null,
+            lineLength ? `${lineLength}m` : null,
+          ].filter(Boolean);
+          const name = placeholderParts.length > 0
+            ? placeholderParts.join(' · ')
+            : `Slackmap ${externalId}`;
+
+          await db.runAsync(
+            `INSERT INTO slacklines
+             (id, name, state, length, type, source, external_id, server_updated_at)
+             VALUES (?, ?, ?, ?, ?, 'slackmap', ?, ?)`,
+            [slId, name, stateName, lineLength, lineType, externalId, new Date().toISOString()],
+          );
+
+          const p1Id = nextPointId--;
+          await db.runAsync(
+            `INSERT INTO points (id, latitude, longitude) VALUES (?, ?, ?)`,
+            [p1Id, a1[1], a1[0]],
+          );
+          await db.runAsync(
+            `INSERT INTO components (id, slackline_id, point_id, component_type)
+             VALUES (?, ?, ?, 'first_anchor_point')`,
+            [nextCompId--, slId, p1Id],
+          );
+
+          const p2Id = nextPointId--;
+          await db.runAsync(
+            `INSERT INTO points (id, latitude, longitude) VALUES (?, ?, ?)`,
+            [p2Id, a2[1], a2[0]],
+          );
+          await db.runAsync(
+            `INSERT INTO components (id, slackline_id, point_id, component_type)
+             VALUES (?, ?, ?, 'second_anchor_point')`,
+            [nextCompId--, slId, p2Id],
+          );
+
+          added++;
+        }
+      }
+    });
+
+    await setMeta('slackmap_last_network_refresh', new Date().toISOString());
+    syncStore.setLastSyncAt(new Date().toISOString());
+
+    return { added, updated, unchanged };
+  } catch (err: any) {
+    console.warn('[slackmap] refresh failed', String(err));
+    syncStore.setError(err?.message ?? 'Slackmap refresh failed');
+    throw err;
+  } finally {
+    syncStore.setSyncing(false);
+  }
+}
+
 // Lazy detail pro konkrétní linii (název, popis, height).
 // Volá se z DetailScreen / InlineDetail při prvním otevření.
 export async function fetchAndCacheSlackmapDetail(slacklineId: number): Promise<void> {

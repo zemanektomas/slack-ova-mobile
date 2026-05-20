@@ -34,7 +34,18 @@
     "language": "Jazyk",
     "mapAerial": "Letecká",
     "mapOutdoor": "Turistická",
-    "mapOsm": "Mapa"
+    "mapOsm": "Mapa",
+    "updates": "Aktualizace",
+    "appVersion": "Aplikace {{version}} (build {{build}})",
+    "openPlayStore": "Play Store",
+    "dataLines": "Data lajn",
+    "dataBundled": "Z poslední verze apky",
+    "lastRefresh": "Aktualizováno: {{date}}",
+    "refreshSlackmap": "Aktualizovat",
+    "refreshDone": "Hotovo",
+    "refreshSummary": "Přidáno: {{added}}\nUpdatováno: {{updated}}\nBeze změny: {{unchanged}}",
+    "refreshFailed": "Aktualizace selhala",
+    "offlineHint": "Pro aktualizaci potřebuješ internet."
   },
   "detail": {
     "length": "Délka",

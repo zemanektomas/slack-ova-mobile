@@ -34,7 +34,18 @@
     "language": "Language",
     "mapAerial": "Satellite",
     "mapOutdoor": "Outdoor",
-    "mapOsm": "Map"
+    "mapOsm": "Map",
+    "updates": "Updates",
+    "appVersion": "App {{version}} (build {{build}})",
+    "openPlayStore": "Play Store",
+    "dataLines": "Slackline data",
+    "dataBundled": "From last app version",
+    "lastRefresh": "Refreshed: {{date}}",
+    "refreshSlackmap": "Refresh",
+    "refreshDone": "Done",
+    "refreshSummary": "Added: {{added}}\nUpdated: {{updated}}\nUnchanged: {{unchanged}}",
+    "refreshFailed": "Refresh failed",
+    "offlineHint": "Internet required for refresh."
   },
   "detail": {
     "length": "Length",
