@@ -1,4 +1,8 @@
+import { useEffect, useState } from 'react';
 import {
+  ActivityIndicator,
+  Alert,
+  Linking,
   Modal,
   Pressable,
   ScrollView,
@@ -9,10 +13,13 @@ import {
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
 import Constants from 'expo-constants';
+import NetInfo from '@react-native-community/netinfo';
 import { useMapStore, MapKind, SourceFilter } from '../store/mapStore';
 import { useLangStore } from '../store/langStore';
 import type { Lang } from '../i18n';
 import { useTheme } from '../theme';
+import { refreshGeometryFromSlackmap } from '../db/slackmap';
+import { getMeta } from '../db/index';
 
 // Verze z app.json — během dev mode `Constants.expoConfig`, v release přes
 // `Application` API. Pro náš účel ukázat uživateli stačí Constants (funguje vždy).
@@ -59,6 +66,57 @@ export function SettingsSheet({ visible, onClose }: SettingsSheetProps) {
   const setHideControls = useMapStore((s) => s.setHideControls);
   const lang = useLangStore((s) => s.lang);
   const setLang = useLangStore((s) => s.setLang);
+
+  // Updates section state
+  const [refreshing, setRefreshing] = useState(false);
+  const [lastRefresh, setLastRefresh] = useState<string | null>(null);
+  const [isOnline, setIsOnline] = useState(true);
+
+  useEffect(() => {
+    if (!visible) return;
+    // Načti timestamp poslední síťové aktualizace
+    getMeta('slackmap_last_network_refresh').then(setLastRefresh).catch(() => {});
+    // Detekce online stavu (live subscription, ne jen polling)
+    const unsub = NetInfo.addEventListener((state) => {
+      setIsOnline(state.isConnected === true && state.isInternetReachable !== false);
+    });
+    return () => unsub();
+  }, [visible]);
+
+  const handleOpenPlayStore = async () => {
+    // market:// URI scheme otevře přímo Play Store app. Fallback na HTTPS pro
+    // případ že apka není v Play Storu (např. dev build, sideload).
+    const marketUrl = 'market://details?id=cz.slackline.ova';
+    const webUrl = 'https://play.google.com/store/apps/details?id=cz.slackline.ova';
+    try {
+      const supported = await Linking.canOpenURL(marketUrl);
+      await Linking.openURL(supported ? marketUrl : webUrl);
+    } catch {
+      Linking.openURL(webUrl).catch(() => {});
+    }
+  };
+
+  const handleRefreshSlackmap = async () => {
+    if (refreshing) return;
+    setRefreshing(true);
+    try {
+      const result = await refreshGeometryFromSlackmap();
+      const refreshedAt = new Date().toISOString();
+      setLastRefresh(refreshedAt);
+      Alert.alert(
+        tr('settings.refreshDone'),
+        tr('settings.refreshSummary', {
+          added: result.added,
+          updated: result.updated,
+          unchanged: result.unchanged,
+        }),
+      );
+    } catch (err: any) {
+      Alert.alert(tr('settings.refreshFailed'), err?.message ?? 'Network error');
+    } finally {
+      setRefreshing(false);
+    }
+  };
 
   return (
     <Modal visible={visible} animationType="slide" transparent onRequestClose={onClose}>
@@ -152,9 +210,59 @@ export function SettingsSheet({ visible, onClose }: SettingsSheetProps) {
                 ))}
               </ScrollView>
             </View>
-            <Text style={[styles.version, { color: t.textDim }]}>
-              Slackline.Ova {APP_VERSION} (build {APP_BUILD})
-            </Text>
+            <View style={styles.row}>
+              <Text style={[styles.rowLabel, { color: t.textMuted }]}>{tr('settings.updates')}</Text>
+
+              {/* Verze aplikace + tlačítko Play Store */}
+              <View style={styles.updateRow}>
+                <Text style={[styles.updateLabel, { color: t.text }]}>
+                  {tr('settings.appVersion', { version: APP_VERSION, build: APP_BUILD })}
+                </Text>
+                <Pressable onPress={handleOpenPlayStore} style={[styles.linkBtn, { borderColor: t.border }]}>
+                  <MaterialCommunityIcons name="google-play" size={14} color={t.accent} style={{ marginRight: 4 }} />
+                  <Text style={[styles.linkBtnText, { color: t.accent }]}>{tr('settings.openPlayStore')}</Text>
+                </Pressable>
+              </View>
+
+              {/* Data lajn + tlačítko Aktualizovat */}
+              <View style={styles.updateRow}>
+                <View style={{ flex: 1 }}>
+                  <Text style={[styles.updateLabel, { color: t.text }]}>
+                    {tr('settings.dataLines')}
+                  </Text>
+                  <Text style={[styles.updateSubtext, { color: t.textDim }]}>
+                    {lastRefresh
+                      ? tr('settings.lastRefresh', { date: formatRefreshDate(lastRefresh, lang) })
+                      : tr('settings.dataBundled')}
+                  </Text>
+                </View>
+                <Pressable
+                  onPress={handleRefreshSlackmap}
+                  disabled={!isOnline || refreshing}
+                  style={[
+                    styles.linkBtn,
+                    { borderColor: t.border, opacity: (!isOnline || refreshing) ? 0.4 : 1 },
+                  ]}
+                >
+                  {refreshing ? (
+                    <ActivityIndicator size="small" color={t.accent} />
+                  ) : (
+                    <>
+                      <MaterialCommunityIcons name="refresh" size={14} color={t.accent} style={{ marginRight: 4 }} />
+                      <Text style={[styles.linkBtnText, { color: t.accent }]}>
+                        {tr('settings.refreshSlackmap')}
+                      </Text>
+                    </>
+                  )}
+                </Pressable>
+              </View>
+
+              {!isOnline && (
+                <Text style={[styles.offlineHint, { color: t.textMuted }]}>
+                  ⚠ {tr('settings.offlineHint')}
+                </Text>
+              )}
+            </View>
           </ScrollView>
 
           <View style={[styles.footer, { borderTopColor: t.border }]}>
@@ -166,6 +274,18 @@ export function SettingsSheet({ visible, onClose }: SettingsSheetProps) {
       </View>
     </Modal>
   );
+}
+
+// Lidsky čitelný formát data — používá Intl.DateTimeFormat per jazyk.
+// "16. 5. 2026" pro CS, "May 16, 2026" pro EN, "16 maja 2026" pro PL.
+function formatRefreshDate(iso: string, lang: Lang): string {
+  try {
+    const d = new Date(iso);
+    const locale = lang === 'cs' ? 'cs-CZ' : lang === 'pl' ? 'pl-PL' : 'en-US';
+    return d.toLocaleDateString(locale, { year: 'numeric', month: 'long', day: 'numeric' });
+  } catch {
+    return iso.slice(0, 10);
+  }
 }
 
 function Chip({
@@ -255,13 +375,27 @@ const styles = StyleSheet.create({
     borderRadius: 5,
   },
   legendText: { fontSize: 11 },
-  version: {
-    fontSize: 11,
-    textAlign: 'center',
-    paddingHorizontal: 16,
-    paddingTop: 8,
-    paddingBottom: 4,
+  updateRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingVertical: 6,
+    gap: 12,
   },
+  updateLabel: { fontSize: 13, fontWeight: '500' },
+  updateSubtext: { fontSize: 11, marginTop: 2 },
+  linkBtn: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 10,
+    paddingVertical: 6,
+    borderRadius: 6,
+    borderWidth: 1,
+    minWidth: 100,
+    justifyContent: 'center',
+  },
+  linkBtnText: { fontSize: 12, fontWeight: '500' },
+  offlineHint: { fontSize: 11, marginTop: 6, fontStyle: 'italic' },
   footer: {
     flexDirection: 'row',
     padding: 16,
