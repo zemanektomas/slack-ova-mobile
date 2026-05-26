@@ -3,7 +3,8 @@
     "all": "All",
     "done": "Done",
     "reset": "Reset",
-    "loading": "Loading…"
+    "loading": "Loading…",
+    "cancel": "Cancel"
   },
   "home": {
     "searchPlaceholder": "Search name, region, sector...",
@@ -45,7 +46,16 @@
     "refreshDone": "Done",
     "refreshSummary": "Added: {{added}}\nUpdated: {{updated}}\nUnchanged: {{unchanged}}",
     "refreshFailed": "Refresh failed",
-    "offlineHint": "Internet required for refresh."
+    "offlineHint": "Internet required for refresh.",
+    "offlineMap": "Offline map",
+    "offlineMapHint": "The map caches automatically as you browse areas. You'll see places you've visited even without signal.",
+    "clearCache": "Cached map",
+    "clearCacheBtn": "Clear",
+    "clearCacheConfirmTitle": "Clear cached map?",
+    "clearCacheConfirmBody": "Frees space on your phone, but next time you'll need signal to see the map again.",
+    "clearCacheConfirm": "Clear",
+    "clearCacheDone": "Map cleared",
+    "clearCacheFailed": "Clear failed"
   },
   "detail": {
     "length": "Length",

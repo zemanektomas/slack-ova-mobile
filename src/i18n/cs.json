@@ -3,7 +3,8 @@
     "all": "Vše",
     "done": "Hotovo",
     "reset": "Resetovat",
-    "loading": "Načítám…"
+    "loading": "Načítám…",
+    "cancel": "Zrušit"
   },
   "home": {
     "searchPlaceholder": "Hledat název, region, sektor...",
@@ -45,7 +46,16 @@
     "refreshDone": "Hotovo",
     "refreshSummary": "Přidáno: {{added}}\nUpdatováno: {{updated}}\nBeze změny: {{unchanged}}",
     "refreshFailed": "Aktualizace selhala",
-    "offlineHint": "Pro aktualizaci potřebuješ internet."
+    "offlineHint": "Pro aktualizaci potřebuješ internet.",
+    "offlineMap": "Offline mapa",
+    "offlineMapHint": "Mapa se ukládá automaticky jak procházíš oblasti. V terénu bez signálu pak vidíš místa kde jsi byl.",
+    "clearCache": "Stažená mapa",
+    "clearCacheBtn": "Vymazat",
+    "clearCacheConfirmTitle": "Vymazat staženou mapu?",
+    "clearCacheConfirmBody": "Uvolní místo na telefonu, ale příště budeš potřebovat signál abys mapu znovu viděl.",
+    "clearCacheConfirm": "Vymazat",
+    "clearCacheDone": "Mapa vymazána",
+    "clearCacheFailed": "Mazání selhalo"
   },
   "detail": {
     "length": "Délka",

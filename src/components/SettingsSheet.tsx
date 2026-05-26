@@ -20,6 +20,7 @@ import type { Lang } from '../i18n';
 import { useTheme } from '../theme';
 import { refreshGeometryFromSlackmap } from '../db/slackmap';
 import { getMeta } from '../db/index';
+import MapLibreGL from '@maplibre/maplibre-react-native';
 
 // Verze z app.json — během dev mode `Constants.expoConfig`, v release přes
 // `Application` API. Pro náš účel ukázat uživateli stačí Constants (funguje vždy).
@@ -71,6 +72,7 @@ export function SettingsSheet({ visible, onClose }: SettingsSheetProps) {
   const [refreshing, setRefreshing] = useState(false);
   const [lastRefresh, setLastRefresh] = useState<string | null>(null);
   const [isOnline, setIsOnline] = useState(true);
+  const [clearingCache, setClearingCache] = useState(false);
 
   useEffect(() => {
     if (!visible) return;
@@ -116,6 +118,35 @@ export function SettingsSheet({ visible, onClose }: SettingsSheetProps) {
     } finally {
       setRefreshing(false);
     }
+  };
+
+  const handleClearMapCache = () => {
+    // Confirm dialog — vymazání cache je destruktivní (uživatel pak musí mít signál
+    // aby viděl mapu). Ne přímé akce, ne nechtěné kliknutí.
+    Alert.alert(
+      tr('settings.clearCacheConfirmTitle'),
+      tr('settings.clearCacheConfirmBody'),
+      [
+        { text: tr('common.cancel'), style: 'cancel' },
+        {
+          text: tr('settings.clearCacheConfirm'),
+          style: 'destructive',
+          onPress: async () => {
+            setClearingCache(true);
+            try {
+              // clearAmbientCache mažе auto-cached tiles (ambient cache).
+              // Explicit offline packs (zatím žádné nemáme) by zůstaly nedotčené.
+              await MapLibreGL.OfflineManager.clearAmbientCache();
+              Alert.alert(tr('settings.clearCacheDone'), '');
+            } catch (err: any) {
+              Alert.alert(tr('settings.clearCacheFailed'), err?.message ?? '');
+            } finally {
+              setClearingCache(false);
+            }
+          },
+        },
+      ],
+    );
   };
 
   return (
@@ -262,6 +293,34 @@ export function SettingsSheet({ visible, onClose }: SettingsSheetProps) {
                   ⚠ {tr('settings.offlineHint')}
                 </Text>
               )}
+            </View>
+
+            <View style={styles.row}>
+              <Text style={[styles.rowLabel, { color: t.textMuted }]}>{tr('settings.offlineMap')}</Text>
+              <Text style={[styles.updateSubtext, { color: t.textDim, marginBottom: 8 }]}>
+                {tr('settings.offlineMapHint')}
+              </Text>
+              <View style={styles.updateRow}>
+                <Text style={[styles.updateLabel, { color: t.text, flex: 1 }]}>
+                  {tr('settings.clearCache')}
+                </Text>
+                <Pressable
+                  onPress={handleClearMapCache}
+                  disabled={clearingCache}
+                  style={[styles.linkBtn, { borderColor: t.border, opacity: clearingCache ? 0.4 : 1 }]}
+                >
+                  {clearingCache ? (
+                    <ActivityIndicator size="small" color={t.accent} />
+                  ) : (
+                    <>
+                      <MaterialCommunityIcons name="trash-can-outline" size={14} color={t.accent} style={{ marginRight: 4 }} />
+                      <Text style={[styles.linkBtnText, { color: t.accent }]}>
+                        {tr('settings.clearCacheBtn')}
+                      </Text>
+                    </>
+                  )}
+                </Pressable>
+              </View>
             </View>
           </ScrollView>
 
