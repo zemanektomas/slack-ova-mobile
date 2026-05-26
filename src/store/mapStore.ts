@@ -11,6 +11,18 @@ const KIND_KEY = 'slackline_map_kind';
 const SOURCE_KEY = 'slackline_source_filter';
 const HIDE_LOGO_KEY = 'slackline_hide_logo';
 const HIDE_CONTROLS_KEY = 'slackline_hide_controls';
+const CENTER_KEY = 'slackline_map_center';  // JSON {lat, lon, zoom}
+
+// Debounced persist: mapa se hýbe ~na každý pixel během pan/zoom, ukládat do
+// AsyncStorage každý frame by bylo zbytečné. Počkáme 2 s bez pohybu, pak zápis.
+let persistTimer: ReturnType<typeof setTimeout> | null = null;
+function schedulePersistCenter() {
+  if (persistTimer) clearTimeout(persistTimer);
+  persistTimer = setTimeout(() => {
+    const { center, zoom } = useMapStore.getState();
+    AsyncStorage.setItem(CENTER_KEY, JSON.stringify({ lat: center.lat, lon: center.lon, zoom })).catch(() => {});
+  }, 2000);
+}
 
 interface MapState {
   bounds: MapBounds | null;
@@ -55,8 +67,14 @@ export const useMapStore = create<MapState>((set) => ({
   hideControls: false,
   focusTarget: null,
   setBounds: (bounds) => set({ bounds }),
-  setCenter: (lat, lon) => set({ center: { lat, lon } }),
-  setZoom: (zoom) => set({ zoom }),
+  setCenter: (lat, lon) => {
+    set({ center: { lat, lon } });
+    schedulePersistCenter();
+  },
+  setZoom: (zoom) => {
+    set({ zoom });
+    schedulePersistCenter();
+  },
   setSheetHeight: (sheetHeight) => set({ sheetHeight }),
   setKind: (kind) => {
     set({ kind });
@@ -94,6 +112,23 @@ export const useMapStore = create<MapState>((set) => ({
     try {
       const hc = await AsyncStorage.getItem(HIDE_CONTROLS_KEY);
       if (hc === '1') set({ hideControls: true });
+    } catch {}
+    // Posledně zobrazená oblast — pokud user už apku použil, vrátíme ho tam.
+    // První spuštění (nic persisted) zůstává default Ostrava (centrum komunity).
+    try {
+      const raw = await AsyncStorage.getItem(CENTER_KEY);
+      if (raw) {
+        const parsed = JSON.parse(raw) as { lat: number; lon: number; zoom: number };
+        if (
+          typeof parsed.lat === 'number' && typeof parsed.lon === 'number' &&
+          typeof parsed.zoom === 'number' &&
+          parsed.lat >= -90 && parsed.lat <= 90 &&
+          parsed.lon >= -180 && parsed.lon <= 180 &&
+          parsed.zoom >= 1 && parsed.zoom <= 20
+        ) {
+          set({ center: { lat: parsed.lat, lon: parsed.lon }, zoom: parsed.zoom });
+        }
+      }
     } catch {}
   },
 }));

@@ -22,6 +22,7 @@ export default function RootLayout() {
   const hydrate = useAuthStore((s) => s.hydrate);
   const hydrateMap = useMapStore((s) => s.hydrate);
   const [i18nReady, setI18nReady] = useState(false);
+  const [mapHydrated, setMapHydrated] = useState(false);
 
   useEffect(() => {
     initI18n()
@@ -46,10 +47,13 @@ export default function RootLayout() {
       }
       try {
         hydrate();
-        hydrateMap();
+        // hydrateMap musí být await + gate render, jinak MapView mountuje s default
+        // Ostrava center než stihne načíst persisted polohu → trh při startu.
+        await hydrateMap();
       } catch (e) {
         console.warn('[init] hydrate failed', String(e));
       }
+      setMapHydrated(true);
 
       try {
         const count = await getSlacklineCount();
@@ -88,7 +92,7 @@ export default function RootLayout() {
     })();
   }, [hydrate]);
 
-  if (!i18nReady) {
+  if (!i18nReady || !mapHydrated) {
     return <View style={{ flex: 1, backgroundColor: t.bg }} />;
   }
 
