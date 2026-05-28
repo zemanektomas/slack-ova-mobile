@@ -55,7 +55,17 @@
     "clearCacheConfirmBody": "Zwolni miejsce na telefonie, ale następnym razem będziesz potrzebować sygnału aby zobaczyć mapę.",
     "clearCacheConfirm": "Wyczyść",
     "clearCacheDone": "Mapa wyczyszczona",
-    "clearCacheFailed": "Czyszczenie nieudane"
+    "clearCacheFailed": "Czyszczenie nieudane",
+    "slackmapAccount": "Konto Slackmap",
+    "slackmapAccountHint": "Zaloguj się kontem ISA aby dodawać i edytować lajny na Slackmap.",
+    "notSignedIn": "Niezalogowany",
+    "signedIn": "Zalogowany",
+    "signIn": "Zaloguj",
+    "signOut": "Wyloguj",
+    "signInFailed": "Logowanie nieudane",
+    "signOutConfirmTitle": "Wylogować ze Slackmap?",
+    "signOutConfirmBody": "Aby dodawać lub edytować lajny, trzeba będzie zalogować się ponownie.",
+    "signOutConfirm": "Wyloguj"
   },
   "detail": {
     "length": "Długość",

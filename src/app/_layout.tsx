@@ -46,10 +46,11 @@ export default function RootLayout() {
         return;
       }
       try {
-        hydrate();
         // hydrateMap musí být await + gate render, jinak MapView mountuje s default
         // Ostrava center než stihne načíst persisted polohu → trh při startu.
-        await hydrateMap();
+        // auth hydrate (Slackmap JWT z secure-store) běží paralelně, ne čekáme —
+        // sign-in/sign-out UI v Settings se zobrazí korektně po hydrate jakmile dorazí.
+        await Promise.all([hydrate(), hydrateMap()]);
       } catch (e) {
         console.warn('[init] hydrate failed', String(e));
       }

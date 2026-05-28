@@ -21,6 +21,8 @@ import { useTheme } from '../theme';
 import { refreshGeometryFromSlackmap } from '../db/slackmap';
 import { getMeta } from '../db/index';
 import MapLibreGL from '@maplibre/maplibre-react-native';
+import { useAuthStore } from '../store/authStore';
+import { useSlackmapAuth } from '../api/useSlackmapAuth';
 
 // Verze z app.json — během dev mode `Constants.expoConfig`, v release přes
 // `Application` API. Pro náš účel ukázat uživateli stačí Constants (funguje vždy).
@@ -67,6 +69,12 @@ export function SettingsSheet({ visible, onClose }: SettingsSheetProps) {
   const setHideControls = useMapStore((s) => s.setHideControls);
   const lang = useLangStore((s) => s.lang);
   const setLang = useLangStore((s) => s.setLang);
+
+  // Slackmap account (F5)
+  const authUser = useAuthStore((s) => s.user);
+  const isAuthenticated = useAuthStore((s) => s.isAuthenticated());
+  const { ready: authReady, signIn, signOut } = useSlackmapAuth();
+  const [signingIn, setSigningIn] = useState(false);
 
   // Updates section state
   const [refreshing, setRefreshing] = useState(false);
@@ -144,6 +152,34 @@ export function SettingsSheet({ visible, onClose }: SettingsSheetProps) {
               setClearingCache(false);
             }
           },
+        },
+      ],
+    );
+  };
+
+  const handleSignIn = async () => {
+    if (signingIn || !authReady) return;
+    setSigningIn(true);
+    try {
+      const result = await signIn();
+      if (!result.ok && result.error !== 'cancelled') {
+        Alert.alert(tr('settings.signInFailed'), result.error);
+      }
+    } finally {
+      setSigningIn(false);
+    }
+  };
+
+  const handleSignOut = () => {
+    Alert.alert(
+      tr('settings.signOutConfirmTitle'),
+      tr('settings.signOutConfirmBody'),
+      [
+        { text: tr('common.cancel'), style: 'cancel' },
+        {
+          text: tr('settings.signOutConfirm'),
+          style: 'destructive',
+          onPress: () => { signOut(); },
         },
       ],
     );
@@ -320,6 +356,61 @@ export function SettingsSheet({ visible, onClose }: SettingsSheetProps) {
                     </>
                   )}
                 </Pressable>
+              </View>
+            </View>
+
+            <View style={styles.row}>
+              <Text style={[styles.rowLabel, { color: t.textMuted }]}>{tr('settings.slackmapAccount')}</Text>
+              <Text style={[styles.updateSubtext, { color: t.textDim, marginBottom: 8 }]}>
+                {tr('settings.slackmapAccountHint')}
+              </Text>
+              <View style={styles.updateRow}>
+                {isAuthenticated && authUser ? (
+                  <>
+                    <View style={{ flex: 1 }}>
+                      <Text style={[styles.updateLabel, { color: t.text }]} numberOfLines={1}>
+                        {authUser.email}
+                      </Text>
+                      <Text style={[styles.updateSubtext, { color: t.textDim }]}>
+                        {tr('settings.signedIn')}
+                      </Text>
+                    </View>
+                    <Pressable
+                      onPress={handleSignOut}
+                      style={[styles.linkBtn, { borderColor: t.border }]}
+                    >
+                      <MaterialCommunityIcons name="logout" size={14} color={t.accent} style={{ marginRight: 4 }} />
+                      <Text style={[styles.linkBtnText, { color: t.accent }]}>
+                        {tr('settings.signOut')}
+                      </Text>
+                    </Pressable>
+                  </>
+                ) : (
+                  <>
+                    <Text style={[styles.updateLabel, { color: t.text, flex: 1 }]}>
+                      {tr('settings.notSignedIn')}
+                    </Text>
+                    <Pressable
+                      onPress={handleSignIn}
+                      disabled={!authReady || signingIn}
+                      style={[
+                        styles.linkBtn,
+                        { borderColor: t.border, opacity: (!authReady || signingIn) ? 0.4 : 1 },
+                      ]}
+                    >
+                      {signingIn ? (
+                        <ActivityIndicator size="small" color={t.accent} />
+                      ) : (
+                        <>
+                          <MaterialCommunityIcons name="login" size={14} color={t.accent} style={{ marginRight: 4 }} />
+                          <Text style={[styles.linkBtnText, { color: t.accent }]}>
+                            {tr('settings.signIn')}
+                          </Text>
+                        </>
+                      )}
+                    </Pressable>
+                  </>
+                )}
               </View>
             </View>
           </ScrollView>
