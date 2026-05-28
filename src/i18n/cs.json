@@ -55,7 +55,17 @@
     "clearCacheConfirmBody": "Uvolní místo na telefonu, ale příště budeš potřebovat signál abys mapu znovu viděl.",
     "clearCacheConfirm": "Vymazat",
     "clearCacheDone": "Mapa vymazána",
-    "clearCacheFailed": "Mazání selhalo"
+    "clearCacheFailed": "Mazání selhalo",
+    "slackmapAccount": "Účet Slackmap",
+    "slackmapAccountHint": "Pro přidávání a úpravu lajn se přihlas ke Slackmap přes ISA účet.",
+    "notSignedIn": "Nepřihlášen",
+    "signedIn": "Přihlášen",
+    "signIn": "Přihlásit",
+    "signOut": "Odhlásit",
+    "signInFailed": "Přihlášení selhalo",
+    "signOutConfirmTitle": "Odhlásit se ze Slackmap?",
+    "signOutConfirmBody": "Pro přidávání a úpravy lajn se budeš muset znovu přihlásit.",
+    "signOutConfirm": "Odhlásit"
   },
   "detail": {
     "length": "Délka",

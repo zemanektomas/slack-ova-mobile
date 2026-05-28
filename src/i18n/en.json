@@ -55,7 +55,17 @@
     "clearCacheConfirmBody": "Frees space on your phone, but next time you'll need signal to see the map again.",
     "clearCacheConfirm": "Clear",
     "clearCacheDone": "Map cleared",
-    "clearCacheFailed": "Clear failed"
+    "clearCacheFailed": "Clear failed",
+    "slackmapAccount": "Slackmap account",
+    "slackmapAccountHint": "Sign in with your ISA account to add and edit lines on Slackmap.",
+    "notSignedIn": "Not signed in",
+    "signedIn": "Signed in",
+    "signIn": "Sign in",
+    "signOut": "Sign out",
+    "signInFailed": "Sign in failed",
+    "signOutConfirmTitle": "Sign out from Slackmap?",
+    "signOutConfirmBody": "You'll need to sign in again to add or edit lines.",
+    "signOutConfirm": "Sign out"
   },
   "detail": {
     "length": "Length",
