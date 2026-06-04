@@ -186,7 +186,17 @@ export function SettingsSheet({ visible, onClose }: SettingsSheetProps) {
   };
 
   return (
-    <Modal visible={visible} animationType="slide" transparent onRequestClose={onClose}>
+    <Modal
+      visible={visible}
+      animationType="slide"
+      transparent
+      onRequestClose={onClose}
+      // statusBarTranslucent na Android donutí modal překryt i system status bar,
+      // jinak by horní pásek (drag handle Gorhom sheetu pod ním) prosvítal.
+      // Bez tohohle uživatel viděl polopruhledný proužek nad Settings sheetem
+      // s drag handle hlavního listu (feedback z Closed Alpha testování).
+      statusBarTranslucent
+    >
       <View style={styles.backdrop}>
         <Pressable style={styles.backdropDismiss} onPress={onClose} />
         <View style={[styles.sheet, { backgroundColor: t.surface }]}>
@@ -478,7 +488,9 @@ function Chip({
 const styles = StyleSheet.create({
   backdrop: {
     flex: 1,
-    backgroundColor: 'rgba(0,0,0,0.4)',
+    // 0.6 opacity (předtím 0.4) — víc kontrastní zatmavení, Settings sheet
+    // vypadá víc jak "modal nad apkou", ne jak "průhledná folie".
+    backgroundColor: 'rgba(0,0,0,0.6)',
     justifyContent: 'flex-end',
   },
   backdropDismiss: { flex: 1 },

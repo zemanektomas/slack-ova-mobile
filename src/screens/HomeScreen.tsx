@@ -192,7 +192,11 @@ export default function HomeScreen() {
         snapPoints={snapPoints}
         onChange={handleSheetChange}
         backgroundStyle={{ backgroundColor: t.surface }}
-        handleIndicatorStyle={{ backgroundColor: t.textMuted }}
+        // Drag handle větší — palcem těžké trefit default ~22px tall kontejner,
+        // user tap propadl do search inputu pod ním (open keyboard nechtěně).
+        // Feedback z Closed Alpha — víc tap-friendly hit area + výrazný indicator.
+        handleStyle={{ paddingVertical: 14, height: 36 }}
+        handleIndicatorStyle={{ backgroundColor: t.textMuted, width: 60, height: 5 }}
         // Klávesnice obecně: sheet se roztáhne na max snap point, content
         // bottom-padding se přizpůsobí výšce klávesnice. Bez tohohle Android
         // překryje search input a uživatel nevidí co píše (#41).
@@ -231,18 +235,15 @@ export default function HomeScreen() {
           </Pressable>
         </View>
 
+        {/* Sortbar layout zrcadlí strukturu řádků dole — name flex:1, ostatní fixní
+            widths matchují col* styly. Bez tohohle byly hlavičky a hodnoty
+            posunutý (feedback z Closed Alpha — sortbar buttony měly flex-width
+            podle textu, tedy "Vzdálenost" širší než "Délka"). */}
         <View style={[styles.sortBar, { borderColor: t.border, backgroundColor: t.surfaceAlt }]}>
-          {SORT_KEYS.map((key) => (
-            <Pressable key={key} onPress={() => toggleSort(key)} style={styles.sortBtn}>
-              <Text style={[
-                styles.sortBtnText,
-                { color: t.textMuted },
-                sortBy === key && { color: t.accent, fontWeight: '600' },
-              ]}>
-                {tr(`sort.${key}`)}{sortBy === key ? (sortDir === 'asc' ? ' ↑' : ' ↓') : ''}
-              </Text>
-            </Pressable>
-          ))}
+          <SortHeader sortKey="name" sortBy={sortBy} sortDir={sortDir} onPress={toggleSort} label={tr('sort.name')} style={styles.sortColName} align="left" theme={t} />
+          <SortHeader sortKey="length" sortBy={sortBy} sortDir={sortDir} onPress={toggleSort} label={tr('sort.length')} style={styles.sortColLength} align="right" theme={t} />
+          <SortHeader sortKey="height" sortBy={sortBy} sortDir={sortDir} onPress={toggleSort} label={tr('sort.height')} style={styles.sortColHeight} align="right" theme={t} />
+          <SortHeader sortKey="distance" sortBy={sortBy} sortDir={sortDir} onPress={toggleSort} label={tr('sort.distance')} style={styles.sortColDistance} align="right" theme={t} />
         </View>
 
         <BottomSheetFlatList
@@ -278,11 +279,54 @@ export default function HomeScreen() {
   );
 }
 
+// Sortbar header — pro každý sloupec stejný style jak row hodnota (width, align).
+// Bez separate komponenty by JSX v render bylo příliš opakující se.
+function SortHeader({
+  sortKey, sortBy, sortDir, onPress, label, style, align, theme,
+}: {
+  sortKey: SortKey;
+  sortBy: SortKey;
+  sortDir: SortDir;
+  onPress: (k: SortKey) => void;
+  label: string;
+  style: any;
+  align: 'left' | 'right';
+  theme: any;
+}) {
+  const active = sortBy === sortKey;
+  const arrow = active ? (sortDir === 'asc' ? ' ↑' : ' ↓') : '';
+  return (
+    <Pressable onPress={() => onPress(sortKey)} style={style}>
+      <Text
+        numberOfLines={1}
+        style={[
+          { fontSize: 12, textAlign: align, color: theme.textMuted },
+          active && { color: theme.accent, fontWeight: '600' },
+        ]}
+      >
+        {label}{arrow}
+      </Text>
+    </Pressable>
+  );
+}
+
 const styles = StyleSheet.create({
   container: { flex: 1 },
-  sortBar: { flexDirection: 'row', padding: 8, borderBottomWidth: 1 },
-  sortBtn: { paddingHorizontal: 10, paddingVertical: 4 },
-  sortBtnText: { fontSize: 12, textTransform: 'capitalize' },
+  // sortBar matchuje `row` padding (12 horizontal, 8 vertical) + gap 8
+  // pro perfektní zarovnání hlaviček s hodnotami níž.
+  sortBar: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+    borderBottomWidth: 1,
+    gap: 8,
+  },
+  // Sortbar columns matchují row col* widths (1:1)
+  sortColName: { flex: 1 },
+  sortColLength: { width: 56 },
+  sortColHeight: { width: 48 },
+  sortColDistance: { width: 60 },
   searchRow: {
     flexDirection: 'row',
     alignItems: 'center',

@@ -13,6 +13,7 @@ export interface SlacklineListItem {
   name: string;
   state?: string | null;
   region?: string | null;
+  sector?: string | null;
   length?: number | null;
   height?: number | null;
   rating?: number | null;
