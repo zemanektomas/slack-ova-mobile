@@ -65,15 +65,19 @@ export async function queryByBounds(args: QueryByBoundsArgs): Promise<SlacklineL
     ? [bounds.sw.lat, bounds.ne.lat, bounds.sw.lon, bounds.ne.lon]
     : [];
 
-  const searchClause = search ? `AND (s.name LIKE ? OR s.region LIKE ? OR s.sector LIKE ?)` : '';
-  const searchParams = search ? [`%${search}%`, `%${search}%`, `%${search}%`] : [];
+  // SQL search SE NEPOUŽÍVÁ — SQLite LIKE je case-sensitive na non-ASCII chars
+  // ("Špek" != "spek"), bez collation/extension to nerozumí diakritice.
+  // Místo toho fetchneme bounds + source set a filtrujeme v JS (`stripDiacritics`).
+  // Pro 8000 lajn JS filter na keypress je <50ms (acceptable pro Hermes JIT).
+  const searchClause = '';
+  const searchParams: string[] = [];
 
   const sourceClause = sourceFilter !== 'all' ? `AND s.source = ?` : '';
   const sourceParams = sourceFilter !== 'all' ? [sourceFilter] : [];
 
   const sql = `
     SELECT
-      s.id, s.name, s.state, s.region, s.length, s.height, s.rating, s.date_tense, s.source, s.type,
+      s.id, s.name, s.state, s.region, s.sector, s.length, s.height, s.rating, s.date_tense, s.source, s.type,
       p.id AS a1_id, p.latitude AS a1_lat, p.longitude AS a1_lon, p.description AS a1_desc,
       p2.id AS a2_id, p2.latitude AS a2_lat, p2.longitude AS a2_lon, p2.description AS a2_desc,
       ${distanceExpr} AS distance
@@ -99,11 +103,12 @@ export async function queryByBounds(args: QueryByBoundsArgs): Promise<SlacklineL
 
   const rows = await db.getAllAsync<any>(sql, params);
 
-  return rows.map((r) => ({
+  const mapped = rows.map((r) => ({
     id: r.id,
     name: nameFallback(r),
     state: r.state,
     region: r.region,
+    sector: r.sector ?? null,
     length: r.length,
     height: r.height,
     rating: r.rating,
@@ -121,6 +126,32 @@ export async function queryByBounds(args: QueryByBoundsArgs): Promise<SlacklineL
       ? { id: r.a2_id, description: r.a2_desc, latitude: r.a2_lat, longitude: r.a2_lon }
       : null,
   }));
+
+  // JS search filter — diakritika-insensitive (řeší case "Špek" matches "spek"
+  // co SQL LIKE neumí). Fulltext přes name + region + sector. Limit aplikovaný
+  // až po filtru, jinak by se search rozhodoval z prvních N nesouvisejících
+  // řádků (SQL ORDER BY je v bounds context, ne search relevance).
+  if (search && search.trim().length > 0) {
+    const needle = stripDiacritics(search.toLowerCase());
+    return mapped.filter((item) => {
+      const haystack = stripDiacritics([
+        item.name ?? '',
+        item.region ?? '',
+        item.sector ?? '',
+      ].join(' ').toLowerCase());
+      return haystack.includes(needle);
+    });
+  }
+
+  return mapped;
+}
+
+// Strip diacritics (Czech/Slovak/Polish háčky a čárky) přes NFD decomposition.
+// "Špek" → "Spek", "lyže" → "lyze", "łódź" → "łodz" (ł zůstává — není to combining
+// diacritic, ale base char; pro CZ/SK/PL search to stačí, ł je vzácné a lidé
+// ho v hledání reálně nepoužívají).
+function stripDiacritics(s: string): string {
+  return s.normalize('NFD').replace(/[̀-ͯ]/g, '');
 }
 
 // Haversine v km. SQL distanceExpr je euclidean ve stupních (pro sort dostačující),
