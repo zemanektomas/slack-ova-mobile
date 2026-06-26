@@ -103,9 +103,15 @@ export default function MapViewComponent({ markers, selectedId, onMarkerPress }:
     });
   };
 
-  // FlyTo na konkrétní lajnu (vyžádáno z InlineDetail přes mapStore.focusOn).
+  // FlyTo na konkrétní lajnu (vyžádáno z InlineDetail přes mapStore.focusOn,
+  // nebo automaticky při tap na řádek listu).
   // Zoom 15 = lajna i kotvy vidět detailně. Padding pod sheetem aby cíl nepadl
   // pod bottom sheet (uživatel má sheet typicky na Half = 50 %).
+  //
+  // ⚠️ V dep array MUSÍ být jen `focusTarget?.nonce` — kdyby tam byl i `sheetHeight`,
+  // pohyb sheetu (drag, resize) by re-fire efekt a kamera by skočila zpět na starý
+  // focus target i když user mezitím manuálně panoval mapou. sheetHeight se čte
+  // ad-hoc při fire pro padding, ale jeho změna nesmí refire focus.
   const focusTarget = useMapStore((s) => s.focusTarget);
   useEffect(() => {
     if (!focusTarget || !cameraRef.current) return;
@@ -115,7 +121,7 @@ export default function MapViewComponent({ markers, selectedId, onMarkerPress }:
       animationDuration: 600,
       padding: { paddingBottom: sheetHeight, paddingTop: 0, paddingLeft: 0, paddingRight: 0 },
     });
-  }, [focusTarget?.nonce, sheetHeight]);
+  }, [focusTarget?.nonce]);
 
   const zoomBy = async (delta: number) => {
     if (!mapRef.current || !cameraRef.current) return;

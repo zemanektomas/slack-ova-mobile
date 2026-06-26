@@ -66,6 +66,7 @@ export default function HomeScreen() {
   const listRef = useRef<any>(null);
   const snapPoints = useMemo(() => ['15%', '50%', '92%'], []);
   const setSheetHeight = useMapStore((s) => s.setSheetHeight);
+  const focusOn = useMapStore((s) => s.focusOn);
 
   // Při změně snap point řekni mapě, jak velkou část obrazovky překrývá sheet,
   // aby mohla kamerou centrovat na střed VIDITELNÉ plochy mapy (ne celé obrazovky).
@@ -122,11 +123,23 @@ export default function HomeScreen() {
       return;
     }
     setExpandedId(id);
-    const idx = items.findIndex((it) => it.id === id);
-    if (idx >= 0) {
-      requestAnimationFrame(() => {
-        listRef.current?.scrollToIndex({ index: idx, animated: true, viewPosition: 0 });
-      });
+    const item = items.find((it) => it.id === id);
+    // Auto-focus na lajnu při expand. Bez toho user tapne řádek, otevře se mu detail,
+    // ale mapa zůstane kde byla — pokud user mezitím panoval, "selektovaná" lajna
+    // je mimo viewport a uživatel si myslí že apka neudělala nic (feedback od Daniela
+    // 25.6.2026). Focus jde i přes mapStore (stejný mechanismus jako crosshair button
+    // v inline detailu), takže `focusTarget.nonce` se inkrementuje a MapView dostane
+    // signál na flyTo.
+    if (item?.first_anchor) {
+      focusOn(item.first_anchor.latitude, item.first_anchor.longitude);
+    }
+    if (item) {
+      const idx = items.findIndex((it) => it.id === id);
+      if (idx >= 0) {
+        requestAnimationFrame(() => {
+          listRef.current?.scrollToIndex({ index: idx, animated: true, viewPosition: 0 });
+        });
+      }
     }
   };
 

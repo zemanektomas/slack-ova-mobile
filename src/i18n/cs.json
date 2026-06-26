@@ -84,6 +84,14 @@
     "accessInfo": "Přístup",
     "notMeasured": "Délka/výška nebyla ověřena",
     "navigate": "Navigovat",
-    "focusOnMap": "Vystředit na mapě"
+    "focusOnMap": "Vystředit na mapě",
+    "translate": "Přeložit",
+    "translating": "Překládám…",
+    "showOriginal": "Zobraz originál",
+    "sameLanguage": "Už je v tvém jazyce",
+    "translateError": "Překlad selhal",
+    "translateErrorHint": "Zkontroluj připojení k internetu (překladač se musí jednou stáhnout, ~30 MB na WiFi).",
+    "translateUnsupported": "Jazyk není podporován",
+    "translateUnsupportedHint": "Překlad v zařízení podporuje jen omezenou sadu jazyků. Originál zůstane viditelný."
   }
 }
