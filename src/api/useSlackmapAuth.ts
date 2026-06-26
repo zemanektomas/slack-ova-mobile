@@ -1,21 +1,25 @@
-// React hook pro Cognito OAuth flow přes expo-auth-session.
+// React hook pro Cognito OAuth flow přes deep link pattern.
 // PKCE Authorization Code grant: apka otevře browser na auth.slacklineinternational.org,
-// uživatel se přihlásí, Cognito přesměruje zpět na slacklineova:// scheme s code,
-// expo-auth-session ho vymění za tokeny (id_token + access_token + refresh_token).
+// uživatel se přihlásí, Cognito přesměruje na http://localhost:5173?code=...,
+// Android intent filter (AndroidManifest.xml) přesměruje URL zpět do MainActivity,
+// apka vymění code za JWT (id_token + access_token + refresh_token).
 //
-// `useAuthRequest` hook generuje PKCE pair (code_verifier + code_challenge) automaticky.
-// Code verifier zůstává jen v paměti, není potřeba storage.
+// Workaround pro ISA Cognito whitelist: použijeme `http://localhost:5173` jako
+// redirect URI (whitelisted v ISA Cognito clientu pro Vite dev server). Místo
+// custom scheme `slacklineova://` (potřebuje ISA whitelist, neprošlo).
+//
+// Změna oproti původnímu (expo-auth-session promptAsync):
+// - Místo `WebBrowser.openAuthSessionAsync` (Custom Tab čeká vlastní callback)
+//   používáme `WebBrowser.openBrowserAsync` (otevře standardní browser) +
+//   `Linking.addEventListener('url')` (deep link listener).
+// - Pro HTTP URL redirect Custom Tab to neumí intercept-ovat — místo toho
+//   Chrome dispatch URL přes Android intent filter, apka dostane deep link.
 
-import { useEffect } from 'react';
-import {
-  AuthRequestConfig,
-  exchangeCodeAsync,
-  makeRedirectUri,
-  useAuthRequest,
-  ResponseType,
-  TokenResponse,
-} from 'expo-auth-session';
+import { useEffect, useRef, useState } from 'react';
+import { Linking } from 'react-native';
 import * as WebBrowser from 'expo-web-browser';
+import * as Crypto from 'expo-crypto';
+import { exchangeCodeAsync } from 'expo-auth-session';
 import { COGNITO, decodeIdToken } from './cognito';
 import { useAuthStore } from '../store/authStore';
 
@@ -27,79 +31,152 @@ const discovery = {
   tokenEndpoint: COGNITO.tokenEndpoint,
 };
 
-// Scheme app.json: 'slacklineova'. Cognito musí mít přidaný callback URL
-// `slacklineova://` ve své App client config. ⚠ Pokud to ISA admin nepřidal,
-// auth flow selže s 'redirect_uri_mismatch'. V tom případě je workaround
-// použít `https://slacklineova.cz/auth/callback` (univerzální URL) + Universal
-// Links — viz README pro setup.
-const REDIRECT_URI = makeRedirectUri({
-  scheme: 'slacklineova',
-  // pro dev (Expo Go) by bylo path: 'redirect', ale my máme bare workflow
-});
+// REDIRECT_URI = `http://localhost:5173` — whitelisted v ISA Cognito (Vite dev port).
+// Android intent filter v AndroidManifest.xml dispatchne URL zpět do MainActivity.
+const REDIRECT_URI = 'http://localhost:5173';
 
-const requestConfig: AuthRequestConfig = {
-  clientId: COGNITO.clientId,
-  scopes: COGNITO.scopes as unknown as string[],
-  redirectUri: REDIRECT_URI,
-  responseType: ResponseType.Code,
-  // PKCE auto-handled, code_challenge_method=S256
-  usePKCE: true,
-  // Force Cognito-native provider (skip social provider picker)
-  extraParams: {
-    identity_provider: COGNITO.identityProvider,
-  },
-};
+// PKCE: vygeneruj code_verifier (random 43-128 char string) + code_challenge (SHA256)
+async function generatePKCE(): Promise<{ verifier: string; challenge: string }> {
+  // 32 random bytes → base64url ~43 chars (RFC 7636)
+  const randomBytes = await Crypto.getRandomBytesAsync(32);
+  const verifier = base64UrlEncode(randomBytes);
+  // SHA256 of verifier, base64url encoded
+  const challengeBuffer = await Crypto.digestStringAsync(
+    Crypto.CryptoDigestAlgorithm.SHA256,
+    verifier,
+    { encoding: Crypto.CryptoEncoding.BASE64 },
+  );
+  // Convert base64 → base64url (URL-safe)
+  const challenge = challengeBuffer.replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+  return { verifier, challenge };
+}
+
+function base64UrlEncode(bytes: Uint8Array): string {
+  // Convert bytes to base64
+  let binary = '';
+  for (let i = 0; i < bytes.byteLength; i++) {
+    binary += String.fromCharCode(bytes[i]);
+  }
+  const base64 = globalThis.btoa(binary);
+  // Convert base64 → base64url
+  return base64.replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+}
 
 export interface UseSlackmapAuth {
-  /** True když auth request je ready (PKCE pair vygenerovaný). */
+  /** True když hook ready (vždy true v této variantě). */
   ready: boolean;
   /** Spustí login flow — otevře browser na Cognito Hosted UI. */
   signIn: () => Promise<{ ok: true } | { ok: false; error: string }>;
-  /** Sign out: vymaž lokální tokeny + (volitelně) Cognito session přes logout URL. */
+  /** Sign out: vymaž lokální tokeny + Cognito session přes logout URL. */
   signOut: () => Promise<void>;
 }
 
 export function useSlackmapAuth(): UseSlackmapAuth {
   const setSession = useAuthStore((s) => s.setSession);
   const storeSignOut = useAuthStore((s) => s.signOut);
+  const [pendingVerifier, setPendingVerifier] = useState<string | null>(null);
+  // Resolver pro signIn() — promise se vyřeší až přijde deep link callback
+  const signInResolver = useRef<((r: { ok: true } | { ok: false; error: string }) => void) | null>(null);
 
-  const [request, response, promptAsync] = useAuthRequest(requestConfig, discovery);
-
-  // Při návratu z browseru zpracuj response. Pro success vymění code za tokeny.
+  // Deep link listener — když Android dispatchne `http://localhost:5173?code=...` do apky,
+  // tady to chytíme, vyměníme code za tokeny a vyřešíme signIn() promise.
   useEffect(() => {
-    if (!response) return;
-    if (response.type !== 'success') return;
-    const code = response.params.code;
-    const codeVerifier = request?.codeVerifier;
-    if (!code || !codeVerifier) return;
+    const handleUrl = async (event: { url: string }) => {
+      const url = event.url;
+      console.log('[auth] deep link received:', url);
+      if (!url.startsWith(REDIRECT_URI)) return;
 
-    (async () => {
+      // Extract code from URL
+      const codeMatch = url.match(/[?&]code=([^&]+)/);
+      const code = codeMatch ? decodeURIComponent(codeMatch[1]) : null;
+      const errorMatch = url.match(/[?&]error=([^&]+)/);
+      const error = errorMatch ? decodeURIComponent(errorMatch[1]) : null;
+
+      if (error) {
+        console.warn('[auth] OAuth error:', error);
+        signInResolver.current?.({ ok: false, error });
+        signInResolver.current = null;
+        return;
+      }
+
+      if (!code || !pendingVerifier) {
+        console.warn('[auth] missing code or verifier');
+        signInResolver.current?.({ ok: false, error: 'missing_code' });
+        signInResolver.current = null;
+        return;
+      }
+
+      // Close browser (Chrome stuck on localhost) — uživatel se vrátí do apky
+      try { WebBrowser.dismissBrowser(); } catch {}
+
+      // Exchange code for tokens
       try {
         const tokens = await exchangeCodeAsync(
           {
             clientId: COGNITO.clientId,
             code,
             redirectUri: REDIRECT_URI,
-            extraParams: { code_verifier: codeVerifier },
+            extraParams: { code_verifier: pendingVerifier },
           },
           discovery,
         );
         await persistTokens(tokens);
-      } catch (err) {
+        signInResolver.current?.({ ok: true });
+      } catch (err: any) {
         console.warn('[auth] token exchange failed', String(err));
+        signInResolver.current?.({ ok: false, error: err?.message ?? 'token_exchange_failed' });
+      } finally {
+        signInResolver.current = null;
+        setPendingVerifier(null);
       }
-    })();
-  }, [response, request?.codeVerifier]);
+    };
+
+    const subscription = Linking.addEventListener('url', handleUrl);
+
+    // Také zkontroluj initial URL (pokud apka byla spuštěna deep linkem)
+    Linking.getInitialURL().then((url) => {
+      if (url) handleUrl({ url });
+    });
+
+    return () => subscription.remove();
+  }, [pendingVerifier]);
 
   const signIn = async (): Promise<{ ok: true } | { ok: false; error: string }> => {
-    if (!request) return { ok: false, error: 'not_ready' };
     try {
-      const result = await promptAsync();
-      if (result.type === 'success') return { ok: true };
-      if (result.type === 'cancel' || result.type === 'dismiss') {
-        return { ok: false, error: 'cancelled' };
-      }
-      return { ok: false, error: `auth_${result.type}` };
+      // 1. Generate PKCE pair
+      const { verifier, challenge } = await generatePKCE();
+      setPendingVerifier(verifier);
+
+      // 2. Construct authorization URL
+      const params = new URLSearchParams({
+        response_type: 'code',
+        client_id: COGNITO.clientId,
+        redirect_uri: REDIRECT_URI,
+        scope: COGNITO.scopes.join(' '),
+        code_challenge: challenge,
+        code_challenge_method: 'S256',
+        identity_provider: COGNITO.identityProvider,
+      });
+      const authUrl = `${COGNITO.authorizationEndpoint}?${params.toString()}`;
+      console.log('[auth] opening browser:', authUrl);
+
+      // 3. Open browser (standard, ne Custom Tab — aby Android dispatch HTTP redirect skrz intent filter)
+      const promise = new Promise<{ ok: true } | { ok: false; error: string }>((resolve) => {
+        signInResolver.current = resolve;
+      });
+
+      await WebBrowser.openBrowserAsync(authUrl, {
+        // showTitle: true,
+        enableBarCollapsing: false,
+      });
+
+      // openBrowserAsync se vrátí jakmile browser je zavřený (uživatel back / dismiss).
+      // Pokud uživatel nedokončí auth, signInResolver nikdy nevolán — timeout fallback.
+      const timeoutPromise = new Promise<{ ok: true } | { ok: false; error: string }>((resolve) => {
+        setTimeout(() => resolve({ ok: false, error: 'timeout_or_dismissed' }), 300_000); // 5 min
+      });
+
+      return await Promise.race([promise, timeoutPromise]);
     } catch (err: any) {
       return { ok: false, error: err?.message ?? 'unknown' };
     }
@@ -107,26 +184,23 @@ export function useSlackmapAuth(): UseSlackmapAuth {
 
   const signOut = async () => {
     await storeSignOut();
-    // Optional: open Cognito logout URL v browseru aby Hosted UI session
-    // taky skončila. Bez tohoto by re-login mohl skip credentials prompt
-    // (uživatel je pořád "přihlášený" na Cognito side).
     const logoutUrl =
       `${COGNITO.logoutEndpoint}?client_id=${COGNITO.clientId}` +
       `&logout_uri=${encodeURIComponent(REDIRECT_URI)}`;
     try {
-      await WebBrowser.openAuthSessionAsync(logoutUrl, REDIRECT_URI);
+      await WebBrowser.openBrowserAsync(logoutUrl);
     } catch {
-      // Sign out v store už proběhl, browser logout je best-effort
+      // best-effort
     }
   };
 
   return {
-    ready: !!request,
+    ready: true,
     signIn,
     signOut,
   };
 
-  async function persistTokens(tokens: TokenResponse) {
+  async function persistTokens(tokens: { idToken?: string }) {
     if (!tokens.idToken) {
       console.warn('[auth] missing id_token in Cognito response');
       return;
