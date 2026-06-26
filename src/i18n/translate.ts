@@ -95,20 +95,20 @@ export async function translateOnDevice(
   }
   const targetMlkit = LANG_MAP[targetLang];
 
-  const result = (await TranslateText.translate({
+  // ⚠️ ML Kit `TranslateText.translate()` vrací string PŘÍMO, ne objekt!
+  // (Ověřeno přes npm doc — `const translatedText = await TranslateText.translate({...})`.)
+  // V0.6.0 měl bug kde jsem to parsoval jako `{ result }` nebo `{ text }` → vždy fallback
+  // na originál text. Fix od v0.6.1.
+  const translated = (await TranslateText.translate({
     text: trimmed,
     sourceLanguage: sourceMlkit,
     targetLanguage: targetMlkit,
     downloadModelIfNeeded: true,
     requireWifi,
-  })) as any;
-
-  // ML Kit vrátí { result: "translated text" } na Android,
-  // některé verze { text: "..." }. Zkusíme oba klíče.
-  const translated = result?.result ?? result?.text ?? '';
+  })) as unknown as string;
 
   return {
-    text: translated || trimmed,
+    text: typeof translated === 'string' && translated ? translated : trimmed,
     sourceLang: detected,
     targetLang,
   };
