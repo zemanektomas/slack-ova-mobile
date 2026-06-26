@@ -84,6 +84,14 @@
     "accessInfo": "Dojście",
     "notMeasured": "Długość/wysokość nie potwierdzona",
     "navigate": "Nawiguj",
-    "focusOnMap": "Wyśrodkuj na mapie"
+    "focusOnMap": "Wyśrodkuj na mapie",
+    "translate": "Przetłumacz",
+    "translating": "Tłumaczę…",
+    "showOriginal": "Pokaż oryginał",
+    "sameLanguage": "Już jest w twoim języku",
+    "translateError": "Tłumaczenie nie powiodło się",
+    "translateErrorHint": "Sprawdź połączenie internetowe (model tłumacza trzeba raz pobrać, ~30 MB przez WiFi).",
+    "translateUnsupported": "Język nie obsługiwany",
+    "translateUnsupportedHint": "Tłumaczenie na urządzeniu obsługuje tylko ograniczony zestaw języków. Oryginał pozostaje widoczny."
   }
 }

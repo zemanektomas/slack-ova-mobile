@@ -5,20 +5,85 @@
 // ne "co o tom psal autor".
 
 import { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, Pressable, Linking } from 'react-native';
+import { View, Text, StyleSheet, Pressable, Linking, ActivityIndicator, Alert } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { getSlacklineDetail } from '../db/queries';
 import { fetchAndCacheSlackmapDetail } from '../db/slackmap';
 import { useMapStore } from '../store/mapStore';
+import { useLangStore } from '../store/langStore';
 import { useTheme, Theme } from '../theme';
+import { translateOnDevice, UnsupportedSourceLangError, SupportedLang } from '../i18n/translate';
 import type { SlacklineDetail, PointResponse } from '../types';
+
+// Stav překladu jedné textové sekce (description / anchors_info / access_info).
+// Klíč v translations objektu = sekce ('description' | 'anchors' | 'access').
+// Original = false → zobraz originál, true → zobraz překlad. Default original.
+type TranslateState = {
+  loading: boolean;
+  translated?: string;     // přeložený text (cached během života komponenty)
+  detectedLang?: string;   // BCP-47 zdrojový jazyk po identifikaci
+  showOriginal: boolean;   // toggle zobrazení
+  error?: string;          // user-friendly message po chybě
+};
+
+const initialTranslate = (): TranslateState => ({
+  loading: false,
+  showOriginal: true,
+});
 
 export default function InlineDetail({ slacklineId }: { slacklineId: number }) {
   const t = useTheme();
   const { t: tr } = useTranslation();
   const focusOn = useMapStore((s) => s.focusOn);
+  const lang = useLangStore((s) => s.lang) as SupportedLang;
   const [detail, setDetail] = useState<SlacklineDetail | null>(null);
+
+  // Per-section translation state. Reset při změně lajny (slacklineId).
+  const [translations, setTranslations] = useState<Record<string, TranslateState>>({});
+  useEffect(() => {
+    setTranslations({});
+  }, [slacklineId, lang]);
+
+  const handleTranslate = async (key: string, sourceText: string) => {
+    const prev = translations[key] ?? initialTranslate();
+
+    // Pokud už máme cached překlad, jen toggle. Bez druhého ML Kit volání.
+    if (prev.translated) {
+      setTranslations((s) => ({ ...s, [key]: { ...prev, showOriginal: !prev.showOriginal } }));
+      return;
+    }
+
+    setTranslations((s) => ({ ...s, [key]: { ...prev, loading: true, error: undefined } }));
+    try {
+      const result = await translateOnDevice(sourceText, lang);
+      setTranslations((s) => ({
+        ...s,
+        [key]: {
+          loading: false,
+          translated: result.text,
+          detectedLang: result.sourceLang,
+          showOriginal: result.sourceLang === lang,  // pokud je už ve správném jazyce, ukazujeme originál
+        },
+      }));
+    } catch (e: any) {
+      const isUnsupported = e instanceof UnsupportedSourceLangError;
+      setTranslations((s) => ({
+        ...s,
+        [key]: {
+          loading: false,
+          showOriginal: true,
+          error: isUnsupported ? tr('detail.translateUnsupported') : tr('detail.translateError'),
+        },
+      }));
+      Alert.alert(
+        tr('detail.translateError'),
+        isUnsupported
+          ? tr('detail.translateUnsupportedHint')
+          : tr('detail.translateErrorHint'),
+      );
+    }
+  };
 
   useEffect(() => {
     let cancelled = false;
@@ -98,23 +163,43 @@ export default function InlineDetail({ slacklineId }: { slacklineId: number }) {
         );
       })()}
 
-      {/* 5) Description */}
+      {/* 5) Description — translatable on-device */}
       {detail.description && (
-        <Text style={[styles.body, { color: t.text }]}>{detail.description}</Text>
+        <TranslatableBlock
+          t={t}
+          tr={tr}
+          original={detail.description}
+          state={translations['description']}
+          onTranslate={() => handleTranslate('description', detail.description!)}
+        />
       )}
 
-      {/* 6) Terénní info — kotvy / přístup / časy */}
+      {/* 6) Terénní info — kotvy / přístup / časy. Anchors a access taky translatable. */}
       {detail.anchors_info && (
         <View style={styles.section}>
           <Text style={[styles.sectionLabel, { color: t.textMuted }]}>{tr('detail.anchorsInfo')}</Text>
-          <Text style={[styles.sectionBody, { color: t.text }]}>{detail.anchors_info}</Text>
+          <TranslatableBlock
+            t={t}
+            tr={tr}
+            original={detail.anchors_info}
+            state={translations['anchors']}
+            onTranslate={() => handleTranslate('anchors', detail.anchors_info!)}
+            small
+          />
         </View>
       )}
 
       {detail.access_info && (
         <View style={styles.section}>
           <Text style={[styles.sectionLabel, { color: t.textMuted }]}>{tr('detail.accessInfo')}</Text>
-          <Text style={[styles.sectionBody, { color: t.text }]}>{detail.access_info}</Text>
+          <TranslatableBlock
+            t={t}
+            tr={tr}
+            original={detail.access_info}
+            state={translations['access']}
+            onTranslate={() => handleTranslate('access', detail.access_info!)}
+            small
+          />
         </View>
       )}
 
@@ -209,6 +294,52 @@ function detailSourceUrl(d: SlacklineDetail): string | null {
   return `https://slack.cz/highlines/?search=${encodeURIComponent(d.name)}`;
 }
 
+// Block uživatelského textu (description / anchors_info / access_info) s on-device
+// translate buttonem. První tap stáhne ML Kit model (~30 MB, WiFi), druhý tap toggle
+// zpět na originál. Bez clicku zůstává originál. Pokud je detected lang = UI lang,
+// button se přesto zobrazí (user pozná, že to v jeho jazyce už je).
+interface TranslatableBlockProps {
+  t: Theme;
+  tr: (k: string, opts?: any) => string;
+  original: string;
+  state?: TranslateState;
+  onTranslate: () => void;
+  small?: boolean;  // pro anchors / access — menší font
+}
+
+function TranslatableBlock({ t, tr, original, state, onTranslate, small }: TranslatableBlockProps) {
+  const showTranslated = state?.translated && !state.showOriginal;
+  const displayText = showTranslated ? state!.translated! : original;
+  const textStyle = small ? styles.sectionBody : styles.body;
+  const sameLangAsUI = state?.detectedLang && !state.translated; // ML Kit identified, ale nebylo třeba překládat
+  return (
+    <View>
+      <Text style={[textStyle, { color: t.text }]}>{displayText}</Text>
+      <Pressable
+        onPress={onTranslate}
+        disabled={state?.loading}
+        style={styles.translateBtn}
+        hitSlop={6}
+      >
+        {state?.loading ? (
+          <ActivityIndicator size="small" color={t.textMuted} />
+        ) : (
+          <MaterialCommunityIcons name="translate" size={14} color={t.textMuted} />
+        )}
+        <Text style={[styles.translateLabel, { color: t.textMuted }]}>
+          {state?.loading
+            ? tr('detail.translating')
+            : showTranslated
+              ? tr('detail.showOriginal')
+              : sameLangAsUI
+                ? tr('detail.sameLanguage')
+                : tr('detail.translate')}
+        </Text>
+      </Pressable>
+    </View>
+  );
+}
+
 function Stat({ t, label, value }: { t: Theme; label: string; value: string }) {
   return (
     <View style={styles.stat}>
@@ -290,6 +421,8 @@ const styles = StyleSheet.create({
   section: { marginTop: 8 },
   sectionLabel: { fontSize: 11, textTransform: 'uppercase', letterSpacing: 0.5, marginBottom: 2 },
   sectionBody: { fontSize: 13, lineHeight: 18 },
+  translateBtn: { flexDirection: 'row', alignItems: 'center', gap: 4, paddingVertical: 4, marginTop: 2 },
+  translateLabel: { fontSize: 11, opacity: 0.8 },
   accessRow: { marginTop: 6, gap: 2 },
   accessItem: { fontSize: 12 },
   nameHistory: { fontSize: 11, marginTop: 4, fontStyle: 'italic' },

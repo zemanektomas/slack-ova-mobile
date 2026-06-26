@@ -84,6 +84,14 @@
     "accessInfo": "Access",
     "notMeasured": "Length/height not verified",
     "navigate": "Navigate",
-    "focusOnMap": "Center on map"
+    "focusOnMap": "Center on map",
+    "translate": "Translate",
+    "translating": "Translating…",
+    "showOriginal": "Show original",
+    "sameLanguage": "Already in your language",
+    "translateError": "Translation failed",
+    "translateErrorHint": "Check your internet connection (the translator model needs to download once, ~30 MB on WiFi).",
+    "translateUnsupported": "Language not supported",
+    "translateUnsupportedHint": "On-device translation only supports a limited set of languages. The original text stays visible."
   }
 }
