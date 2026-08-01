@@ -4,7 +4,8 @@
     "done": "Gotowe",
     "reset": "Resetuj",
     "loading": "Ładowanie…",
-    "cancel": "Anuluj"
+    "cancel": "Anuluj",
+    "error": "Błąd"
   },
   "home": {
     "searchPlaceholder": "Szukaj nazwy, regionu, sektora...",
@@ -93,5 +94,181 @@
     "translateErrorHint": "Sprawdź połączenie internetowe (model tłumacza trzeba raz pobrać, ~30 MB przez WiFi).",
     "translateUnsupported": "Język nie obsługiwany",
     "translateUnsupportedHint": "Tłumaczenie na urządzeniu obsługuje tylko ograniczony zestaw języków. Oryginał pozostaje widoczny."
+  },
+  "isaSafety": {
+    "title": "ISA Safety Companion",
+    "subtitle": "Przewodnik bezpieczeństwa highline",
+    "openBtn": "Otwórz przewodnik ISA",
+    "sectionLabel": "Bezpieczeństwo",
+    "disclaimer": "Zgodnie z ISA:21 (2023) i powiązanymi standardami. Aplikacja dostarcza rekomendacje, ostateczna decyzja należy do Ciebie.",
+    "modeReadOnly": "Nauka",
+    "modeSession": "Sprawdzenie na miejscu",
+    "sessionStart": "Rozpocznij",
+    "sessionEnd": "Zakończ",
+    "sessionComplete": "Sprawdzenie ukończone",
+    "sessionSaveLog": "Zapisz log",
+    "sessionHistory": "Historia sprawdzeń",
+    "sessionHistoryEmpty": "Brak wpisów.",
+    "openReference": "Otwórz źródło",
+    "showDetail": "Szczegóły",
+    "hideDetail": "Ukryj",
+    "cardCount": "{{count}} sprawdzeń",
+    "cardCountOne": "1 sprawdzenie",
+    "checkedAt": "Sprawdzono: {{date}}",
+    "category": {
+      "limits": "Limity sił",
+      "checklist": "Checklist",
+      "rule": "Zasada",
+      "thresholds": "Progi",
+      "lifetime": "Żywotność"
+    }
+  },
+  "cards": {
+    "commandments": {
+      "title": "10 przykazań highline",
+      "summary": "Podstawowe zasady bezpieczeństwa, z których wszystko inne wynika",
+      "c1": "1. Zawsze 3 borháky w anchorze",
+      "c1Detail": "Jeden borhák = single point of failure. Trzy borháky wytrzymają obciążenie nawet gdy jeden zawiedzie. Źródło: HowNot2 Bolting Bible, ISA:21.",
+      "c2": "2. Kąt między nogami anchora ≤ 45°",
+      "c2Detail": "Powyżej 60° siła per-leg rośnie wykładniczo; powyżej 90° NIGDY. Kąt 120° = każda noga niesie więcej niż całe obciążenie. Źródło: ISA anchor best practice.",
+      "c3": "3. Dla HL poniżej 40 m — wszystkie materiały nylon",
+      "c3Detail": "Polyester i Dyneema nie mają wystarczającego stretch aby absorbować energię upadku. Krótka lajna + statyczny materiał = anchor peak przekroczy 12 kN. Źródło: ISA:21 Załącznik 5.",
+      "c4": "4. Bowline NIGDY dla anchora HL",
+      "c4Detail": "Cykliczne obciążenie rozluźnia węzeł. Używaj Figure-8 re-traced. Źródło: ISA:21 §3.3.2.",
+      "c5": "5. Working load ≤ 12 kN, backupfall ≤ 8 kN",
+      "c5Detail": "Nie przekraczaj żadnego. Powyżej limitów = ryzyko awarii komponentów. Źródło: ISA:21 §1.3.",
+      "c6": "6. Zawsze 2 attachmenty do lajny podczas operacji",
+      "c6Detail": "Nigdy nie odłączaj primary attachment dopóki secondary nie jest load-tested. Dotyczy rigging, taping, rescue. Źródło: ISA Rescue best practice.",
+      "c7": "7. Wiatr powyżej 60 km/h = praktycznie każdy HL zawiedzie",
+      "c7Detail": "Derig przed tym, nie po. Historycznie 37 wind-related incidents, 10 z katastroficzną awarią. Źródło: ISA Wind Advisory 2020.",
+      "c8": "8. Buddy check przed każdym wejściem",
+      "c8Detail": "Doświadczenie nie zastępuje kontroli — większość wypadków dzieje się za rutyną. Sprawdzajcie się wzajemnie: harness, leash, backup. Źródło: ISA Safety culture.",
+      "c9": "9. Weblock zawsze z tie-off",
+      "c9Detail": "Bez tie-off popruh może wyślizgnąć się pod wibracją. Ostatni krok riggingu weblocka. Źródło: ISA:21 §3.11.1.2.",
+      "c10": "10. Burza blisko + deszcz = DERIG NOW",
+      "c10Detail": "Electrostatic discharge może topić fibers przy 5000-15000°C nawet bez bezpośredniego pioruna. UHMWPE najbardziej wrażliwy (topi się przy 150°C). CZ incident 2024. Źródło: ISA Electrostatic Warning 12/2025."
+    },
+    "electrostatic": {
+      "title": "Electrostatic Discharge Warning",
+      "summary": "Najnowsze ostrzeżenie ISA safety (12/2025) — plasma arcs podczas burz",
+      "e1": "Burza blisko = derig natychmiast",
+      "e1Detail": "Nie czekaj na pierwszy piorun. Plasma arcs mogą powstawać między mokrymi segmentami popruhu jeszcze przed główną burzą. Śledź radar (Windy, Meteoradar).",
+      "e2": "UHMWPE (Dyneema) jest najbardziej wrażliwy",
+      "e2Detail": "Topi się przy 150°C. Plasma arcs 5000-15000°C powodują natychmiastową awarię. Dla storm-prone lokalizacji preferuj nylon lub polyester.",
+      "e3": "Rozważ tapeless setup dla burzowych lokalizacji",
+      "e3Detail": "Suchy popruh pod tape działa jak insulator, mokry segment obok jak conductor — między nimi powstaje arc. Bez tape energia rozprasza się równomiernie.",
+      "e4": "Post-storm inspekcja = detape + cała długość",
+      "e4Detail": "Zdejmij cały tape. Szukaj burn marks, melted fibers, odbarwień. Ukryte damage pod tape może zawieść pod obciążeniem.",
+      "e5": "10 udokumentowanych incydentów od 2012",
+      "e5Detail": "Ostatni w CZ 2024. Nie ignoruj — to realne ryzyko. Szczegóły w ISA Warning document (link w źródle)."
+    },
+    "twoAttachments": {
+      "title": "Two Attachments Rule",
+      "summary": "Krytyczna zasada safety dla rigging, rescue i highline walk",
+      "t1": "Zawsze min 2 niezależne attachmenty do lajny/liny",
+      "t1Detail": "Podczas każdej operacji (rigging, taping, rescue, ascending) musisz mieć 2 niezależne attachment points. Awaria jednego = drugi trzyma.",
+      "t2": "Test before commit",
+      "t2Detail": "Zanim odłączysz primary attachment, load-test secondary. Usiądź, obciąż, potwierdź że trzyma. Dopiero potem odłączaj primary.",
+      "t3": "Leash + backup connection dla walk",
+      "t3Detail": "Highliner jest połączony z mainline przez leash + backup ringiem z backup line. Awaria mainline = backup catches. Nigdy tylko leash.",
+      "t4": "Dla rescue: primary rope + backup PAS",
+      "t4Detail": "Gdy poruszasz się po lajnie (rescue, self-rescue), twoje primary connection (Tibloc, Micro Traxion) plus backup PAS (personal anchor system) na harness."
+    },
+    "buddyCheck": {
+      "title": "Buddy Check",
+      "summary": "Checklist przed każdym wejściem na highline",
+      "b1": "Harness — prawidłowo założony, buckles doubled back",
+      "b1Detail": "Sprawdź: gear loops OK, leg loops zaciśnięte, waist belt nad biodrami. Buckle musi być doubled back (przewleć pas z powrotem).",
+      "b2": "Leash — prawidłowo przewleczona, węzeł sprawdzony",
+      "b2Detail": "Re-traced Figure-8 przez harness belay loop. Tail min 10 cm. Barrel knot backup nie jest wymagany ale zalecany dla Bowline / Flemish bend.",
+      "b3": "Leash ring — obie lajny przewleczone",
+      "b3Detail": "Ring musi obejmować mainline i backup line. Jeśli tylko jedną → przy awarii tej drugiej highliner spada pod backup line = śmierć.",
+      "b4": "Backup connection do harness — funkcjonalny",
+      "b4Detail": "Backup ring lub backup PAS. Fizycznie zawiśnij na backupie samodzielnie, potwierdź że trzyma.",
+      "b5": "Helmet — jeśli powyżej 5 m lub hard anchor",
+      "b5Detail": "Osobisty wybór poniżej 5 m nad soft ground. Powyżej 5 m lub nad twardym terenem = obowiązkowe. Uraz głowy nie amortyzuje stretch.",
+      "b6": "Buddy mówi GO na głos",
+      "b6Detail": "To nie formalność. Werbalne wypowiedziane OK = zamknięcie kontroli. Jeśli buddy waha się = STOP, ponownie."
+    },
+    "suspensionTrauma": {
+      "title": "Suspension Trauma Awareness",
+      "summary": "Krytyczna informacja dla sytuacji rescue (⚠️ NIE przewodnik rescue)",
+      "s1": "Nieprzytomny highliner w harness = 5 minut critical",
+      "s1Detail": "Harness działa jak turniket. Krew w nogach staje się deoxygenowana. Przy 15 min = śmierć nawet u zdrowego bez obrażeń.",
+      "s2": "Przytomny highliner w harness = 15-30 minut",
+      "s2Detail": "Jeśli przytomny i porusza się, może zmienić pozycję harness. Ale i tak: im szybciej na ziemię, tym lepiej. Nie rób rutynowego rescue.",
+      "s3": "Po sprowadzeniu na ziemię: NIGDY nie kłaść płasko od razu",
+      "s3Detail": "Toksyczna krew wpływa do serca → arytmia serca / zatrzymanie. Sadzaj powoli, W-pozycja (kolana do klatki), potem recovery position.",
+      "s4": "To NIE jest przewodnik rescue — dzwoń 112",
+      "s4Detail": "Highline rescue wymaga treningu. Nie aktywuj według aplikacji. Przede wszystkim dzwoń 112 (GOPR, straż pożarna). Ta karta to awareness — abyś wiedział że masz mało czasu."
+    },
+    "isa21Limits": {
+      "title": "Limity sił ISA:21",
+      "summary": "Kluczowe limity bezpieczeństwa dla systemu highline",
+      "col": { "what": "Element", "limit": "Limit" },
+      "row": {
+        "workingLoad": "Working load na kotwach",
+        "backupfall": "Backupfall force",
+        "primaryAnchor": "Primary anchoring material",
+        "secondaryAnchor": "Secondary / backup material",
+        "weblock": "Weblock",
+        "leashRing": "Pierścień leasha"
+      }
+    },
+    "serene": {
+      "title": "SERENE",
+      "summary": "5 zasad dla bezpiecznego anchora",
+      "strong": "Strong — mocny",
+      "strongDetail": "Anchor wytrzymuje min 2× oczekiwany peak load. Cel: 48 kN primary, 24 kN secondary.",
+      "equalized": "Equalized — wyrównany",
+      "equalizedDetail": "Obciążenie równomiernie rozłożone. Sliding-X aktywnie, BFK statycznie.",
+      "redundant": "Redundant — redundantny",
+      "redundantDetail": "Jeśli 1 punkt zawiedzie, reszta utrzyma obciążenie. Min 2 niezależne punkty attachmentu.",
+      "efficient": "Efficient — efektywny",
+      "efficientDetail": "Kąty między nogami < 60° idealnie, < 90° maksymalnie. Powyżej 120° = katastrofa.",
+      "noExtension": "No Extension — bez wydłużenia",
+      "noExtensionDetail": "Jeśli 1 noga zawiedzie, masterpoint się nie przesunie → brak shock load. Backup / limiting knots."
+    },
+    "snareSane": {
+      "title": "SNARE SANE",
+      "summary": "6 zasad dla dokładnej oceny anchora",
+      "strength": "Strength — wytrzymałość",
+      "strengthDetail": "Anchor wytrzymuje min 2× oczekiwany peak load. Oblicz max load (peak fall × safety factor 2).",
+      "noAbrasion": "No Abrasion — bez otarcia",
+      "noAbrasionDetail": "Brak ostrych krawędzi w load path. Visual check, padding przy ostrych krawędziach.",
+      "redundancy": "Redundancy — redundancja",
+      "redundancyDetail": "Jeśli 1 element zawiedzie, anchor wciąż trzyma. Min 2 niezależne punkty.",
+      "equalization": "Equalization — wyrównanie",
+      "equalizationDetail": "Obciążenie równomiernie rozłożone. Sliding-X aktywnie, BFK statycznie.",
+      "smallAngles": "Small Angles — małe kąty",
+      "smallAnglesDetail": "Kąt między nogami < 60° idealnie. 90° = per-leg 71%, 120° = 100%, > 120° = katastrofa.",
+      "noExtension": "No Extension — bez wydłużenia",
+      "noExtensionDetail": "Failure jednej nogi nie może spowodować shock load. Backup / limiting knots."
+    },
+    "nylonRule": {
+      "title": "Sub-40m Nylon Rule",
+      "summary": "Kompatybilność materiału popruhu z długością lajny",
+      "col": { "length": "Długość", "pa": "PA nylon", "pes": "PES polyester", "hmpe": "UHMWPE" },
+      "hint": "Sub-40m highline = mainline + backup + leash wszystko PA (nylon). Statyczny materiał (PES, UHMWPE) generuje 2-3× wyższe peak forces = ryzyko przekroczenia limitu ISA:21 12 kN."
+    },
+    "wind": {
+      "title": "Wind Advisory",
+      "summary": "Progi ISA dla decyzji rig / derig",
+      "col": { "speed": "Prędkość wiatru", "action": "Rekomendacja" },
+      "row": {
+        "ok": "OK, rig safely",
+        "caution": "Caution — zaczyna się detape",
+        "damage": "Damage risk — derig",
+        "stop": "Do not rig / ewakuacja"
+      },
+      "hint": "Śledź Ventusky, Windy lub Open-Meteo. Storm approach = derig natychmiast (electrostatic risk)."
+    },
+    "rlt": {
+      "title": "Recommended Lifetime (RLT)",
+      "summary": "Rekomendowana żywotność popruhu według typu i materiału",
+      "col": { "type": "Typ (ISA:41)", "pa": "PA nylon", "pes": "PES polyester", "hmpe": "UHMWPE" },
+      "row": { "visual": "Wizualna inspekcja", "na": "Bez rekomendacji" },
+      "hint": "Dni = ekspozycja na środowisko (UV, deszcz), NIE od daty produkcji. Przechowywanie się nie liczy."
+    }
   }
 }

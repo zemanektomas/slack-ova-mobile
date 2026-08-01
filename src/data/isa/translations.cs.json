@@ -1,0 +1,114 @@
+{
+  "isaSafety": {
+    "title": "ISA Safety Companion",
+    "subtitle": "Bezpečnostní příručka pro highline",
+    "disclaimer": "Podle ISA:21 (2023) a souvisejících standardů. Apka poskytuje doporučení, konečné rozhodnutí je vždy na tobě. Pro definitivní texty otevři oficiální ISA:21 PDF.",
+    "modeReadOnly": "Studium",
+    "modeSession": "Kontrola na místě",
+    "sessionStart": "Zahájit kontrolu",
+    "sessionEnd": "Ukončit kontrolu",
+    "sessionComplete": "Kontrola dokončena",
+    "sessionCheckAll": "Všechny body zaškrtnuty",
+    "sessionSaveLog": "Uložit záznam",
+    "sessionHistory": "Historie kontrol",
+    "openReference": "Otevřít referenci",
+    "showDetail": "Detail",
+    "hideDetail": "Skrýt",
+    "category": {
+      "limits": "Limity sil",
+      "checklist": "Checklist",
+      "rule": "Pravidlo",
+      "thresholds": "Prahové hodnoty",
+      "lifetime": "Životnost"
+    }
+  },
+  "cards": {
+    "isa21Limits": {
+      "title": "Limity sil ISA:21",
+      "summary": "Klíčové bezpečnostní limity pro highline system",
+      "col": {
+        "what": "Komponenta",
+        "limit": "Limit"
+      },
+      "row": {
+        "workingLoad": "Working load u kotev",
+        "backupfall": "Backupfall force",
+        "primaryAnchor": "Primary anchoring material",
+        "secondaryAnchor": "Secondary / backup material",
+        "weblock": "Weblock (kotvítko)",
+        "leashRing": "Leash ring"
+      }
+    },
+    "serene": {
+      "title": "SERENE",
+      "summary": "5 bodů pro bezpečný anchor",
+      "strong": "Strong — pevný",
+      "strongDetail": "Anchor unese min 2× očekávaný peak load. Cíl: 48 kN primary, 24 kN secondary.",
+      "equalized": "Equalized — vyrovnaný",
+      "equalizedDetail": "Zátěž rovnoměrně rozdělena mezi všechny body. Sliding-X aktivně, BFK staticky.",
+      "redundant": "Redundant — redundantní",
+      "redundantDetail": "Pokud 1 bod selže, zbytek udrží zátěž. Min 2 nezávislé attachment points.",
+      "efficient": "Efficient — efektivní",
+      "efficientDetail": "Úhly mezi legs < 60° ideální, < 90° maximum. Nad 120° = catastrophic.",
+      "noExtension": "No Extension — bez prodloužení",
+      "noExtensionDetail": "Pokud 1 leg selže, masterpoint se neposune → žádný shock load. Backup / limiting knots."
+    },
+    "snareSane": {
+      "title": "SNARE SANE",
+      "summary": "6 bodů pro důkladné anchor assessment",
+      "strength": "Strength — pevnost",
+      "strengthDetail": "Anchor unese min 2× očekávaný peak load. Spočítat max load (peak fall × safety factor 2).",
+      "noAbrasion": "No Abrasion — bez odření",
+      "noAbrasionDetail": "Žádné ostré hrany v load path. Visual check, padding kde sharp edges.",
+      "redundancy": "Redundancy — redundance",
+      "redundancyDetail": "Pokud 1 component selže, anchor stále drží. Min 2 nezávislé body.",
+      "equalization": "Equalization — vyrovnání",
+      "equalizationDetail": "Zátěž rovnoměrně rozdělena. Sliding-X aktivně, BFK staticky.",
+      "smallAngles": "Small Angles — malé úhly",
+      "smallAnglesDetail": "Úhel mezi anchor legs < 60° ideální. 90° = per-leg 71%, 120° = 100%, > 120° = catastrophic.",
+      "noExtension": "No Extension — bez prodloužení",
+      "noExtensionDetail": "Failure jednoho legu nesmí způsobit shock load. Backup / limiting knots."
+    },
+    "nylonRule": {
+      "title": "Sub-40m Nylon Rule",
+      "summary": "Kompatibilita materiálu popruhu s délkou lajny",
+      "col": {
+        "length": "Délka",
+        "pa": "PA nylon",
+        "pes": "PES polyester",
+        "hmpe": "UHMWPE"
+      },
+      "hint": "Sub-40m highline = mainline + backup + leash všechno PA (nylon). Statický materiál (PES, UHMWPE) generuje 2-3× vyšší peak forces = risk překročení ISA:21 limitu 12 kN."
+    },
+    "wind": {
+      "title": "Wind Advisory",
+      "summary": "ISA prahové hodnoty pro rig / derig rozhodnutí",
+      "col": {
+        "speed": "Rychlost větru",
+        "action": "Doporučení"
+      },
+      "row": {
+        "ok": "OK, rig safely",
+        "caution": "Caution — začíná detape",
+        "damage": "Damage risk — derig",
+        "stop": "Do not rig / evacuate"
+      },
+      "hint": "Sledovat Ventusky, Windy nebo Open-Meteo. Storm approach = derig okamžitě (electrostatic risk)."
+    },
+    "rlt": {
+      "title": "Recommended Lifetime (RLT)",
+      "summary": "Doporučená životnost popruhu podle typu a materiálu",
+      "col": {
+        "type": "Typ (ISA:41)",
+        "pa": "PA nylon",
+        "pes": "PES polyester",
+        "hmpe": "UHMWPE"
+      },
+      "row": {
+        "visual": "Vizuální inspekce",
+        "na": "Bez doporučení"
+      },
+      "hint": "Dny = vystavení vlivům prostředí (UV, déšť), NIKOLI od data výroby. Skladování se nepočítá."
+    }
+  }
+}

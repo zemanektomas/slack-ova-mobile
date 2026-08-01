@@ -4,7 +4,8 @@
     "done": "Done",
     "reset": "Reset",
     "loading": "Loading…",
-    "cancel": "Cancel"
+    "cancel": "Cancel",
+    "error": "Error"
   },
   "home": {
     "searchPlaceholder": "Search name, region, sector...",
@@ -93,5 +94,181 @@
     "translateErrorHint": "Check your internet connection (the translator model needs to download once, ~30 MB on WiFi).",
     "translateUnsupported": "Language not supported",
     "translateUnsupportedHint": "On-device translation only supports a limited set of languages. The original text stays visible."
+  },
+  "isaSafety": {
+    "title": "ISA Safety Companion",
+    "subtitle": "Highline safety reference",
+    "openBtn": "Open ISA reference",
+    "sectionLabel": "Safety",
+    "disclaimer": "Based on ISA:21 (2023) and related standards. This app provides recommendations, the final decision is always yours.",
+    "modeReadOnly": "Study",
+    "modeSession": "On-site check",
+    "sessionStart": "Start check",
+    "sessionEnd": "Complete",
+    "sessionComplete": "Check completed",
+    "sessionSaveLog": "Save log",
+    "sessionHistory": "Check history",
+    "sessionHistoryEmpty": "No checks yet.",
+    "openReference": "Open reference",
+    "showDetail": "Detail",
+    "hideDetail": "Hide",
+    "cardCount": "{{count}} checks",
+    "cardCountOne": "1 check",
+    "checkedAt": "Checked: {{date}}",
+    "category": {
+      "limits": "Force limits",
+      "checklist": "Checklist",
+      "rule": "Rule",
+      "thresholds": "Thresholds",
+      "lifetime": "Lifetime"
+    }
+  },
+  "cards": {
+    "commandments": {
+      "title": "10 Highline Commandments",
+      "summary": "Fundamental safety principles from which everything else derives",
+      "c1": "1. Always 3 bolts in an anchor",
+      "c1Detail": "One bolt = single point of failure. Three bolts withstand load even if one fails. Source: HowNot2 Bolting Bible, ISA:21.",
+      "c2": "2. Angle between anchor legs ≤ 45°",
+      "c2Detail": "Above 60° per-leg force grows exponentially; above 90° NEVER. 120° = each leg carries more than the total load. Source: ISA anchor best practice.",
+      "c3": "3. For HL under 40 m — all materials nylon",
+      "c3Detail": "Polyester and Dyneema lack the stretch to absorb fall energy. Short line + static material = anchor peak over 12 kN. Source: ISA:21 Appendix 5.",
+      "c4": "4. Bowline NEVER for HL anchor",
+      "c4Detail": "Cyclic loading loosens the knot. Use Figure-8 re-traced. Source: ISA:21 §3.3.2.",
+      "c5": "5. Working load ≤ 12 kN, backupfall ≤ 8 kN",
+      "c5Detail": "Never exceed either. Above limits = component failure risk. Source: ISA:21 §1.3.",
+      "c6": "6. Always 2 attachments to the line during operation",
+      "c6Detail": "Never disconnect primary attachment until secondary is load-tested. Applies to rigging, taping, rescue. Source: ISA Rescue best practice.",
+      "c7": "7. Wind over 60 km/h = practically every HL fails",
+      "c7Detail": "Derig before, not after. Historically 37 wind-related incidents, 10 with catastrophic failure. Source: ISA Wind Advisory 2020.",
+      "c8": "8. Buddy check before every walk",
+      "c8Detail": "Experience does not replace the check — most accidents happen behind routine. Check each other: harness, leash, backup. Source: ISA Safety culture.",
+      "c9": "9. Weblock always with tie-off",
+      "c9Detail": "Without tie-off, webbing can slip out under vibration. Final step of weblock rigging. Source: ISA:21 §3.11.1.2.",
+      "c10": "10. Storm approaching + rain = DERIG NOW",
+      "c10Detail": "Electrostatic discharge can melt fibers at 5000-15000°C even without direct lightning. UHMWPE most vulnerable (melts at 150°C). CZ incident 2024. Source: ISA Electrostatic Warning 12/2025."
+    },
+    "electrostatic": {
+      "title": "Electrostatic Discharge Warning",
+      "summary": "Newest ISA safety warning (12/2025) — plasma arcs during storms",
+      "e1": "Storm approaching = derig immediately",
+      "e1Detail": "Do not wait for the first lightning strike. Plasma arcs can form between wet webbing segments even before the main storm. Watch radar (Windy, Meteoradar).",
+      "e2": "UHMWPE (Dyneema) is most vulnerable",
+      "e2Detail": "Melts at 150°C. Plasma arcs 5000-15000°C cause immediate failure. For storm-prone locations, prefer nylon or polyester.",
+      "e3": "Consider tapeless setup for storm locations",
+      "e3Detail": "Dry webbing under tape acts as insulator, wet segment beside it as conductor — arc forms between them. Without tape, energy dissipates evenly.",
+      "e4": "Post-storm inspection = detape + full length",
+      "e4Detail": "Remove all tape. Look for burn marks, melted fibers, discoloration. Hidden damage under tape may fail under load.",
+      "e5": "10 documented incidents since 2012",
+      "e5Detail": "Latest one in CZ 2024. Do not ignore — this is a real risk. Details in the ISA Warning document (link in source)."
+    },
+    "twoAttachments": {
+      "title": "Two Attachments Rule",
+      "summary": "Critical safety rule for rigging, rescue and highline walk",
+      "t1": "Always min 2 independent attachments to the line/rope",
+      "t1Detail": "During any operation (rigging, taping, rescue, ascending) you must have 2 independent attachment points. Failure of one = the other holds.",
+      "t2": "Test before commit",
+      "t2Detail": "Before disconnecting primary attachment, load-test the secondary. Sit, weight, verify it holds. Only then disconnect primary.",
+      "t3": "Leash + backup connection for walking",
+      "t3Detail": "Highliner is connected to mainline via leash + backup ring to backup line. Mainline failure = backup catches. Never just the leash.",
+      "t4": "For rescue: primary rope + backup PAS",
+      "t4Detail": "When moving on the line (rescue, self-rescue), your primary connection (Tibloc, Micro Traxion) plus backup PAS (personal anchor system) on harness."
+    },
+    "buddyCheck": {
+      "title": "Buddy Check",
+      "summary": "Checklist before every walk onto a highline",
+      "b1": "Harness — correctly worn, buckles doubled back",
+      "b1Detail": "Check: gear loops OK, leg loops tight, waist belt above hips. Buckle must be doubled back (thread the strap back through).",
+      "b2": "Leash — correctly threaded, knot checked",
+      "b2Detail": "Re-traced Figure-8 through harness belay loop. Tail min 10 cm. Barrel knot backup not required but recommended for Bowline / Flemish bend.",
+      "b3": "Leash ring — both lines threaded",
+      "b3Detail": "Ring must encompass both mainline and backup line. If only one → mainline failure drops highliner under backup line = death.",
+      "b4": "Backup connection to harness — functional",
+      "b4Detail": "Backup ring or backup PAS. Physically hang on the backup alone, verify it holds.",
+      "b5": "Helmet — if above 5 m or hard anchor",
+      "b5Detail": "Personal choice under 5 m over soft ground. Above 5 m or over hard terrain = mandatory. Head trauma cannot be softened by stretch.",
+      "b6": "Buddy says GO out loud",
+      "b6Detail": "This is not formality. Verbal spoken OK = closure of the check. If buddy hesitates = STOP, redo."
+    },
+    "suspensionTrauma": {
+      "title": "Suspension Trauma Awareness",
+      "summary": "Critical info for rescue situations (⚠️ NOT a rescue guide)",
+      "s1": "Unconscious highliner in harness = 5 minutes critical",
+      "s1Detail": "Harness acts as tourniquet. Blood in legs becomes deoxygenated. At 15 min = death even for healthy individual without injury.",
+      "s2": "Conscious highliner in harness = 15-30 minutes",
+      "s2Detail": "If conscious and moving, they can shift harness. But still: the faster down, the better. Do not do routine rescue.",
+      "s3": "After ground extraction: NEVER lay flat immediately",
+      "s3Detail": "Toxic blood floods heart → cardiac arrhythmia / arrest. Sit up slowly, W-position (knees to chest), then recovery position.",
+      "s4": "This is NOT a rescue guide — call emergency services",
+      "s4Detail": "Highline rescue requires training. Do not activate based on the app. Primarily call emergency (112 EU, 911 US). This card is awareness — so you know time is short."
+    },
+    "isa21Limits": {
+      "title": "ISA:21 Force Limits",
+      "summary": "Key safety limits for highline systems",
+      "col": { "what": "Component", "limit": "Limit" },
+      "row": {
+        "workingLoad": "Working load at anchors",
+        "backupfall": "Backupfall force",
+        "primaryAnchor": "Primary anchoring material",
+        "secondaryAnchor": "Secondary / backup material",
+        "weblock": "Weblock",
+        "leashRing": "Leash ring"
+      }
+    },
+    "serene": {
+      "title": "SERENE",
+      "summary": "5 principles for a safe anchor",
+      "strong": "Strong",
+      "strongDetail": "Anchor holds min 2× expected peak load. Target: 48 kN primary, 24 kN secondary.",
+      "equalized": "Equalized",
+      "equalizedDetail": "Load evenly distributed across all points. Sliding-X actively, BFK statically.",
+      "redundant": "Redundant",
+      "redundantDetail": "If 1 point fails, rest holds the load. Min 2 independent attachment points.",
+      "efficient": "Efficient",
+      "efficientDetail": "Angles between legs < 60° ideal, < 90° maximum. Above 120° = catastrophic.",
+      "noExtension": "No Extension",
+      "noExtensionDetail": "If 1 leg fails, masterpoint stays in place → no shock load. Backup / limiting knots."
+    },
+    "snareSane": {
+      "title": "SNARE SANE",
+      "summary": "6 principles for thorough anchor assessment",
+      "strength": "Strength",
+      "strengthDetail": "Anchor holds min 2× expected peak load. Calculate max load (peak fall × safety factor 2).",
+      "noAbrasion": "No Abrasion",
+      "noAbrasionDetail": "No sharp edges in load path. Visual check, padding at sharp edges.",
+      "redundancy": "Redundancy",
+      "redundancyDetail": "If 1 component fails, anchor still holds. Min 2 independent points.",
+      "equalization": "Equalization",
+      "equalizationDetail": "Load evenly distributed. Sliding-X actively, BFK statically.",
+      "smallAngles": "Small Angles",
+      "smallAnglesDetail": "Angle between anchor legs < 60° ideal. 90° = per-leg 71%, 120° = 100%, > 120° = catastrophic.",
+      "noExtension": "No Extension",
+      "noExtensionDetail": "Failure of one leg must not cause shock load. Backup / limiting knots."
+    },
+    "nylonRule": {
+      "title": "Sub-40m Nylon Rule",
+      "summary": "Webbing material compatibility with line length",
+      "col": { "length": "Length", "pa": "PA nylon", "pes": "PES polyester", "hmpe": "UHMWPE" },
+      "hint": "Sub-40m highline = mainline + backup + leash all PA (nylon). Static materials (PES, UHMWPE) generate 2-3× higher peak forces = risk of exceeding ISA:21 limit 12 kN."
+    },
+    "wind": {
+      "title": "Wind Advisory",
+      "summary": "ISA thresholds for rig / derig decision",
+      "col": { "speed": "Wind speed", "action": "Recommendation" },
+      "row": {
+        "ok": "OK, rig safely",
+        "caution": "Caution — detape starts",
+        "damage": "Damage risk — derig",
+        "stop": "Do not rig / evacuate"
+      },
+      "hint": "Watch Ventusky, Windy or Open-Meteo. Storm approach = derig immediately (electrostatic risk)."
+    },
+    "rlt": {
+      "title": "Recommended Lifetime (RLT)",
+      "summary": "Recommended webbing lifetime by type and material",
+      "col": { "type": "Type (ISA:41)", "pa": "PA nylon", "pes": "PES polyester", "hmpe": "UHMWPE" },
+      "row": { "visual": "Visual inspection", "na": "No recommendation" },
+      "hint": "Days = exposure to environment (UV, rain), NOT from manufacture date. Storage doesn't count."
+    }
   }
 }

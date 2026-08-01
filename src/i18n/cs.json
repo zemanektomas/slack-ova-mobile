@@ -4,7 +4,8 @@
     "done": "Hotovo",
     "reset": "Resetovat",
     "loading": "Načítám…",
-    "cancel": "Zrušit"
+    "cancel": "Zrušit",
+    "error": "Chyba"
   },
   "home": {
     "searchPlaceholder": "Hledat název, region, sektor...",
@@ -93,5 +94,181 @@
     "translateErrorHint": "Zkontroluj připojení k internetu (překladač se musí jednou stáhnout, ~30 MB na WiFi).",
     "translateUnsupported": "Jazyk není podporován",
     "translateUnsupportedHint": "Překlad v zařízení podporuje jen omezenou sadu jazyků. Originál zůstane viditelný."
+  },
+  "isaSafety": {
+    "title": "ISA Safety Companion",
+    "subtitle": "Bezpečnostní příručka pro highline",
+    "openBtn": "Otevřít ISA příručku",
+    "sectionLabel": "Bezpečnost",
+    "disclaimer": "Podle ISA:21 (2023) a souvisejících standardů. Apka poskytuje doporučení, konečné rozhodnutí je vždy na tobě.",
+    "modeReadOnly": "Studium",
+    "modeSession": "Kontrola na místě",
+    "sessionStart": "Zahájit kontrolu",
+    "sessionEnd": "Dokončit",
+    "sessionComplete": "Kontrola dokončena",
+    "sessionSaveLog": "Uložit záznam",
+    "sessionHistory": "Historie kontrol",
+    "sessionHistoryEmpty": "Zatím žádné záznamy.",
+    "openReference": "Otevřít referenci",
+    "showDetail": "Detail",
+    "hideDetail": "Skrýt",
+    "cardCount": "{{count}} kontrol",
+    "cardCountOne": "1 kontrola",
+    "checkedAt": "Kontrolováno: {{date}}",
+    "category": {
+      "limits": "Limity sil",
+      "checklist": "Checklist",
+      "rule": "Pravidlo",
+      "thresholds": "Prahové hodnoty",
+      "lifetime": "Životnost"
+    }
+  },
+  "cards": {
+    "commandments": {
+      "title": "10 přikázání highline",
+      "summary": "Základní safety pravidla, ze kterých se vše ostatní odvozuje",
+      "c1": "1. Vždy 3 borháky v anchor",
+      "c1Detail": "Jeden borhák = single point of failure. Tři borháky snáší tah i při selhání jednoho. Zdroj: HowNot2 Bolting Bible, ISA:21.",
+      "c2": "2. Úhel mezi anchor legs ≤ 45°",
+      "c2Detail": "Nad 60° roste per-leg síla exponenciálně; nad 90° NIKDY. Úhel 120° = každá noha nese víc než celá zátěž. Zdroj: ISA anchor best practice.",
+      "c3": "3. Pro HL pod 40 m — všechen materiál nylon",
+      "c3Detail": "Polyester a Dyneema nemají dostatek stretch pro absorpci energie pádu. Krátká lajna + statický materiál = anchor peak přes 12 kN. Zdroj: ISA:21 Příloha 5.",
+      "c4": "4. Bowline NIKDY pro HL anchor",
+      "c4Detail": "Cyklické zatížení uvolní uzel. Používej Figure-8 re-traced. Zdroj: ISA:21 §3.3.2.",
+      "c5": "5. Working load ≤ 12 kN, backupfall ≤ 8 kN",
+      "c5Detail": "Nepřepnout ani jedno. Nad limitem = risk selhání komponentů. Zdroj: ISA:21 §1.3.",
+      "c6": "6. Vždy 2 attachments k lajně během operace",
+      "c6Detail": "Nikdy neodpojuj primary attachment, dokud secondary neni load-tested. Platí pro rigging, tape, rescue. Zdroj: ISA Rescue best practice.",
+      "c7": "7. Vítr nad 60 km/h = prakticky každý HL selže",
+      "c7Detail": "Derig před tím, ne po. Historicky 37 wind-related incidents, 10 s katastrofickým selháním. Zdroj: ISA Wind Advisory 2020.",
+      "c8": "8. Buddy check před každým nástupem",
+      "c8Detail": "Zkušenost check nenahrazuje — většina nehod je za rutinou. Kontrolujte se navzájem: harness, leash, backup. Zdroj: ISA Safety culture.",
+      "c9": "9. Weblock vždy s tie-off",
+      "c9Detail": "Bez tie-off se popruh může vysmeknout při vibraci. Poslední krok riggingu weblocku. Zdroj: ISA:21 §3.11.1.2.",
+      "c10": "10. Bouře blízko + déšť = DERIG NOW",
+      "c10Detail": "Electrostatic discharge může tavit fibers při 5000-15000°C i bez přímého blesku. UHMWPE nejzranitelnější (taje 150°C). ČR incident 2024. Zdroj: ISA Electrostatic Warning 12/2025."
+    },
+    "electrostatic": {
+      "title": "Electrostatic Discharge Warning",
+      "summary": "Nejnovější ISA safety varování (12/2025) — plasma arcs při bouřích",
+      "e1": "Bouře blízko = derig okamžitě",
+      "e1Detail": "Nečekej na první blesk. Plasma arcs mohou vznikat mezi mokrými segmenty popruhu i před hlavní bouří. Sleduj radar (Windy, Meteoradar).",
+      "e2": "UHMWPE (Dyneema) je nejzranitelnější",
+      "e2Detail": "Taje při 150°C. Plasma arcs 5000-15000°C způsobí okamžité selhání. Pro storm-prone lokace preferuj nylon nebo polyester.",
+      "e3": "Tapeless setup zvaž pro bouřkové lokace",
+      "e3Detail": "Suchý popruh pod tape funguje jako insulator, mokrý segment vedle jako conductor — mezi nimi vzniká arc. Bez tape se energie disipuje rovnoměrně.",
+      "e4": "Post-storm inspekce = detape + celá délka",
+      "e4Detail": "Sundej všechen tape. Hledej burn marks, melted fibers, decolorace. Skrytý damage pod tape může selhat pod zátěží.",
+      "e5": "10 dokumentovaných incidents od 2012",
+      "e5Detail": "Nejnovější v ČR 2024. Neignoruj — je to reálné riziko. Detailně v ISA Warning dokumentu (odkaz ve zdroji)."
+    },
+    "twoAttachments": {
+      "title": "2 Attachments Rule",
+      "summary": "Kritické safety pravidlo pro rigging, rescue a highline walk",
+      "t1": "Vždy min 2 nezávislé attachments k lajně/rope",
+      "t1Detail": "Během jakékoli operace (rigging, tape, rescue, ascending) musíš mít 2 nezávislé attachment points. Selhání jednoho = druhý drží.",
+      "t2": "Test before commit",
+      "t2Detail": "Než odpojíš primary attachment, load-test secondary. Sedni, zatiž, ověř drží. Až pak odpojuj primary.",
+      "t3": "Leash + backup connection pro walk",
+      "t3Detail": "Highliner je připojen leashem k mainline + backup ringem k backup line. Selhání mainline = backup catches. Nikdy jen leash.",
+      "t4": "Pro rescue: primary rope + backup PAS",
+      "t4Detail": "Když se pohybuješ po lajně (rescue, self-rescue), tvoje primary connection (Tibloc, Micro Traxion) plus backup PAS (personal anchor system) na harness."
+    },
+    "buddyCheck": {
+      "title": "Buddy Check",
+      "summary": "Checklist před každým nástupem na highline",
+      "b1": "Harness — správně nasazený, buckles doubled back",
+      "b1Detail": "Kontrola: gear loops v pořádku, leg loops utažené, waist belt nad kyčlemi. Buckle musí být doubled back (procvakni pásem zpět).",
+      "b2": "Leash — správně provlečen, uzel checkeded",
+      "b2Detail": "Provlékaná osmička v harness belay loop. Tail min 10 cm. Barrel knot backup není povinný ale doporučený pro Bowline / Flemish bend.",
+      "b3": "Leash ring — obě lajny provlečené",
+      "b3Detail": "Ring musí obepínat mainline i backup line. Pokud jen jednu → při selhání té ostatní highliner spadne pod backup line = smrt.",
+      "b4": "Backup connection k harness — funkční",
+      "b4Detail": "Backup ring nebo backup PAS. Fyzicky pověs se na backup samostatně, ověř drží.",
+      "b5": "Helmet — pokud nad 5 m nebo hard anchor",
+      "b5Detail": "Osobní volba pod 5 m nad soft ground. Nad 5 m nebo nad tvrdý terén = povinné. Krev z hlavy neochráníš stretchem.",
+      "b6": "Buddy říká GO nahlas",
+      "b6Detail": "Není to formality. Slovní verbální OK = uzavření kontroly. Pokud buddy váhá = STOP, znovu."
+    },
+    "suspensionTrauma": {
+      "title": "Suspension Trauma Awareness",
+      "summary": "Kritická informace pro rescue situace (⚠️ NE rescue návod)",
+      "s1": "Unconscious highliner v odsedce = 5 minut critical",
+      "s1Detail": "Harness funguje jako turniket. Krev v nohou se stane deoxygenovanou. Při 15 minutach = smrt i u zdravého jedince bez zranění.",
+      "s2": "Conscious highliner v odsedce = 15-30 minut",
+      "s2Detail": "Pokud je vědomý, pohybuje se, může uvolnit harness. Ale i tak: čím rychleji dolů, tím lépe. Nedělej rutinní rescue.",
+      "s3": "Po sundání na zem: NIKDY neposazovat okamžitě naplocho",
+      "s3Detail": "Toxická krev nahrne do srdce → kardiální arytmie / zástava. Posazovat pomalu, W-pozice (kolena k hrudi), pak recovery position.",
+      "s4": "Toto NENÍ rescue návod — volej 112",
+      "s4Detail": "Highline rescue vyžaduje trénink. Neaktivuj podle apky. Primárně volej 112 (horská služba, HZS). Toto card je awareness — abys věděl že máš málo času."
+    },
+    "isa21Limits": {
+      "title": "Limity sil ISA:21",
+      "summary": "Klíčové bezpečnostní limity pro highline system",
+      "col": { "what": "Komponenta", "limit": "Limit" },
+      "row": {
+        "workingLoad": "Working load u kotev",
+        "backupfall": "Backupfall force",
+        "primaryAnchor": "Primary anchoring material",
+        "secondaryAnchor": "Secondary / backup material",
+        "weblock": "Weblock (kotvítko)",
+        "leashRing": "Leash ring"
+      }
+    },
+    "serene": {
+      "title": "SERENE",
+      "summary": "5 bodů pro bezpečný anchor",
+      "strong": "Strong — pevný",
+      "strongDetail": "Anchor unese min 2× očekávaný peak load. Cíl: 48 kN primary, 24 kN secondary.",
+      "equalized": "Equalized — vyrovnaný",
+      "equalizedDetail": "Zátěž rovnoměrně rozdělena mezi všechny body. Sliding-X aktivně, BFK staticky.",
+      "redundant": "Redundant — redundantní",
+      "redundantDetail": "Pokud 1 bod selže, zbytek udrží zátěž. Min 2 nezávislé attachment points.",
+      "efficient": "Efficient — efektivní",
+      "efficientDetail": "Úhly mezi legs < 60° ideální, < 90° maximum. Nad 120° = catastrophic.",
+      "noExtension": "No Extension — bez prodloužení",
+      "noExtensionDetail": "Pokud 1 leg selže, masterpoint se neposune → žádný shock load. Backup / limiting knots."
+    },
+    "snareSane": {
+      "title": "SNARE SANE",
+      "summary": "6 bodů pro důkladné anchor assessment",
+      "strength": "Strength — pevnost",
+      "strengthDetail": "Anchor unese min 2× očekávaný peak load. Spočítat max load (peak fall × safety factor 2).",
+      "noAbrasion": "No Abrasion — bez odření",
+      "noAbrasionDetail": "Žádné ostré hrany v load path. Visual check, padding kde sharp edges.",
+      "redundancy": "Redundancy — redundance",
+      "redundancyDetail": "Pokud 1 component selže, anchor stále drží. Min 2 nezávislé body.",
+      "equalization": "Equalization — vyrovnání",
+      "equalizationDetail": "Zátěž rovnoměrně rozdělena. Sliding-X aktivně, BFK staticky.",
+      "smallAngles": "Small Angles — malé úhly",
+      "smallAnglesDetail": "Úhel mezi anchor legs < 60° ideální. 90° = per-leg 71%, 120° = 100%, > 120° = catastrophic.",
+      "noExtension": "No Extension — bez prodloužení",
+      "noExtensionDetail": "Failure jednoho legu nesmí způsobit shock load. Backup / limiting knots."
+    },
+    "nylonRule": {
+      "title": "Sub-40m Nylon Rule",
+      "summary": "Kompatibilita materiálu popruhu s délkou lajny",
+      "col": { "length": "Délka", "pa": "PA nylon", "pes": "PES polyester", "hmpe": "UHMWPE" },
+      "hint": "Sub-40m highline = mainline + backup + leash všechno PA (nylon). Statický materiál (PES, UHMWPE) generuje 2-3× vyšší peak forces = risk překročení ISA:21 limitu 12 kN."
+    },
+    "wind": {
+      "title": "Wind Advisory",
+      "summary": "ISA prahové hodnoty pro rig / derig rozhodnutí",
+      "col": { "speed": "Rychlost větru", "action": "Doporučení" },
+      "row": {
+        "ok": "OK, rig safely",
+        "caution": "Caution — začíná detape",
+        "damage": "Damage risk — derig",
+        "stop": "Do not rig / evacuate"
+      },
+      "hint": "Sledovat Ventusky, Windy nebo Open-Meteo. Storm approach = derig okamžitě (electrostatic risk)."
+    },
+    "rlt": {
+      "title": "Recommended Lifetime (RLT)",
+      "summary": "Doporučená životnost popruhu podle typu a materiálu",
+      "col": { "type": "Typ (ISA:41)", "pa": "PA nylon", "pes": "PES polyester", "hmpe": "UHMWPE" },
+      "row": { "visual": "Vizuální inspekce", "na": "Bez doporučení" },
+      "hint": "Dny = vystavení vlivům prostředí (UV, déšť), NIKOLI od data výroby. Skladování se nepočítá."
+    }
   }
 }

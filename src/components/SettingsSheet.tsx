@@ -23,6 +23,7 @@ import { getMeta } from '../db/index';
 import MapLibreGL from '@maplibre/maplibre-react-native';
 import { useAuthStore } from '../store/authStore';
 import { useSlackmapAuth } from '../api/useSlackmapAuth';
+import { ISASafetySheet } from './ISASafetySheet';
 
 // Verze z app.json — během dev mode `Constants.expoConfig`, v release přes
 // `Application` API. Pro náš účel ukázat uživateli stačí Constants (funguje vždy).
@@ -81,6 +82,9 @@ export function SettingsSheet({ visible, onClose }: SettingsSheetProps) {
   const [lastRefresh, setLastRefresh] = useState<string | null>(null);
   const [isOnline, setIsOnline] = useState(true);
   const [clearingCache, setClearingCache] = useState(false);
+
+  // ISA Safety Companion (F5) — nested sheet
+  const [isaSheetOpen, setIsaSheetOpen] = useState(false);
 
   useEffect(() => {
     if (!visible) return;
@@ -370,6 +374,27 @@ export function SettingsSheet({ visible, onClose }: SettingsSheetProps) {
             </View>
 
             <View style={styles.row}>
+              <Text style={[styles.rowLabel, { color: t.textMuted }]}>{tr('isaSafety.sectionLabel')}</Text>
+              <Text style={[styles.updateSubtext, { color: t.textDim, marginBottom: 8 }]}>
+                {tr('isaSafety.subtitle')}
+              </Text>
+              <View style={styles.updateRow}>
+                <Text style={[styles.updateLabel, { color: t.text, flex: 1 }]}>
+                  {tr('isaSafety.title')}
+                </Text>
+                <Pressable
+                  onPress={() => setIsaSheetOpen(true)}
+                  style={[styles.linkBtn, { borderColor: t.border }]}
+                >
+                  <MaterialCommunityIcons name="shield-check" size={14} color={t.accent} style={{ marginRight: 4 }} />
+                  <Text style={[styles.linkBtnText, { color: t.accent }]}>
+                    {tr('isaSafety.openBtn')}
+                  </Text>
+                </Pressable>
+              </View>
+            </View>
+
+            <View style={styles.row}>
               <Text style={[styles.rowLabel, { color: t.textMuted }]}>{tr('settings.slackmapAccount')}</Text>
               <Text style={[styles.updateSubtext, { color: t.textDim, marginBottom: 8 }]}>
                 {tr('settings.slackmapAccountHint')}
@@ -432,6 +457,9 @@ export function SettingsSheet({ visible, onClose }: SettingsSheetProps) {
           </View>
         </View>
       </View>
+
+      {/* Nested ISA Safety sheet — F5 */}
+      <ISASafetySheet visible={isaSheetOpen} onClose={() => setIsaSheetOpen(false)} />
     </Modal>
   );
 }

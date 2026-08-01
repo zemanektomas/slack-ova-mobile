@@ -1,0 +1,114 @@
+{
+  "isaSafety": {
+    "title": "ISA Safety Companion",
+    "subtitle": "Highline safety reference",
+    "disclaimer": "Based on ISA:21 (2023) and related standards. This app provides recommendations, the final decision is always yours. For definitive texts open the official ISA:21 PDF.",
+    "modeReadOnly": "Study",
+    "modeSession": "On-site check",
+    "sessionStart": "Start check",
+    "sessionEnd": "End check",
+    "sessionComplete": "Check completed",
+    "sessionCheckAll": "All items checked",
+    "sessionSaveLog": "Save log",
+    "sessionHistory": "Check history",
+    "openReference": "Open reference",
+    "showDetail": "Detail",
+    "hideDetail": "Hide",
+    "category": {
+      "limits": "Force limits",
+      "checklist": "Checklist",
+      "rule": "Rule",
+      "thresholds": "Thresholds",
+      "lifetime": "Lifetime"
+    }
+  },
+  "cards": {
+    "isa21Limits": {
+      "title": "ISA:21 Force Limits",
+      "summary": "Key safety limits for highline systems",
+      "col": {
+        "what": "Component",
+        "limit": "Limit"
+      },
+      "row": {
+        "workingLoad": "Working load at anchors",
+        "backupfall": "Backupfall force",
+        "primaryAnchor": "Primary anchoring material",
+        "secondaryAnchor": "Secondary / backup material",
+        "weblock": "Weblock",
+        "leashRing": "Leash ring"
+      }
+    },
+    "serene": {
+      "title": "SERENE",
+      "summary": "5 principles for a safe anchor",
+      "strong": "Strong",
+      "strongDetail": "Anchor holds min 2× expected peak load. Target: 48 kN primary, 24 kN secondary.",
+      "equalized": "Equalized",
+      "equalizedDetail": "Load evenly distributed across all points. Sliding-X actively, BFK statically.",
+      "redundant": "Redundant",
+      "redundantDetail": "If 1 point fails, rest holds the load. Min 2 independent attachment points.",
+      "efficient": "Efficient",
+      "efficientDetail": "Angles between legs < 60° ideal, < 90° maximum. Above 120° = catastrophic.",
+      "noExtension": "No Extension",
+      "noExtensionDetail": "If 1 leg fails, masterpoint stays in place → no shock load. Backup / limiting knots."
+    },
+    "snareSane": {
+      "title": "SNARE SANE",
+      "summary": "6 principles for thorough anchor assessment",
+      "strength": "Strength",
+      "strengthDetail": "Anchor holds min 2× expected peak load. Calculate max load (peak fall × safety factor 2).",
+      "noAbrasion": "No Abrasion",
+      "noAbrasionDetail": "No sharp edges in load path. Visual check, padding at sharp edges.",
+      "redundancy": "Redundancy",
+      "redundancyDetail": "If 1 component fails, anchor still holds. Min 2 independent points.",
+      "equalization": "Equalization",
+      "equalizationDetail": "Load evenly distributed. Sliding-X actively, BFK statically.",
+      "smallAngles": "Small Angles",
+      "smallAnglesDetail": "Angle between anchor legs < 60° ideal. 90° = per-leg 71%, 120° = 100%, > 120° = catastrophic.",
+      "noExtension": "No Extension",
+      "noExtensionDetail": "Failure of one leg must not cause shock load. Backup / limiting knots."
+    },
+    "nylonRule": {
+      "title": "Sub-40m Nylon Rule",
+      "summary": "Webbing material compatibility with line length",
+      "col": {
+        "length": "Length",
+        "pa": "PA nylon",
+        "pes": "PES polyester",
+        "hmpe": "UHMWPE"
+      },
+      "hint": "Sub-40m highline = mainline + backup + leash all PA (nylon). Static materials (PES, UHMWPE) generate 2-3× higher peak forces = risk of exceeding ISA:21 limit 12 kN."
+    },
+    "wind": {
+      "title": "Wind Advisory",
+      "summary": "ISA thresholds for rig / derig decision",
+      "col": {
+        "speed": "Wind speed",
+        "action": "Recommendation"
+      },
+      "row": {
+        "ok": "OK, rig safely",
+        "caution": "Caution — detape starts",
+        "damage": "Damage risk — derig",
+        "stop": "Do not rig / evacuate"
+      },
+      "hint": "Watch Ventusky, Windy or Open-Meteo. Storm approach = derig immediately (electrostatic risk)."
+    },
+    "rlt": {
+      "title": "Recommended Lifetime (RLT)",
+      "summary": "Recommended webbing lifetime by type and material",
+      "col": {
+        "type": "Type (ISA:41)",
+        "pa": "PA nylon",
+        "pes": "PES polyester",
+        "hmpe": "UHMWPE"
+      },
+      "row": {
+        "visual": "Visual inspection",
+        "na": "No recommendation"
+      },
+      "hint": "Days = exposure to environment (UV, rain), NOT from manufacture date. Storage doesn't count."
+    }
+  }
+}

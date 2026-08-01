@@ -1,7 +1,7 @@
 // SQLite schema pro lokální mirror serverové DB + lokální stav (outbox, cache).
 // Spouští se při startu, idempotentně (CREATE IF NOT EXISTS).
 
-export const SCHEMA_VERSION = 3;
+export const SCHEMA_VERSION = 4;
 
 export const SCHEMA_SQL = `
 CREATE TABLE IF NOT EXISTS slacklines (
@@ -87,9 +87,24 @@ CREATE TABLE IF NOT EXISTS cached_images (
   fetched_at TEXT NOT NULL
 );
 
+-- v4: ISA Safety Companion — session log
+CREATE TABLE IF NOT EXISTS isa_check_sessions (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  card_id TEXT NOT NULL,
+  started_at TEXT NOT NULL,
+  completed_at TEXT,
+  total_items INTEGER NOT NULL,
+  checked_items INTEGER NOT NULL,
+  checked_ids TEXT NOT NULL,   -- JSON array of item ids
+  gps_lat REAL,
+  gps_lon REAL,
+  note TEXT
+);
+
 CREATE INDEX IF NOT EXISTS ix_points_bbox ON points(latitude, longitude);
 CREATE INDEX IF NOT EXISTS ix_components_type ON components(component_type, slackline_id);
 CREATE INDEX IF NOT EXISTS ix_components_slackline ON components(slackline_id);
 CREATE INDEX IF NOT EXISTS ix_crossings_slackline ON crossings(slackline_id);
 CREATE INDEX IF NOT EXISTS ix_crossings_user ON crossings(user_id);
+CREATE INDEX IF NOT EXISTS ix_isa_sessions_card ON isa_check_sessions(card_id, completed_at DESC);
 `;
