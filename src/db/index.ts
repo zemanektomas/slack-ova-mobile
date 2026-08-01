@@ -30,6 +30,10 @@ async function migrate(db: SQLite.SQLiteDatabase): Promise<void> {
     try { await db.execAsync(`ALTER TABLE slacklines ADD COLUMN access_info TEXT`); } catch {}
     try { await db.execAsync(`ALTER TABLE slacklines ADD COLUMN is_measured INTEGER`); } catch {}
   }
+  if (current < 4) {
+    // v4: ISA Safety Companion — session log (F5)
+    // Tabulka + index vytvořeny v SCHEMA_SQL (CREATE IF NOT EXISTS), jen bumpujeme verzi.
+  }
   // Index na source — vytvoříme až po migraci (sloupec teď určitě existuje)
   try {
     await db.execAsync(`CREATE INDEX IF NOT EXISTS ix_slacklines_source ON slacklines(source)`);

@@ -1,0 +1,114 @@
+{
+  "isaSafety": {
+    "title": "ISA Safety Companion",
+    "subtitle": "Przewodnik bezpieczeństwa highline",
+    "disclaimer": "Zgodnie z ISA:21 (2023) i powiązanymi standardami. Aplikacja dostarcza rekomendacje, ostateczna decyzja należy do Ciebie. Definitywne teksty znajdziesz w oficjalnym PDF ISA:21.",
+    "modeReadOnly": "Nauka",
+    "modeSession": "Sprawdzenie na miejscu",
+    "sessionStart": "Rozpocznij sprawdzenie",
+    "sessionEnd": "Zakończ sprawdzenie",
+    "sessionComplete": "Sprawdzenie ukończone",
+    "sessionCheckAll": "Wszystkie punkty zaznaczone",
+    "sessionSaveLog": "Zapisz log",
+    "sessionHistory": "Historia sprawdzeń",
+    "openReference": "Otwórz źródło",
+    "showDetail": "Szczegóły",
+    "hideDetail": "Ukryj",
+    "category": {
+      "limits": "Limity sił",
+      "checklist": "Checklist",
+      "rule": "Zasada",
+      "thresholds": "Progi",
+      "lifetime": "Żywotność"
+    }
+  },
+  "cards": {
+    "isa21Limits": {
+      "title": "Limity sił ISA:21",
+      "summary": "Kluczowe limity bezpieczeństwa dla systemu highline",
+      "col": {
+        "what": "Element",
+        "limit": "Limit"
+      },
+      "row": {
+        "workingLoad": "Working load na kotwach",
+        "backupfall": "Backupfall force",
+        "primaryAnchor": "Primary anchoring material",
+        "secondaryAnchor": "Secondary / backup material",
+        "weblock": "Weblock",
+        "leashRing": "Pierścień leasha"
+      }
+    },
+    "serene": {
+      "title": "SERENE",
+      "summary": "5 zasad dla bezpiecznego anchora",
+      "strong": "Strong — mocny",
+      "strongDetail": "Anchor wytrzymuje min 2× oczekiwany peak load. Cel: 48 kN primary, 24 kN secondary.",
+      "equalized": "Equalized — wyrównany",
+      "equalizedDetail": "Obciążenie równomiernie rozłożone. Sliding-X aktywnie, BFK statycznie.",
+      "redundant": "Redundant — redundantny",
+      "redundantDetail": "Jeśli 1 punkt zawiedzie, reszta utrzyma obciążenie. Min 2 niezależne punkty attachmentu.",
+      "efficient": "Efficient — efektywny",
+      "efficientDetail": "Kąty między nogami < 60° idealnie, < 90° maksymalnie. Powyżej 120° = katastrofa.",
+      "noExtension": "No Extension — bez wydłużenia",
+      "noExtensionDetail": "Jeśli 1 noga zawiedzie, masterpoint się nie przesunie → brak shock load. Backup / limiting knots."
+    },
+    "snareSane": {
+      "title": "SNARE SANE",
+      "summary": "6 zasad dla dokładnej oceny anchora",
+      "strength": "Strength — wytrzymałość",
+      "strengthDetail": "Anchor wytrzymuje min 2× oczekiwany peak load. Oblicz max load (peak fall × safety factor 2).",
+      "noAbrasion": "No Abrasion — bez otarcia",
+      "noAbrasionDetail": "Brak ostrych krawędzi w load path. Visual check, padding przy ostrych krawędziach.",
+      "redundancy": "Redundancy — redundancja",
+      "redundancyDetail": "Jeśli 1 element zawiedzie, anchor wciąż trzyma. Min 2 niezależne punkty.",
+      "equalization": "Equalization — wyrównanie",
+      "equalizationDetail": "Obciążenie równomiernie rozłożone. Sliding-X aktywnie, BFK statycznie.",
+      "smallAngles": "Small Angles — małe kąty",
+      "smallAnglesDetail": "Kąt między nogami < 60° idealnie. 90° = per-leg 71%, 120° = 100%, > 120° = katastrofa.",
+      "noExtension": "No Extension — bez wydłużenia",
+      "noExtensionDetail": "Failure jednej nogi nie może spowodować shock load. Backup / limiting knots."
+    },
+    "nylonRule": {
+      "title": "Sub-40m Nylon Rule",
+      "summary": "Kompatybilność materiału popruhu z długością lajny",
+      "col": {
+        "length": "Długość",
+        "pa": "PA nylon",
+        "pes": "PES polyester",
+        "hmpe": "UHMWPE"
+      },
+      "hint": "Sub-40m highline = mainline + backup + leash wszystko PA (nylon). Statyczny materiał (PES, UHMWPE) generuje 2-3× wyższe peak forces = ryzyko przekroczenia limitu ISA:21 12 kN."
+    },
+    "wind": {
+      "title": "Wind Advisory",
+      "summary": "Progi ISA dla decyzji rig / derig",
+      "col": {
+        "speed": "Prędkość wiatru",
+        "action": "Rekomendacja"
+      },
+      "row": {
+        "ok": "OK, rig safely",
+        "caution": "Caution — zaczyna się detape",
+        "damage": "Damage risk — derig",
+        "stop": "Do not rig / ewakuacja"
+      },
+      "hint": "Śledź Ventusky, Windy lub Open-Meteo. Storm approach = derig natychmiast (electrostatic risk)."
+    },
+    "rlt": {
+      "title": "Recommended Lifetime (RLT)",
+      "summary": "Rekomendowana żywotność popruhu według typu i materiału",
+      "col": {
+        "type": "Typ (ISA:41)",
+        "pa": "PA nylon",
+        "pes": "PES polyester",
+        "hmpe": "UHMWPE"
+      },
+      "row": {
+        "visual": "Wizualna inspekcja",
+        "na": "Bez rekomendacji"
+      },
+      "hint": "Dni = ekspozycja na środowisko (UV, deszcz), NIE od daty produkcji. Przechowywanie się nie liczy."
+    }
+  }
+}
