@@ -1,7 +1,7 @@
 // SQLite schema pro lokální mirror serverové DB + lokální stav (outbox, cache).
 // Spouští se při startu, idempotentně (CREATE IF NOT EXISTS).
 
-export const SCHEMA_VERSION = 4;
+export const SCHEMA_VERSION = 6;
 
 export const SCHEMA_SQL = `
 CREATE TABLE IF NOT EXISTS slacklines (
@@ -87,7 +87,7 @@ CREATE TABLE IF NOT EXISTS cached_images (
   fetched_at TEXT NOT NULL
 );
 
--- v4: ISA Safety Companion — session log
+-- v4: ISA Safety Companion — session log (per-card, obecná kontrola)
 CREATE TABLE IF NOT EXISTS isa_check_sessions (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   card_id TEXT NOT NULL,
@@ -101,10 +101,31 @@ CREATE TABLE IF NOT EXISTS isa_check_sessions (
   note TEXT
 );
 
+-- v5: Per-line Safety Check (F5 v0.7.2) — kontrola vázaná na konkrétní lajnu
+-- v6: Rozšíření o Full rig log mode (check_type, gates_status, log_data)
+CREATE TABLE IF NOT EXISTS line_safety_checks (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  slackline_id INTEGER NOT NULL,       -- FK na slacklines.id
+  timestamp TEXT NOT NULL,              -- ISO — dokončení kontroly
+  cards_used TEXT NOT NULL,             -- JSON: [cardId, ...] které byly v checklistu
+  items_checked TEXT NOT NULL,          -- JSON: {cardId: [itemId, ...]} co uživatel odškrtl
+  total_items INTEGER NOT NULL,         -- celkem bodů v checklistu
+  checked_items INTEGER NOT NULL,       -- kolik z nich odškrtnuto
+  overall_status TEXT NOT NULL,         -- 'complete' | 'partial'
+  gps_lat REAL,
+  gps_lon REAL,
+  note TEXT,
+  -- v6 (rig log mode):
+  check_type TEXT NOT NULL DEFAULT 'quick',  -- 'quick' | 'full'
+  gates_status TEXT,                    -- JSON: {a, b, c} → 'complete'|'partial'|'skipped'|null
+  log_data TEXT                         -- JSON: {tension_kn, duration_hours, incident, incident_note, lead_rigger}
+);
+
 CREATE INDEX IF NOT EXISTS ix_points_bbox ON points(latitude, longitude);
 CREATE INDEX IF NOT EXISTS ix_components_type ON components(component_type, slackline_id);
 CREATE INDEX IF NOT EXISTS ix_components_slackline ON components(slackline_id);
 CREATE INDEX IF NOT EXISTS ix_crossings_slackline ON crossings(slackline_id);
 CREATE INDEX IF NOT EXISTS ix_crossings_user ON crossings(user_id);
 CREATE INDEX IF NOT EXISTS ix_isa_sessions_card ON isa_check_sessions(card_id, completed_at DESC);
+CREATE INDEX IF NOT EXISTS ix_line_safety_line ON line_safety_checks(slackline_id, timestamp DESC);
 `;

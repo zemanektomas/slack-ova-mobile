@@ -95,6 +95,263 @@
     "translateUnsupported": "Jazyk není podporován",
     "translateUnsupportedHint": "Překlad v zařízení podporuje jen omezenou sadu jazyků. Originál zůstane viditelný."
   },
+  "level": {
+    "sectionTitle": "Úroveň zkušeností",
+    "hint": "Nastavení určuje varování a doporučení v apce.",
+    "novice": "Nováček",
+    "normal": "Normál",
+    "pro": "Profi",
+    "noviceHint": "Prohlížím, začínám. Chci vidět varování a odkazy na komunitu.",
+    "normalHint": "Chodím highline, znám základy. Standardní pohled.",
+    "proHint": "Rigger / instruktor. Skryj advisories, zpřístupni advanced content."
+  },
+  "community": {
+    "title": "Komunita",
+    "sectionLabel": "Komunita",
+    "openBtn": "Zobrazit komunitu",
+    "noCountry": "Země nezjištěna z popisu lajny.",
+    "isaMembers": "ISA členové",
+    "slacklineGroups": "Slackline skupiny",
+    "empty": "Pro tuto zemi nejsou v katalogu žádné skupiny.",
+    "loadFailed": "Nepodařilo se načíst komunitu (potřeba internet).",
+    "footerNote": "Zdroj: Slackmap.com — Slackline groups & ISA members."
+  },
+  "onboarding": {
+    "title": "Vítej ve Slackline.Ova",
+    "slide1Title": "Offline mapa slackline",
+    "slide1Body": "Katalog 8000+ lajn ze slack.cz + Slackmap. Funguje bez signálu v terénu.",
+    "slide2Title": "Bezpečnostní referenční materiál",
+    "slide2Body": "ISA:21 pravidla, checklists, kalkulátory. Ale POZOR — apka není substituce tréninku. Highline je life-safety activity.",
+    "slide3Title": "Vyber svou úroveň",
+    "slide3Body": "Nastavení určuje jak apka bude mluvit s tebou. Změnit můžeš kdykoli v Nastavení.",
+    "next": "Další",
+    "start": "Pojďme na to",
+    "skip": "Přeskočit"
+  },
+  "novice": {
+    "advisoryTitle": "Jsi nováček",
+    "advisoryBody": "Highline NENÍ DIY podle apky. Najdi si zkušeného rigera nebo se přidej ke komunitě dříve, než něco postavíš.",
+    "showCommunity": "Zobrazit komunitu"
+  },
+  "rigWorkflow": {
+    "sectionPhases": "Fáze stavby",
+    "sectionCrossCutting": "Průřezové vrstvy (platí ve všech fázích)",
+    "gateBadge": "GATE {{gate}}",
+    "gateFullA": "GATE A — Kotvy schváleny",
+    "gateFullB": "GATE B — Systém schválen před natažením",
+    "gateFullC": "GATE C — Lajna schválena k chůzi",
+    "p0": {
+      "title": "0. Plán doma",
+      "i1": "Počasí + okno (vítr, bouřky, teplota)",
+      "i2": "Povolení / vlastník pozemku / přístup",
+      "i3": "Tým: kdo jde, kdo umí rescue",
+      "i4": "Kit list podle délky (main, backup, weblock, kladky, odsedky)",
+      "i5": "Plán B: co když nejde postavit → odjíždíme"
+    },
+    "p1": {
+      "title": "1. Příjezd a recon",
+      "i1": "Parkování, čas přístupu, co se nese",
+      "i2": "Zóna POD lajnou — kdo tam smí být",
+      "i3": "Vzdušný prostor, elektrické vedení, cesty",
+      "i4": "Únikové cesty + signál na telefonu",
+      "i5": "Fotka výchozího stavu"
+    },
+    "p2": {
+      "title": "2. Posouzení kotev",
+      "i1": "Nosnost a stav (skála / strom / borháky / A-frame)",
+      "i2": "Směr zatížení vs. směr kotvy",
+      "i3": "Redundance — 2 nezávislé body na každé straně",
+      "i4": "Hledání SPOF (jeden prvek = jeden pád)",
+      "i5": "Ochrana proti odření (hrany, bandáž)"
+    },
+    "p3": {
+      "title": "3. Stavba kotev",
+      "i1": "Main a backup ODDĚLENĚ (nesdílí prvek)",
+      "i2": "Tie-back tam kde je pochybnost",
+      "i3": "Vyrovnání zátěže, úhly < 60°",
+      "i4": "Šekly dotažené a zajištěné",
+      "i5": "Kontrola: co se stane když tento prvek praskne"
+    },
+    "p4": {
+      "title": "4. Transport popruhu",
+      "i1": "Tagline / přehození / přenesení",
+      "i2": "Kontrola překroucení po celé délce",
+      "i3": "Nic neleží v ostré hraně",
+      "i4": "Odsedky a rescue kit připravené na místě"
+    },
+    "p5": {
+      "title": "5. Tensioning (napínání)",
+      "i1": "MA systém (3:1 / compound), redirect minimálně",
+      "i2": "Progress capture = weblock, line grip jen dočasně",
+      "i3": "Sledování síly (odhad / load cell)",
+      "i4": "Komunikace: 'táhnu' / 'stop' / 'povoluju'",
+      "i5": "Backup nechat volný, ale ne prověšený na zemi"
+    },
+    "p6": {
+      "title": "6. Kontrola před vstupem",
+      "i1": "Obchůzka obou kotev — druhý pár očí",
+      "i2": "Všechny uzly a šekly znovu",
+      "i3": "Leash test (délka, kroužek, uzel)",
+      "i4": "Kdo dělá rescue a čím",
+      "i5": "Nahlas: 'lajna je ok'"
+    },
+    "p7": {
+      "title": "7. Provoz (walk)",
+      "i1": "Leash discipline — bez výjimek",
+      "i2": "Zóna pod lajnou hlídaná",
+      "i3": "Vítr / elektrostatika / únava → přerušit",
+      "i4": "Rotace lidí, pauzy, voda",
+      "i5": "Pravidelný pohled na kotvy"
+    },
+    "p8": {
+      "title": "8. Detension a odchod",
+      "i1": "Pořadí uvolnění (nejdřív lidé, pak tension)",
+      "i2": "Kontrola materiálu při balení (odření, deformace)",
+      "i3": "Zápis do logu: síla, doba, incidenty",
+      "i4": "Leave no trace",
+      "i5": "RLT — odečíst dny / hodiny popruhu"
+    },
+    "crossCutting": {
+      "material": {
+        "title": "Materiál",
+        "i1": "Certifikace a MBS",
+        "i2": "Stáří / RLT / historie zatížení",
+        "i3": "Inspekce před i po"
+      },
+      "safety": {
+        "title": "Bezpečnost",
+        "i1": "Redundance u všeho co drží člověka",
+        "i2": "Žádný SPOF (single point of failure)",
+        "i3": "Rescue plán DŘÍV než někdo vleze"
+      },
+      "people": {
+        "title": "Lidé",
+        "i1": "Jeden rozhoduje — vedoucí rigger",
+        "i2": "Kdo hlídá zónu pod lajnou",
+        "i3": "Role řečené nahlas na začátku"
+      }
+    }
+  },
+  "rigLog": {
+    "title": "Kompletní rig log",
+    "subtitle": "Celá stavba lajny — 3 gates + záznam",
+    "menuLabel": "Kompletní rig log",
+    "menuHint": "Pro stavbu od začátku (5-10 min)",
+    "gateA": {
+      "title": "Gate A — Kotvy schváleny",
+      "description": "Po posouzení kotev, před stavbou.",
+      "a1": "Kotvy posouzeny (nosnost, směr zatížení, stav)",
+      "a1Detail": "Vizuálně a mechanicky. Skála/strom/borháky/A-frame — každý má vlastní kritéria. Když pochybuješ o čemkoli, nejdi dál.",
+      "a2": "Redundance ověřena (2 nezávislé body na každé straně)",
+      "a2Detail": "Minimum 2 nezávislé body per strana, aby při selhání jednoho druhý udržel. Není redundance, není stavba.",
+      "a3": "SPOF nenalezen (žádné single point of failure)",
+      "a3Detail": "Projdi celý systém očima. Jeden prvek = jeden pád? Vidíš někde jediný karabinu, jediný uzel bez zálohy? Odstranit."
+    },
+    "gateB": {
+      "title": "Gate B — Systém před natažením",
+      "description": "Po stavbě kotev, transport a rig před tension.",
+      "b1": "Main a backup oddělené (nesdílí prvek)",
+      "b1Detail": "Hlavní lajna a back-up nesmějí sdílet žádný prvek v load path. Šekl, karabina, kotva — všechno per lajna samostatně.",
+      "b2": "Weblock / progress capture zajištěn",
+      "b2Detail": "Weblock je progress capture pro Buckingham systém. Tie-off zavázán, vizuálně zkontrolován. Bez tie-off = fatal.",
+      "b3": "Backup funkční (volný, ale ne prověšený na zem)",
+      "b3Detail": "Back-up musí viset volně (aby chytal při selhání), ale nesmí být tak volný že leží na zemi. Vyzkoušet vahou."
+    },
+    "gateC": {
+      "title": "Gate C — Lajna schválena k chůzi",
+      "description": "Druhý pár očí. Před vstupem highlinera.",
+      "c1": "Druhá kontrola provedena (druhý pár očí, obě kotvy)",
+      "c1Detail": "Jiný člen týmu projde obě kotvy nezávisle. Když rigger už nevidí své chyby po hodinách stavby, druhé oko je najde.",
+      "c2": "Leash ok (délka, kroužek, uzel)",
+      "c2Detail": "Odsedka: správná délka pro danou lajnu, certifikovaný kruh obepínající obě lajny, uzel s ocasem min 10 cm.",
+      "c3": "Rescue plán a kdo ho dělá",
+      "c3Detail": "Nahlas: kdo, čím, kde je gear. Bez rescue plánu nikdo nesmí vlézt na lajnu. Suspension trauma = 5 min limit."
+    },
+    "log": {
+      "title": "Záznam stavby (volitelné)",
+      "tensionKn": "Max tension (kN)",
+      "tensionKnHint": "Odhad nebo změřeno load cell",
+      "durationHours": "Doba stání lajny (hodiny)",
+      "durationHoursHint": "Kolik hodin lajna visela (pro RLT tracking)",
+      "incident": "Došlo k incidentu?",
+      "incidentNote": "Popis incidentu",
+      "incidentNoteHint": "Co se stalo, jak jste to vyřešili",
+      "leadRigger": "Vedoucí rigger",
+      "leadRiggerHint": "Kdo měl finální slovo"
+    },
+    "gateStatus": {
+      "complete": "Kompletně odškrtnuto",
+      "partial": "Částečně odškrtnuto",
+      "skipped": "Přeskočeno",
+      "notStarted": "Nezahájeno"
+    },
+    "skipGate": "Přeskočit gate",
+    "confirmSkip": "Opravdu přeskočit tento gate?",
+    "confirmSkipBody": "Přeskočení se uloží do záznamu. Doporučeno projít každý gate."
+  },
+  "quickCheck": {
+    "title": "Rychlá kontrola před chůzí",
+    "subtitle": "10 klíčových bodů, cca 30 sekund",
+    "menuLabel": "Rychlá kontrola",
+    "menuHint": "Před chůzí (30 sec)",
+    "categoryLabel": {
+      "gear": "Vybavení",
+      "anchor": "Kotva",
+      "material": "Materiál",
+      "weather": "Počasí",
+      "rescue": "Záchrana"
+    },
+    "reason": {
+      "nylonRule": "Highline pod 40 m — kritický materiálový požadavek",
+      "wind": "Lajna nad terénem — vítr může způsobit selhání",
+      "storm": "Vyšší / delší lajna — riziko elektrostatického výboje",
+      "treeAnchor": "Kotva na stromě — vyžaduje bandáž a inspekci"
+    },
+    "item": {
+      "harness": "Sedák správně nasazen",
+      "harnessDetail": "Doubled buckle, waist belt nad kyčlemi, leg loops utažené. Zkontrolovat vizuálně před nasednutím.",
+      "leash": "Odsedka provlečená přes obě lajny",
+      "leashDetail": "Certifikovaný kruh musí obepínat hlavní lajnu i back-up. Pokud jen jednu → při selhání spadneš pod druhou.",
+      "anchor": "Kotva zkontrolována",
+      "anchorDetail": "Redundance (min 2 body), úhel ramen < 45°, žádné ostré hrany. Vizuálně na obou stranách.",
+      "backup": "Backup připojení funkční",
+      "backupDetail": "Backup ring nebo PAS na sedáku. Fyzicky pověs se na backup samostatně, ověř drží.",
+      "rescuePlan": "Rescue plán jasný",
+      "rescuePlanDetail": "Kdo záchranu provede, čím (rope, ascender, kladka), jak dlouho by trvalo dostat se k tobě. Nahlas s týmem.",
+      "weblockTieoff": "Weblock tie-off zavázán",
+      "weblockTieoffDetail": "Poslední krok montáže weblocku. Bez tie-off se popruh může vysmeknout při vibraci. Vizuálně na obou stranách.",
+      "nylonRule": "Všechen materiál nylon (< 40 m HL)",
+      "nylonRuleDetail": "Hlavní lajna, back-up i odsedka musí být nylon. Polyester nebo Dyneema na krátké HL = síla na kotvě přes 12 kN.",
+      "wind": "Vítr aktuálně < 30 km/h",
+      "windDetail": "Ventusky / Windy / aktuální pocit. Nad 30 km/h začíná detape, nad 60 km/h každá highline selže.",
+      "storm": "Bouřky nehrozí v následujících 2 hodinách",
+      "stormDetail": "Radar (Meteoradar, Windy). Storm approach + déšť = elektrostatický výboj v UHMWPE, plasma 5000-15000°C. Sundej lajnu.",
+      "treeAnchor": "Kotvy na stromě zkontrolovány",
+      "treeAnchorDetail": "Průměr > 30 cm, zdravý strom, kůra nepoškozená, bandáž mezi popruhem a kůrou. Pokud pochybnost — nekotvit."
+    }
+  },
+  "lineSafety": {
+    "sectionTitle": "Bezpečnostní kontrola",
+    "neverChecked": "Zatím nekontrolováno",
+    "lastCheckedAt": "Naposled: {{date}}",
+    "lastCheckedComplete": "Naposled: {{date}} ✓",
+    "lastCheckedPartial": "Naposled: {{date}} ({{checked}}/{{total}})",
+    "listIntroForLine": "Doporučená kontrola pro tuhle lajnu:",
+    "typeAndDims": "{{type}} · {{length}} m · {{height}} m nad zemí",
+    "typeAndLength": "{{type}} · {{length}} m",
+    "typeOnly": "{{type}}",
+    "startCheck": "Zahájit kontrolu",
+    "openHistory": "Historie kontrol ({{count}})",
+    "openHistoryEmpty": "Historie kontrol",
+    "sessionTitle": "Kontrola pro: {{name}}",
+    "sessionSave": "Uložit kontrolu",
+    "sessionSaved": "Kontrola uložena",
+    "sessionSaveError": "Uložení selhalo",
+    "sessionEmpty": "Nezaškrtl jsi žádný bod. Uložit kontrolu jen s poznámkou?",
+    "sessionProgress": "{{checked}}/{{total}} zaškrtnuto",
+    "peek": "Ukaž body",
+    "peekHide": "Skrýt body"
+  },
   "isaSafety": {
     "title": "ISA Safety Companion",
     "subtitle": "Bezpečnostní příručka pro highline",
@@ -124,29 +381,25 @@
     }
   },
   "cards": {
-    "commandments": {
-      "title": "10 přikázání highline",
-      "summary": "Základní safety pravidla, ze kterých se vše ostatní odvozuje",
-      "c1": "1. Vždy 3 borháky v anchor",
-      "c1Detail": "Jeden borhák = single point of failure. Tři borháky snáší tah i při selhání jednoho. Zdroj: HowNot2 Bolting Bible, ISA:21.",
-      "c2": "2. Úhel mezi anchor legs ≤ 45°",
-      "c2Detail": "Nad 60° roste per-leg síla exponenciálně; nad 90° NIKDY. Úhel 120° = každá noha nese víc než celá zátěž. Zdroj: ISA anchor best practice.",
-      "c3": "3. Pro HL pod 40 m — všechen materiál nylon",
-      "c3Detail": "Polyester a Dyneema nemají dostatek stretch pro absorpci energie pádu. Krátká lajna + statický materiál = anchor peak přes 12 kN. Zdroj: ISA:21 Příloha 5.",
-      "c4": "4. Bowline NIKDY pro HL anchor",
-      "c4Detail": "Cyklické zatížení uvolní uzel. Používej Figure-8 re-traced. Zdroj: ISA:21 §3.3.2.",
-      "c5": "5. Working load ≤ 12 kN, backupfall ≤ 8 kN",
-      "c5Detail": "Nepřepnout ani jedno. Nad limitem = risk selhání komponentů. Zdroj: ISA:21 §1.3.",
-      "c6": "6. Vždy 2 attachments k lajně během operace",
-      "c6Detail": "Nikdy neodpojuj primary attachment, dokud secondary neni load-tested. Platí pro rigging, tape, rescue. Zdroj: ISA Rescue best practice.",
-      "c7": "7. Vítr nad 60 km/h = prakticky každý HL selže",
-      "c7Detail": "Derig před tím, ne po. Historicky 37 wind-related incidents, 10 s katastrofickým selháním. Zdroj: ISA Wind Advisory 2020.",
-      "c8": "8. Buddy check před každým nástupem",
-      "c8Detail": "Zkušenost check nenahrazuje — většina nehod je za rutinou. Kontrolujte se navzájem: harness, leash, backup. Zdroj: ISA Safety culture.",
-      "c9": "9. Weblock vždy s tie-off",
-      "c9Detail": "Bez tie-off se popruh může vysmeknout při vibraci. Poslední krok riggingu weblocku. Zdroj: ISA:21 §3.11.1.2.",
-      "c10": "10. Bouře blízko + déšť = DERIG NOW",
-      "c10Detail": "Electrostatic discharge může tavit fibers při 5000-15000°C i bez přímého blesku. UHMWPE nejzranitelnější (taje 150°C). ČR incident 2024. Zdroj: ISA Electrostatic Warning 12/2025."
+    "bowline": {
+      "title": "Dračí smyčka nikdy na kotvě highline",
+      "summary": "Kritické pravidlo — bowline se cyklickým zatížením rozvazuje",
+      "bw1": "Nepoužívej bowline na kotvě",
+      "bw1Detail": "Opakované zatěžování a povolování uzel rozvazuje. Riziko rozvázání pod zátěží — smrtelné.",
+      "bw2": "Používej provlékanou osmičku",
+      "bw2Detail": "Provlékaná osmička (Figure-8 re-traced) drží pod cyklickou zátěží. Standard pro highline anchor.",
+      "bw3": "Ocásek min 10 cm",
+      "bw3Detail": "Po utažení uzlu musí ocásek zbývat minimálně 10 cm (dopor. 15+ cm). Kratší = riziko protažení uzlem."
+    },
+    "weblockTieoff": {
+      "title": "Weblock (kotvítko) vždy s tie-off",
+      "summary": "Poslední krok montáže kotvítka — bez tie-off se popruh vysmekne",
+      "wt1": "Tie-off je poslední krok montáže",
+      "wt1Detail": "Po nasazení popruhu do kotvítka udělej tie-off na ocasu popruhu (obvykle overhand + backup knot). Bez toho se popruh může postupně vysmeknout.",
+      "wt2": "Vizuální kontrola na obou stranách",
+      "wt2Detail": "Před chůzí zkontroluj tie-off na obou kotvítkách. Součást kontroly v páru.",
+      "wt3": "Bez tie-off riziko při vibraci",
+      "wt3Detail": "Vibrace + gravitační napínání popruhu = postupné vysmýkání ze kotvítka. Zejm. na dlouhých lajnách s větrem. Fatální pokud selže během chůze."
     },
     "electrostatic": {
       "title": "Electrostatic Discharge Warning",
@@ -201,6 +454,24 @@
       "s3Detail": "Toxická krev nahrne do srdce → kardiální arytmie / zástava. Posazovat pomalu, W-pozice (kolena k hrudi), pak recovery position.",
       "s4": "Toto NENÍ rescue návod — volej 112",
       "s4Detail": "Highline rescue vyžaduje trénink. Neaktivuj podle apky. Primárně volej 112 (horská služba, HZS). Toto card je awareness — abys věděl že máš málo času."
+    },
+    "rigWorkflow": {
+      "title": "Kompletní rig workflow",
+      "summary": "Celý strom stavby lajny od plánu doma po odchod"
+    },
+    "novice": {
+      "title": "Začínáš? Přečti si nejdřív",
+      "summary": "Základní pravidla pro nováčky, než někam vyrazíš",
+      "n1": "Highline NENÍ DIY podle apky",
+      "n1Detail": "Apka je referenční materiál, ne návod pro první rig. Falešný pocit bezpečí z apky = smrtelně nebezpečný. Trénink je nezbytný.",
+      "n2": "Nikdy nestavěj sám",
+      "n2Detail": "První roky se učíš od zkušených. Pojď stavět s nimi jako pozorovatel, pak jako pomocník, teprve pak jako vedoucí rigger. Trvá to roky.",
+      "n3": "Najdi si komunitu",
+      "n3Detail": "V ČR máme aktivní skupiny: Slackline Ostrava, Olomouc, Praha, Brno, atd. FB skupiny + osobní kontakty. V sekci Komunita ve Nastavení najdeš seznam.",
+      "n4": "Choď na oficiální kurzy",
+      "n4Detail": "ISA (International Slackline Association) certifikuje instruktory. V ČR máme Anče Kuchařovou (Liberec) + další. Rigger Cert = mezinárodní standard.",
+      "n5": "Začni na nízkých parkových lajnách",
+      "n5Detail": "Longline < 20 cm nad zemí. Pak trickline. Highline až po letech tréninku a s někým zkušeným, kdo dohlédne."
     },
     "isa21Limits": {
       "title": "Limity sil ISA:21",

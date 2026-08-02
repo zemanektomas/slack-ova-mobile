@@ -15,6 +15,13 @@ import { useLangStore } from '../store/langStore';
 import { useTheme, Theme } from '../theme';
 import { translateOnDevice, UnsupportedSourceLangError, SupportedLang } from '../i18n/translate';
 import type { SlacklineDetail, PointResponse } from '../types';
+import { QuickCheckSheet } from './QuickCheckSheet';
+import { FullRigLogSheet } from './FullRigLogSheet';
+import { CommunitySheet } from './CommunitySheet';
+import { generateQuickCheckForLine } from '../data/isa/quickCheck';
+import { getLastLineSafetyCheck, countLineSafetyChecks, LineSafetyCheck } from '../db/lineSafetyChecks';
+import { useLevelStore } from '../store/levelStore';
+import { extractCountryCode } from '../api/community';
 
 // Stav překladu jedné textové sekce (description / anchors_info / access_info).
 // Klíč v translations objektu = sekce ('description' | 'anchors' | 'access').
@@ -44,6 +51,36 @@ export default function InlineDetail({ slacklineId }: { slacklineId: number }) {
   useEffect(() => {
     setTranslations({});
   }, [slacklineId, lang]);
+
+  // Safety check state (F5 v0.7.2)
+  const [safetyExpanded, setSafetyExpanded] = useState(false);
+  const [quickSheetOpen, setQuickSheetOpen] = useState(false);
+  const [fullSheetOpen, setFullSheetOpen] = useState(false);
+  const [lastCheck, setLastCheck] = useState<LineSafetyCheck | null>(null);
+  const [checkCount, setCheckCount] = useState(0);
+
+  // Level + Community (v0.7.3)
+  const level = useLevelStore((s) => s.level);
+  const [communitySheetOpen, setCommunitySheetOpen] = useState(false);
+
+  const loadSafetyStats = async () => {
+    try {
+      const [last, count] = await Promise.all([
+        getLastLineSafetyCheck(slacklineId),
+        countLineSafetyChecks(slacklineId),
+      ]);
+      setLastCheck(last);
+      setCheckCount(count);
+    } catch {}
+  };
+
+  useEffect(() => {
+    setSafetyExpanded(false);
+    setLastCheck(null);
+    setCheckCount(0);
+    loadSafetyStats();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [slacklineId]);
 
   const handleTranslate = async (key: string, sourceText: string) => {
     const prev = translations[key] ?? initialTranslate();
@@ -268,9 +305,335 @@ export default function InlineDetail({ slacklineId }: { slacklineId: number }) {
           </Pressable>
         );
       })()}
+
+      {/* 9) Bezpečnostní kontrola (F5 v0.7.2) — expandable pod zdrojem */}
+      <SafetySection
+        t={t}
+        tr={tr}
+        detail={detail}
+        expanded={safetyExpanded}
+        onToggleExpand={() => setSafetyExpanded((v) => !v)}
+        lastCheck={lastCheck}
+        checkCount={checkCount}
+        lang={lang}
+        onStartQuick={() => setQuickSheetOpen(true)}
+        onStartFull={() => setFullSheetOpen(true)}
+      />
+
+      {/* 10) Community — v0.7.3, pod Bezpečnostní kontrolou */}
+      {(() => {
+        const country = extractCountryCode(detail.state);
+        if (!country) return null;
+        return (
+          <View style={{ marginTop: 12 }}>
+            <Pressable
+              onPress={() => setCommunitySheetOpen(true)}
+              style={[communityStyles.btn, { borderColor: t.border, backgroundColor: t.surfaceAlt }]}
+            >
+              <MaterialCommunityIcons
+                name="account-group-outline"
+                size={16}
+                color={t.text}
+                style={{ marginRight: 8 }}
+              />
+              <Text style={[communityStyles.btnText, { color: t.text }]}>
+                {tr('community.openBtn')} ({country})
+              </Text>
+              <MaterialCommunityIcons name="chevron-right" size={18} color={t.textMuted} />
+            </Pressable>
+          </View>
+        );
+      })()}
+
+      {/* 11) Novice advisory — jen když level='novice' */}
+      {level === 'novice' && (
+        <View style={[noviceStyles.box, { borderColor: '#e11d48', backgroundColor: t.surfaceAlt }]}>
+          <View style={noviceStyles.header}>
+            <MaterialCommunityIcons name="alert-outline" size={16} color="#e11d48" style={{ marginRight: 6 }} />
+            <Text style={[noviceStyles.title, { color: t.text }]}>
+              {tr('novice.advisoryTitle')}
+            </Text>
+          </View>
+          <Text style={[noviceStyles.body, { color: t.textMuted }]}>
+            {tr('novice.advisoryBody')}
+          </Text>
+          {extractCountryCode(detail.state) && (
+            <Pressable
+              onPress={() => setCommunitySheetOpen(true)}
+              style={noviceStyles.link}
+            >
+              <MaterialCommunityIcons name="arrow-right" size={14} color={t.accent} />
+              <Text style={[noviceStyles.linkText, { color: t.accent }]}>
+                {tr('novice.showCommunity')}
+              </Text>
+            </Pressable>
+          )}
+        </View>
+      )}
+
+      <QuickCheckSheet
+        visible={quickSheetOpen}
+        line={detail}
+        onClose={() => setQuickSheetOpen(false)}
+        onSaved={loadSafetyStats}
+      />
+      <FullRigLogSheet
+        visible={fullSheetOpen}
+        line={detail}
+        onClose={() => setFullSheetOpen(false)}
+        onSaved={loadSafetyStats}
+      />
+      <CommunitySheet
+        visible={communitySheetOpen}
+        countryCode={extractCountryCode(detail.state)}
+        onClose={() => setCommunitySheetOpen(false)}
+      />
     </View>
   );
 }
+
+// -----------------------------------------------------------------------------
+
+const noviceStyles = StyleSheet.create({
+  box: {
+    marginTop: 12,
+    padding: 12,
+    borderWidth: 1,
+    borderRadius: 8,
+    borderLeftWidth: 3,
+  },
+  header: { flexDirection: 'row', alignItems: 'center', marginBottom: 4 },
+  title: { fontSize: 13, fontWeight: '600' },
+  body: { fontSize: 12, lineHeight: 16 },
+  link: { flexDirection: 'row', alignItems: 'center', marginTop: 8 },
+  linkText: { fontSize: 12, fontWeight: '500', marginLeft: 4 },
+});
+
+const communityStyles = StyleSheet.create({
+  btn: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: 10,
+    paddingHorizontal: 12,
+    borderWidth: 1,
+    borderRadius: 8,
+  },
+  btnText: { flex: 1, fontSize: 13, fontWeight: '500' },
+});
+
+// -----------------------------------------------------------------------------
+
+function SafetySection({
+  t, tr, detail, expanded, onToggleExpand, lastCheck, checkCount, lang, onStartQuick, onStartFull,
+}: {
+  t: Theme;
+  tr: (k: string, opts?: any) => string;
+  detail: SlacklineDetail;
+  expanded: boolean;
+  onToggleExpand: () => void;
+  lastCheck: LineSafetyCheck | null;
+  checkCount: number;
+  lang: SupportedLang;
+  onStartQuick: () => void;
+  onStartFull: () => void;
+}) {
+  const { items } = generateQuickCheckForLine(detail);
+
+  const lastCheckLabel = lastCheck
+    ? lastCheck.checked_items >= lastCheck.total_items
+      ? tr('lineSafety.lastCheckedComplete', { date: formatCheckDate(lastCheck.timestamp, lang) })
+      : tr('lineSafety.lastCheckedPartial', {
+          date: formatCheckDate(lastCheck.timestamp, lang),
+          checked: lastCheck.checked_items,
+          total: lastCheck.total_items,
+        })
+    : tr('lineSafety.neverChecked');
+
+  const typeText = detail.type
+    ? detail.length && detail.height
+      ? tr('lineSafety.typeAndDims', {
+          type: detail.type,
+          length: Math.round(detail.length),
+          height: Math.round(detail.height),
+        })
+      : detail.length
+        ? tr('lineSafety.typeAndLength', { type: detail.type, length: Math.round(detail.length) })
+        : tr('lineSafety.typeOnly', { type: detail.type })
+    : null;
+
+  return (
+    <View style={{ marginTop: 12 }}>
+      <Pressable
+        onPress={onToggleExpand}
+        style={[
+          safetyStyles.header,
+          { borderColor: t.border, backgroundColor: t.surfaceAlt },
+        ]}
+      >
+        <MaterialCommunityIcons
+          name="shield-check-outline"
+          size={20}
+          color={t.text}
+          style={{ marginRight: 10 }}
+        />
+        <Text style={[safetyStyles.title, { color: t.text }]}>
+          {tr('lineSafety.sectionTitle')}
+        </Text>
+        <MaterialCommunityIcons
+          name={expanded ? 'chevron-up' : 'chevron-down'}
+          size={20}
+          color={t.textMuted}
+        />
+      </Pressable>
+
+      {expanded && (
+        <View style={[safetyStyles.body, { backgroundColor: t.surfaceAlt, borderColor: t.border }]}>
+          <Text style={[safetyStyles.lastCheck, { color: t.textMuted }]}>
+            {lastCheckLabel}
+          </Text>
+
+          <Text style={[safetyStyles.intro, { color: t.textMuted }]}>
+            {tr('lineSafety.listIntroForLine')}
+          </Text>
+          {typeText && (
+            <Text style={[safetyStyles.typeText, { color: t.textDim }]}>({typeText})</Text>
+          )}
+
+          <View style={{ marginTop: 6 }}>
+            {items.map((item) => (
+              <View key={item.id} style={safetyStyles.itemRow}>
+                <MaterialCommunityIcons
+                  name={item.icon as any}
+                  size={16}
+                  color={t.textMuted}
+                  style={{ marginRight: 8 }}
+                />
+                <Text style={[safetyStyles.itemLabel, { color: t.text }]} numberOfLines={2}>
+                  {tr(item.labelKey)}
+                </Text>
+              </View>
+            ))}
+          </View>
+
+          <View style={safetyStyles.actionsRow}>
+            <Pressable
+              onPress={onStartQuick}
+              style={[safetyStyles.actionBtn, { backgroundColor: t.accent }]}
+            >
+              <MaterialCommunityIcons
+                name="lightning-bolt"
+                size={16}
+                color={t.accentOn}
+                style={{ marginRight: 6 }}
+              />
+              <View>
+                <Text style={{ color: t.accentOn, fontWeight: '600', fontSize: 13 }}>
+                  {tr('quickCheck.menuLabel')}
+                </Text>
+                <Text style={{ color: t.accentOn, fontSize: 10, opacity: 0.85 }}>
+                  {tr('quickCheck.menuHint')}
+                </Text>
+              </View>
+            </Pressable>
+            <Pressable
+              onPress={onStartFull}
+              style={[safetyStyles.actionBtn, { borderWidth: 1, borderColor: t.accent }]}
+            >
+              <MaterialCommunityIcons
+                name="wrench-outline"
+                size={16}
+                color={t.accent}
+                style={{ marginRight: 6 }}
+              />
+              <View>
+                <Text style={{ color: t.accent, fontWeight: '600', fontSize: 13 }}>
+                  {tr('rigLog.menuLabel')}
+                </Text>
+                <Text style={{ color: t.textDim, fontSize: 10 }}>
+                  {tr('rigLog.menuHint')}
+                </Text>
+              </View>
+            </Pressable>
+          </View>
+
+          {checkCount > 0 && (
+            <Text style={[safetyStyles.historyLink, { color: t.textDim }]}>
+              📜 {tr('lineSafety.openHistory', { count: checkCount })}
+            </Text>
+          )}
+        </View>
+      )}
+    </View>
+  );
+}
+
+function formatCheckDate(iso: string, lang: SupportedLang): string {
+  try {
+    const d = new Date(iso);
+    const locale = lang === 'cs' ? 'cs-CZ' : lang === 'pl' ? 'pl-PL' : 'en-US';
+    return d.toLocaleDateString(locale, {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+    });
+  } catch {
+    return iso.slice(0, 16).replace('T', ' ');
+  }
+}
+
+const safetyStyles = StyleSheet.create({
+  header: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: 10,
+    paddingHorizontal: 12,
+    borderWidth: 1,
+    borderRadius: 8,
+  },
+  title: { flex: 1, fontSize: 14, fontWeight: '600' },
+  body: {
+    borderWidth: 1,
+    borderTopWidth: 0,
+    borderBottomLeftRadius: 8,
+    borderBottomRightRadius: 8,
+    padding: 12,
+    marginTop: -1,
+  },
+  lastCheck: { fontSize: 11, marginBottom: 10, fontStyle: 'italic' },
+  intro: { fontSize: 12, marginBottom: 2 },
+  typeText: { fontSize: 11, marginBottom: 6 },
+  itemRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: 4,
+  },
+  itemLabel: { flex: 1, fontSize: 12 },
+  startBtn: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 10,
+    borderRadius: 8,
+    marginTop: 12,
+  },
+  actionsRow: {
+    flexDirection: 'row',
+    gap: 8,
+    marginTop: 12,
+  },
+  actionBtn: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 10,
+    paddingHorizontal: 8,
+    borderRadius: 8,
+  },
+  historyLink: { fontSize: 11, marginTop: 8, textAlign: 'center' },
+});
 
 // Slackmap restriction `"none"` / `"none: ..."` znamená "žádná omezení" — nepatří
 // do červeného warningu. Skutečná varování začínají `"partial"` nebo `"full"`.

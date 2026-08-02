@@ -1,6 +1,5 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import {
-  Alert,
   Modal,
   Pressable,
   ScrollView,
@@ -10,162 +9,35 @@ import {
 } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
-import * as Location from 'expo-location';
 import { useTheme } from '../theme';
 import { CARDS, CardData, ChecklistItem } from '../data/isa/cards';
-import { useLangStore } from '../store/langStore';
-import type { Lang } from '../i18n';
-import {
-  ISASession,
-  countSessions,
-  deleteSession,
-  listSessions,
-  saveSession,
-} from '../db/isaSessions';
+import { RIG_PHASES, CROSS_CUTTING_LAYERS, RigPhase, CrossCuttingLayer } from '../data/isa/rigLog';
 
 interface ISASafetySheetProps {
   visible: boolean;
   onClose: () => void;
 }
 
-type Mode = 'read' | 'session';
-
 /**
- * ISA Safety Companion — F5 milestone (v0.7.0).
+ * ISA Safety Companion — F5 milestone (v0.7.0 → refactored v0.7.2).
  *
- * Two modes:
- *   - read: static content (study mode)
- *   - session: interactive checkboxes for on-site anchor build verification;
- *     completed sessions persist to SQLite (isa_check_sessions) with timestamp
- *     and best-effort GPS fix.
+ * READ-ONLY reference guide. Interactive per-line checks moved to
+ * QuickCheckSheet (accessible from line detail). This sheet remains as
+ * pure study/reference material — 11 cards with expandable content.
  *
- * Content data-driven from `src/data/isa/cards.ts`, i18n keys resolved via t().
+ * Session mode + history removed in v0.7.2 (rig log insight: interactive
+ * checks belong to specific lines, not generic reference). SQLite table
+ * `isa_check_sessions` is kept in schema for backward compat, but not
+ * written to anymore.
  */
 export function ISASafetySheet({ visible, onClose }: ISASafetySheetProps) {
   const t = useTheme();
   const { tr } = useTr();
-  const lang = useLangStore((s) => s.lang);
-  const [mode, setMode] = useState<Mode>('read');
   const [expandedCard, setExpandedCard] = useState<string | null>(null);
-  // Checked state per session — cardId → Set of itemIds
-  const [checked, setChecked] = useState<Record<string, Set<string>>>({});
-  // Session start timestamp per cardId — set on first check, cleared on save/reset
-  const [sessionStarts, setSessionStarts] = useState<Record<string, string>>({});
-  // Historie per card + total count (nezobrazovat 0 pokud nikdy nebyla kontrola)
-  const [historyCards, setHistoryCards] = useState<Record<string, number>>({});
-  const [historyDetail, setHistoryDetail] = useState<{
-    cardId: string;
-    sessions: ISASession[];
-  } | null>(null);
-
-  // Načíst counts pro badge při každém open
-  useEffect(() => {
-    if (!visible) return;
-    (async () => {
-      const next: Record<string, number> = {};
-      for (const card of CARDS) {
-        if (!card.checklist) continue;
-        try {
-          next[card.id] = await countSessions(card.id);
-        } catch {
-          next[card.id] = 0;
-        }
-      }
-      setHistoryCards(next);
-    })();
-  }, [visible]);
 
   const handleClose = () => {
     setExpandedCard(null);
-    setChecked({});
-    setSessionStarts({});
-    setHistoryDetail(null);
-    setMode('read');
     onClose();
-  };
-
-  const toggleCheck = (cardId: string, itemId: string) => {
-    setChecked((prev) => {
-      const next = { ...prev };
-      const set = new Set(next[cardId] ?? []);
-      if (set.has(itemId)) set.delete(itemId);
-      else set.add(itemId);
-      next[cardId] = set;
-      return next;
-    });
-    // Automaticky založ session timestamp při první interakci
-    setSessionStarts((prev) =>
-      prev[cardId] ? prev : { ...prev, [cardId]: new Date().toISOString() },
-    );
-  };
-
-  const resetSession = (cardId: string) => {
-    setChecked((prev) => ({ ...prev, [cardId]: new Set() }));
-    setSessionStarts((prev) => {
-      const next = { ...prev };
-      delete next[cardId];
-      return next;
-    });
-  };
-
-  const handleSaveSession = async (card: CardData) => {
-    const items = checked[card.id];
-    if (!card.checklist || !items || items.size === 0) return;
-    const startedAt = sessionStarts[card.id] ?? new Date().toISOString();
-
-    // Best-effort GPS: quick last-known fix; nechceme blokovat save čekáním na live fix
-    let gpsLat: number | null = null;
-    let gpsLon: number | null = null;
-    try {
-      const perm = await Location.getForegroundPermissionsAsync();
-      if (perm.granted) {
-        const last = await Location.getLastKnownPositionAsync({ maxAge: 5 * 60 * 1000 });
-        if (last) {
-          gpsLat = last.coords.latitude;
-          gpsLon = last.coords.longitude;
-        }
-      }
-    } catch {}
-
-    try {
-      await saveSession({
-        cardId: card.id,
-        startedAt,
-        totalItems: card.checklist.length,
-        checkedIds: Array.from(items),
-        gpsLat,
-        gpsLon,
-      });
-      // Update badge count okamžitě
-      setHistoryCards((prev) => ({ ...prev, [card.id]: (prev[card.id] ?? 0) + 1 }));
-      resetSession(card.id);
-      Alert.alert(tr('isaSafety.sessionComplete'), '');
-    } catch (err: any) {
-      Alert.alert(tr('common.error') ?? 'Error', err?.message ?? 'Save failed');
-    }
-  };
-
-  const openHistory = async (cardId: string) => {
-    try {
-      const sessions = await listSessions(cardId, 30);
-      setHistoryDetail({ cardId, sessions });
-    } catch {
-      setHistoryDetail({ cardId, sessions: [] });
-    }
-  };
-
-  const handleDeleteSession = async (id: number) => {
-    try {
-      await deleteSession(id);
-      if (historyDetail) {
-        const filtered = historyDetail.sessions.filter((s) => s.id !== id);
-        setHistoryDetail({ ...historyDetail, sessions: filtered });
-        setHistoryCards((prev) => ({
-          ...prev,
-          [historyDetail.cardId]: Math.max(0, (prev[historyDetail.cardId] ?? 1) - 1),
-        }));
-      }
-    } catch {}
   };
 
   return (
@@ -189,39 +61,15 @@ export function ISASafetySheet({ visible, onClose }: ISASafetySheetProps) {
             </Pressable>
           </View>
 
-          <View style={styles.modeSwitch}>
-            <ModeChip
-              label={tr('isaSafety.modeReadOnly')}
-              icon="book-open-outline"
-              active={mode === 'read'}
-              onPress={() => setMode('read')}
-              theme={t}
-            />
-            <ModeChip
-              label={tr('isaSafety.modeSession')}
-              icon="clipboard-check-outline"
-              active={mode === 'session'}
-              onPress={() => setMode('session')}
-              theme={t}
-            />
-          </View>
-
           <ScrollView style={styles.scroll} contentContainerStyle={{ paddingBottom: 24 }}>
             {CARDS.map((card) => (
               <CardView
                 key={card.id}
                 card={card}
-                mode={mode}
                 expanded={expandedCard === card.id}
                 onToggleExpand={() =>
                   setExpandedCard((prev) => (prev === card.id ? null : card.id))
                 }
-                checkedItems={checked[card.id] ?? new Set()}
-                onToggleCheck={(itemId) => toggleCheck(card.id, itemId)}
-                historyCount={historyCards[card.id] ?? 0}
-                onSaveSession={() => handleSaveSession(card)}
-                onResetSession={() => resetSession(card.id)}
-                onOpenHistory={() => openHistory(card.id)}
                 theme={t}
                 tr={tr}
               />
@@ -231,18 +79,6 @@ export function ISASafetySheet({ visible, onClose }: ISASafetySheetProps) {
               {tr('isaSafety.disclaimer')}
             </Text>
           </ScrollView>
-
-          {historyDetail && (
-            <HistorySheet
-              cardId={historyDetail.cardId}
-              sessions={historyDetail.sessions}
-              onClose={() => setHistoryDetail(null)}
-              onDelete={handleDeleteSession}
-              lang={lang}
-              theme={t}
-              tr={tr}
-            />
-          )}
 
           <View style={[styles.footer, { borderTopColor: t.border }]}>
             <Pressable onPress={handleClose} style={[styles.footerBtn, { backgroundColor: t.accent }]}>
@@ -259,58 +95,30 @@ export function ISASafetySheet({ visible, onClose }: ISASafetySheetProps) {
 
 function CardView({
   card,
-  mode,
   expanded,
   onToggleExpand,
-  checkedItems,
-  onToggleCheck,
-  historyCount,
-  onSaveSession,
-  onResetSession,
-  onOpenHistory,
   theme,
   tr,
 }: {
   card: CardData;
-  mode: Mode;
   expanded: boolean;
   onToggleExpand: () => void;
-  checkedItems: Set<string>;
-  onToggleCheck: (itemId: string) => void;
-  historyCount: number;
-  onSaveSession: () => void;
-  onResetSession: () => void;
-  onOpenHistory: () => void;
   theme: ReturnType<typeof useTheme>;
   tr: (key: string, opts?: Record<string, unknown>) => string;
 }) {
-  const totalItems = card.checklist?.length ?? 0;
-  const checkedCount = checkedItems.size;
-  const allChecked = totalItems > 0 && checkedCount === totalItems;
-
   return (
     <View style={[styles.card, { borderColor: theme.border, backgroundColor: theme.surfaceAlt }]}>
       <Pressable onPress={onToggleExpand} style={styles.cardHeader}>
         <MaterialCommunityIcons
           name={card.icon as any}
           size={22}
-          color={mode === 'session' && allChecked ? theme.accent : theme.text}
+          color={theme.text}
           style={{ marginRight: 10 }}
         />
         <View style={{ flex: 1 }}>
           <Text style={[styles.cardTitle, { color: theme.text }]}>{tr(card.titleKey)}</Text>
           <Text style={[styles.cardSummary, { color: theme.textMuted }]}>{tr(card.summaryKey)}</Text>
         </View>
-        {mode === 'session' && totalItems > 0 && (
-          <Text style={[styles.progressBadge, { color: allChecked ? theme.accent : theme.textMuted }]}>
-            {checkedCount}/{totalItems}
-          </Text>
-        )}
-        {mode === 'read' && historyCount > 0 && (
-          <View style={[styles.countBadge, { backgroundColor: theme.accent }]}>
-            <Text style={[styles.countBadgeText, { color: theme.accentOn }]}>{historyCount}</Text>
-          </View>
-        )}
         <MaterialCommunityIcons
           name={expanded ? 'chevron-up' : 'chevron-down'}
           size={20}
@@ -320,46 +128,17 @@ function CardView({
 
       {expanded && (
         <View style={styles.cardBody}>
-          {/* Checklist rendering */}
+          {/* Checklist rendering — read-only, no checkboxes */}
           {card.checklist && (
             <View>
               {card.checklist.map((item) => (
                 <ChecklistRow
                   key={item.id}
                   item={item}
-                  interactive={mode === 'session'}
-                  checked={checkedItems.has(item.id)}
-                  onToggle={() => onToggleCheck(item.id)}
                   theme={theme}
                   tr={tr}
                 />
               ))}
-
-              {/* Session actions — jen v session mode + má alespoň 1 zaškrtnutý bod */}
-              {mode === 'session' && checkedCount > 0 && (
-                <View style={styles.sessionActions}>
-                  <Pressable onPress={onResetSession} style={[styles.actionBtn, { borderColor: theme.border }]}>
-                    <MaterialCommunityIcons name="refresh" size={14} color={theme.textMuted} style={{ marginRight: 4 }} />
-                    <Text style={[styles.actionBtnText, { color: theme.textMuted }]}>{tr('common.reset')}</Text>
-                  </Pressable>
-                  <Pressable onPress={onSaveSession} style={[styles.actionBtn, { backgroundColor: theme.accent, borderColor: theme.accent }]}>
-                    <MaterialCommunityIcons name="content-save-outline" size={14} color={theme.accentOn} style={{ marginRight: 4 }} />
-                    <Text style={[styles.actionBtnText, { color: theme.accentOn, fontWeight: '600' }]}>
-                      {tr('isaSafety.sessionSaveLog')}
-                    </Text>
-                  </Pressable>
-                </View>
-              )}
-
-              {/* History link — jen v read mode + card má nějakou historii */}
-              {mode === 'read' && historyCount > 0 && (
-                <Pressable onPress={onOpenHistory} style={styles.historyLink}>
-                  <MaterialCommunityIcons name="history" size={14} color={theme.accent} style={{ marginRight: 4 }} />
-                  <Text style={[styles.historyLinkText, { color: theme.accent }]}>
-                    {tr('isaSafety.sessionHistory')} ({historyCount})
-                  </Text>
-                </Pressable>
-              )}
             </View>
           )}
 
@@ -387,7 +166,6 @@ function CardView({
                       key={cellIdx}
                       style={[styles.tableCell, { color: cellIdx === 0 ? theme.text : theme.textMuted }]}
                     >
-                      {/* Cell may be a translation key or a literal (numbers, kN units) */}
                       {cell.startsWith('cards.') ? tr(cell) : cell}
                     </Text>
                   ))}
@@ -396,8 +174,13 @@ function CardView({
             </View>
           )}
 
+          {/* Workflow rendering (rig-workflow karta) */}
+          {card.category === 'workflow' && (
+            <WorkflowContent theme={theme} tr={tr} />
+          )}
+
           {/* Hint text (for rule / thresholds / lifetime cards) */}
-          {card.category !== 'checklist' && card.category !== 'limits' && (
+          {card.category !== 'checklist' && card.category !== 'limits' && card.category !== 'workflow' && (
             <Text style={[styles.hint, { color: theme.textMuted }]}>
               {tr(`cards.${card.id.replace(/-/g, '')}.hint`)}
             </Text>
@@ -418,186 +201,117 @@ function CardView({
 
 // -----------------------------------------------------------------------------
 
-function ChecklistRow({
-  item,
-  interactive,
-  checked,
-  onToggle,
+function WorkflowContent({
   theme,
   tr,
 }: {
-  item: ChecklistItem;
-  interactive: boolean;
-  checked: boolean;
-  onToggle: () => void;
   theme: ReturnType<typeof useTheme>;
-  tr: (key: string) => string;
+  tr: (key: string, opts?: Record<string, unknown>) => string;
 }) {
-  const [detailOpen, setDetailOpen] = useState(false);
   return (
-    <View style={styles.checklistItem}>
-      <Pressable
-        onPress={interactive ? onToggle : () => setDetailOpen((v) => !v)}
-        style={styles.checklistRow}
-      >
-        <MaterialCommunityIcons
-          name={
-            interactive
-              ? checked
-                ? 'checkbox-marked'
-                : 'checkbox-blank-outline'
-              : 'circle-medium'
-          }
-          size={interactive ? 22 : 18}
-          color={interactive && checked ? theme.accent : theme.textMuted}
-          style={{ marginRight: 10 }}
-        />
-        <Text
-          style={[
-            styles.checklistLabel,
-            { color: theme.text },
-            interactive && checked && { textDecorationLine: 'line-through', color: theme.textMuted },
-          ]}
-        >
-          {tr(item.labelKey)}
-        </Text>
-      </Pressable>
-      {item.detailKey && (detailOpen || !interactive) && (
-        <Text style={[styles.checklistDetail, { color: theme.textDim }]}>{tr(item.detailKey)}</Text>
-      )}
+    <View>
+      {/* SECTION: Build phases */}
+      <Text style={[wfStyles.sectionLabel, { color: theme.textDim }]}>
+        {tr('rigWorkflow.sectionPhases')}
+      </Text>
+
+      {RIG_PHASES.map((phase) => (
+        <View key={phase.id} style={wfStyles.phaseBlock}>
+          <View style={wfStyles.phaseHeader}>
+            <MaterialCommunityIcons
+              name={phase.icon as any}
+              size={18}
+              color={theme.text}
+              style={{ marginRight: 8 }}
+            />
+            <Text style={[wfStyles.phaseTitle, { color: theme.text }]}>
+              {tr(phase.titleKey)}
+            </Text>
+          </View>
+          {phase.items.map((item, idx) => (
+            <View key={idx} style={wfStyles.phaseItem}>
+              <Text style={[wfStyles.bullet, { color: theme.textMuted }]}>•</Text>
+              <Text style={[wfStyles.phaseItemText, { color: theme.textMuted }]}>
+                {tr(item.labelKey)}
+              </Text>
+            </View>
+          ))}
+          {phase.gateAfter && (
+            <View style={[wfStyles.gate, { borderColor: theme.accent, backgroundColor: theme.surface }]}>
+              <MaterialCommunityIcons
+                name="flag-checkered"
+                size={14}
+                color={theme.accent}
+                style={{ marginRight: 6 }}
+              />
+              <Text style={[wfStyles.gateText, { color: theme.accent }]}>
+                {tr(`rigWorkflow.gateFull${phase.gateAfter.toUpperCase()}`)}
+              </Text>
+            </View>
+          )}
+        </View>
+      ))}
+
+      {/* SECTION: Cross-cutting layers */}
+      <Text style={[wfStyles.sectionLabel, { color: theme.textDim, marginTop: 16 }]}>
+        {tr('rigWorkflow.sectionCrossCutting')}
+      </Text>
+
+      {CROSS_CUTTING_LAYERS.map((layer) => (
+        <View key={layer.id} style={wfStyles.phaseBlock}>
+          <View style={wfStyles.phaseHeader}>
+            <MaterialCommunityIcons
+              name={layer.icon as any}
+              size={16}
+              color={theme.text}
+              style={{ marginRight: 8 }}
+            />
+            <Text style={[wfStyles.phaseTitle, { color: theme.text, fontSize: 13 }]}>
+              {tr(layer.titleKey)}
+            </Text>
+          </View>
+          {layer.itemKeys.map((key, idx) => (
+            <View key={idx} style={wfStyles.phaseItem}>
+              <Text style={[wfStyles.bullet, { color: theme.textMuted }]}>•</Text>
+              <Text style={[wfStyles.phaseItemText, { color: theme.textMuted }]}>
+                {tr(key)}
+              </Text>
+            </View>
+          ))}
+        </View>
+      ))}
     </View>
   );
 }
 
 // -----------------------------------------------------------------------------
 
-function HistorySheet({
-  cardId,
-  sessions,
-  onClose,
-  onDelete,
-  lang,
+function ChecklistRow({
+  item,
   theme,
   tr,
 }: {
-  cardId: string;
-  sessions: ISASession[];
-  onClose: () => void;
-  onDelete: (id: number) => void;
-  lang: Lang;
+  item: ChecklistItem;
   theme: ReturnType<typeof useTheme>;
-  tr: (key: string, opts?: Record<string, unknown>) => string;
+  tr: (key: string) => string;
 }) {
-  const card = CARDS.find((c) => c.id === cardId);
-  const locale = lang === 'cs' ? 'cs-CZ' : lang === 'pl' ? 'pl-PL' : 'en-US';
-
   return (
-    <Modal visible transparent animationType="fade" onRequestClose={onClose} statusBarTranslucent>
-      <View style={styles.backdrop}>
-        <Pressable style={styles.backdropDismiss} onPress={onClose} />
-        <View style={[styles.sheet, { backgroundColor: theme.surface, maxHeight: '70%' }]}>
-          <View style={styles.header}>
-            <View style={{ flex: 1 }}>
-              <Text style={[styles.title, { color: theme.text }]}>
-                {tr('isaSafety.sessionHistory')}
-              </Text>
-              {card && (
-                <Text style={[styles.subtitle, { color: theme.textMuted }]}>{tr(card.titleKey)}</Text>
-              )}
-            </View>
-            <Pressable onPress={onClose} hitSlop={10}>
-              <MaterialCommunityIcons name="close" size={24} color={theme.textMuted} />
-            </Pressable>
-          </View>
-
-          <ScrollView contentContainerStyle={{ paddingBottom: 24 }}>
-            {sessions.length === 0 && (
-              <Text style={[styles.disclaimer, { color: theme.textDim }]}>
-                {tr('isaSafety.sessionHistoryEmpty')}
-              </Text>
-            )}
-            {sessions.map((s) => (
-              <View
-                key={s.id}
-                style={[styles.historyItem, { borderBottomColor: theme.border }]}
-              >
-                <View style={{ flex: 1 }}>
-                  <Text style={[styles.historyDate, { color: theme.text }]}>
-                    {formatSessionDate(s.completed_at ?? s.started_at, locale)}
-                  </Text>
-                  <Text style={[styles.historyMeta, { color: theme.textMuted }]}>
-                    {s.checked_items}/{s.total_items}
-                    {s.gps_lat != null && s.gps_lon != null && (
-                      <>
-                        {'  ·  '}
-                        {s.gps_lat.toFixed(4)}, {s.gps_lon.toFixed(4)}
-                      </>
-                    )}
-                  </Text>
-                </View>
-                <Pressable onPress={() => onDelete(s.id)} hitSlop={8}>
-                  <MaterialCommunityIcons name="trash-can-outline" size={18} color={theme.textMuted} />
-                </Pressable>
-              </View>
-            ))}
-          </ScrollView>
-        </View>
+    <View style={styles.checklistItem}>
+      <View style={styles.checklistRow}>
+        <MaterialCommunityIcons
+          name="circle-medium"
+          size={18}
+          color={theme.textMuted}
+          style={{ marginRight: 10 }}
+        />
+        <Text style={[styles.checklistLabel, { color: theme.text }]}>
+          {tr(item.labelKey)}
+        </Text>
       </View>
-    </Modal>
-  );
-}
-
-function formatSessionDate(iso: string, locale: string): string {
-  try {
-    const d = new Date(iso);
-    return d.toLocaleString(locale, {
-      year: 'numeric',
-      month: 'short',
-      day: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit',
-    });
-  } catch {
-    return iso.slice(0, 16).replace('T', ' ');
-  }
-}
-
-// -----------------------------------------------------------------------------
-
-function ModeChip({
-  label,
-  icon,
-  active,
-  onPress,
-  theme,
-}: {
-  label: string;
-  icon: keyof typeof MaterialCommunityIcons.glyphMap;
-  active: boolean;
-  onPress: () => void;
-  theme: ReturnType<typeof useTheme>;
-}) {
-  return (
-    <Pressable
-      onPress={onPress}
-      style={[
-        styles.modeChip,
-        {
-          backgroundColor: active ? theme.accent : theme.surfaceAlt,
-          borderColor: active ? theme.accent : theme.border,
-        },
-      ]}
-    >
-      <MaterialCommunityIcons
-        name={icon}
-        size={16}
-        color={active ? theme.accentOn : theme.text}
-        style={{ marginRight: 6 }}
-      />
-      <Text style={{ color: active ? theme.accentOn : theme.text, fontSize: 13, fontWeight: '500' }}>
-        {label}
-      </Text>
-    </Pressable>
+      {item.detailKey && (
+        <Text style={[styles.checklistDetail, { color: theme.textDim }]}>{tr(item.detailKey)}</Text>
+      )}
+    </View>
   );
 }
 
@@ -634,20 +348,6 @@ const styles = StyleSheet.create({
   },
   title: { fontSize: 18, fontWeight: '600' },
   subtitle: { fontSize: 12, marginTop: 2 },
-  modeSwitch: {
-    flexDirection: 'row',
-    paddingHorizontal: 16,
-    paddingBottom: 12,
-    gap: 8,
-  },
-  modeChip: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingHorizontal: 12,
-    paddingVertical: 8,
-    borderRadius: 20,
-    borderWidth: 1,
-  },
   scroll: { flexGrow: 0 },
   card: {
     marginHorizontal: 16,
@@ -663,17 +363,6 @@ const styles = StyleSheet.create({
   },
   cardTitle: { fontSize: 15, fontWeight: '600' },
   cardSummary: { fontSize: 12, marginTop: 2 },
-  progressBadge: { fontSize: 12, fontWeight: '600', marginRight: 8 },
-  countBadge: {
-    minWidth: 20,
-    height: 20,
-    paddingHorizontal: 6,
-    borderRadius: 10,
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginRight: 6,
-  },
-  countBadgeText: { fontSize: 11, fontWeight: '700' },
   cardBody: {
     paddingHorizontal: 14,
     paddingBottom: 14,
@@ -685,38 +374,7 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
   },
   checklistLabel: { fontSize: 14, flex: 1 },
-  checklistDetail: { fontSize: 12, marginLeft: 32, marginBottom: 8, lineHeight: 16 },
-  sessionActions: {
-    flexDirection: 'row',
-    justifyContent: 'flex-end',
-    gap: 8,
-    marginTop: 12,
-  },
-  actionBtn: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingHorizontal: 12,
-    paddingVertical: 8,
-    borderRadius: 8,
-    borderWidth: 1,
-  },
-  actionBtnText: { fontSize: 12 },
-  historyLink: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginTop: 12,
-    paddingVertical: 4,
-  },
-  historyLinkText: { fontSize: 12, fontWeight: '500' },
-  historyItem: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingHorizontal: 16,
-    paddingVertical: 12,
-    borderBottomWidth: 1,
-  },
-  historyDate: { fontSize: 13, fontWeight: '500' },
-  historyMeta: { fontSize: 11, marginTop: 2 },
+  checklistDetail: { fontSize: 12, marginLeft: 28, marginBottom: 8, lineHeight: 16 },
   tableWrap: {
     borderWidth: 1,
     borderRadius: 8,
@@ -765,5 +423,59 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
     borderRadius: 8,
     alignItems: 'center',
+  },
+});
+
+const wfStyles = StyleSheet.create({
+  sectionLabel: {
+    fontSize: 10,
+    textTransform: 'uppercase',
+    letterSpacing: 0.5,
+    fontWeight: '600',
+    marginTop: 4,
+    marginBottom: 8,
+  },
+  phaseBlock: {
+    marginBottom: 12,
+  },
+  phaseHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 4,
+  },
+  phaseTitle: {
+    fontSize: 13,
+    fontWeight: '600',
+  },
+  phaseItem: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    paddingLeft: 26,
+    paddingVertical: 2,
+  },
+  bullet: {
+    width: 12,
+    fontSize: 11,
+    lineHeight: 16,
+  },
+  phaseItemText: {
+    flex: 1,
+    fontSize: 12,
+    lineHeight: 16,
+  },
+  gate: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: 6,
+    marginLeft: 26,
+    paddingVertical: 6,
+    paddingHorizontal: 10,
+    borderWidth: 1,
+    borderRadius: 6,
+    alignSelf: 'flex-start',
+  },
+  gateText: {
+    fontSize: 11,
+    fontWeight: '600',
   },
 });
