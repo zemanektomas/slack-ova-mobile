@@ -95,6 +95,67 @@
     "translateUnsupported": "Jazyk není podporován",
     "translateUnsupportedHint": "Překlad v zařízení podporuje jen omezenou sadu jazyků. Originál zůstane viditelný."
   },
+  "calc": {
+    "openBtn": "Otevřít kalkulátor",
+    "angle": {
+      "title": "Úhel kotvy — síla na jedno rameno",
+      "totalLoad": "Celková zátěž",
+      "angleLabel": "Úhel mezi rameny",
+      "perLegLabel": "Síla na jedno rameno",
+      "tableLabel": "Referenční tabulka",
+      "col": { "angle": "Úhel", "perLeg": "Per-leg", "rating": "Hodnocení" },
+      "rating": {
+        "ideal": "🟢 ideál",
+        "ok": "🟢 OK",
+        "max": "🟡 max",
+        "caution": "🟡 pozor",
+        "stop": "🔴 STOP",
+        "never": "💀 NIKDY"
+      },
+      "formula": "Formule: F_per_leg = F_total ÷ (2 × cos(θ/2))",
+      "source": "Zdroj: ISA anchor best practice + fyzika triangulace."
+    },
+    "force": {
+      "title": "Síla při pádu (peak force)",
+      "material": "Materiál",
+      "length": "Délka lajny",
+      "working": "Working tension",
+      "anchorPeak": "Peak na kotvě",
+      "leashPeak": "Peak na odsedku",
+      "tableLabel": "Peak na kotvě (dle délky)",
+      "col": { "length": "Délka" },
+      "source": "Zdroj: Jörren 2015 (SlackLab) — 20m data, extrapolace pro delší lajny.",
+      "disclaimer": "⚠ Odhady — reálné síly měří load cell (Enforcer, LineScale)."
+    },
+    "ma": {
+      "title": "Mechanical advantage (kladky)",
+      "movable": "Movable pulleys (pohyblivé)",
+      "fixed": "Fixed pulleys (redirect)",
+      "pull": "Tvá pull síla",
+      "theoretical": "Teoretické MA",
+      "real": "Reálné MA (s friction)",
+      "output": "Výstupní síla na weblock",
+      "pullDistance": "Pull distance ratio",
+      "pullDistanceUnit": "m tail : 1 m weblock",
+      "sweetSpot": "Sweet spot pro highline tensioning.",
+      "tooMuch": "Pull distance nesmyslná — použij max 4 movable.",
+      "tableLabel": "Referenční tabulka",
+      "col": { "movable": "Movable", "theory": "Teorie", "real": "Reálné", "pullDist": "Pull dist" },
+      "buckingham": "Buckingham system (Balance Community)",
+      "formula": "Formule: MA = 2^N_movable, efficiency = 0.9^(N_movable + N_fixed)",
+      "source": "Zdroj: Balance Community — Buckingham Tensioning System."
+    },
+    "deviation": {
+      "title": "Síla na deviaci (redirect)",
+      "tension": "Tension lajny",
+      "angle": "Úhel deviace",
+      "forceLabel": "Síla na deviaci",
+      "tableLabel": "Referenční tabulka",
+      "col": { "angle": "Úhel", "force": "Síla", "ratio": "Poměr" },
+      "warning": "⚠ Deviace nese víc než sama lajna. Anchor pro deviaci musí být silnější než pro kotvení highline.",
+      "formula": "Formule: F = 2 × T × sin(θ/2)"
+    }
+  },
   "level": {
     "sectionTitle": "Úroveň zkušeností",
     "hint": "Nastavení určuje varování a doporučení v apce.",

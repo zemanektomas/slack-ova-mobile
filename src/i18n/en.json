@@ -95,6 +95,67 @@
     "translateUnsupported": "Language not supported",
     "translateUnsupportedHint": "On-device translation only supports a limited set of languages. The original text stays visible."
   },
+  "calc": {
+    "openBtn": "Open calculator",
+    "angle": {
+      "title": "Anchor angle — force per leg",
+      "totalLoad": "Total load",
+      "angleLabel": "Angle between legs",
+      "perLegLabel": "Force per leg",
+      "tableLabel": "Reference table",
+      "col": { "angle": "Angle", "perLeg": "Per-leg", "rating": "Rating" },
+      "rating": {
+        "ideal": "🟢 ideal",
+        "ok": "🟢 OK",
+        "max": "🟡 max",
+        "caution": "🟡 caution",
+        "stop": "🔴 STOP",
+        "never": "💀 NEVER"
+      },
+      "formula": "Formula: F_per_leg = F_total ÷ (2 × cos(θ/2))",
+      "source": "Source: ISA anchor best practice + triangulation physics."
+    },
+    "force": {
+      "title": "Peak force estimator",
+      "material": "Material",
+      "length": "Line length",
+      "working": "Working tension",
+      "anchorPeak": "Anchor peak",
+      "leashPeak": "Leash peak",
+      "tableLabel": "Anchor peak (by length)",
+      "col": { "length": "Length" },
+      "source": "Source: Jörren 2015 (SlackLab) — 20m data, extrapolated for longer lines.",
+      "disclaimer": "⚠ Estimates — real forces measured with load cell (Enforcer, LineScale)."
+    },
+    "ma": {
+      "title": "Mechanical advantage (pulleys)",
+      "movable": "Movable pulleys",
+      "fixed": "Fixed pulleys (redirect)",
+      "pull": "Your pull force",
+      "theoretical": "Theoretical MA",
+      "real": "Real MA (with friction)",
+      "output": "Output force on weblock",
+      "pullDistance": "Pull distance ratio",
+      "pullDistanceUnit": "m tail : 1 m weblock",
+      "sweetSpot": "Sweet spot for highline tensioning.",
+      "tooMuch": "Pull distance impractical — use max 4 movable.",
+      "tableLabel": "Reference table",
+      "col": { "movable": "Movable", "theory": "Theory", "real": "Real", "pullDist": "Pull dist" },
+      "buckingham": "Buckingham system (Balance Community)",
+      "formula": "Formula: MA = 2^N_movable, efficiency = 0.9^(N_movable + N_fixed)",
+      "source": "Source: Balance Community — Buckingham Tensioning System."
+    },
+    "deviation": {
+      "title": "Deviation force (redirect)",
+      "tension": "Line tension",
+      "angle": "Deviation angle",
+      "forceLabel": "Force on deviation",
+      "tableLabel": "Reference table",
+      "col": { "angle": "Angle", "force": "Force", "ratio": "Ratio" },
+      "warning": "⚠ Deviation carries more than the line itself. Anchor for deviation must be stronger than for highline anchoring.",
+      "formula": "Formula: F = 2 × T × sin(θ/2)"
+    }
+  },
   "level": {
     "sectionTitle": "Experience level",
     "hint": "Setting affects warnings and recommendations in the app.",
