@@ -95,6 +95,263 @@
     "translateUnsupported": "Language not supported",
     "translateUnsupportedHint": "On-device translation only supports a limited set of languages. The original text stays visible."
   },
+  "level": {
+    "sectionTitle": "Experience level",
+    "hint": "Setting affects warnings and recommendations in the app.",
+    "novice": "Beginner",
+    "normal": "Normal",
+    "pro": "Pro",
+    "noviceHint": "Browsing, starting out. I want to see warnings and community links.",
+    "normalHint": "I walk highlines, know the basics. Standard view.",
+    "proHint": "Rigger / instructor. Hide advisories, show advanced content."
+  },
+  "community": {
+    "title": "Community",
+    "sectionLabel": "Community",
+    "openBtn": "Show community",
+    "noCountry": "Country not detected from line description.",
+    "isaMembers": "ISA members",
+    "slacklineGroups": "Slackline groups",
+    "empty": "No groups in the catalog for this country.",
+    "loadFailed": "Failed to load community (needs internet).",
+    "footerNote": "Source: Slackmap.com — Slackline groups & ISA members."
+  },
+  "onboarding": {
+    "title": "Welcome to Slackline.Ova",
+    "slide1Title": "Offline slackline map",
+    "slide1Body": "Catalog of 8000+ lines from slack.cz + Slackmap. Works without signal in the field.",
+    "slide2Title": "Safety reference material",
+    "slide2Body": "ISA:21 rules, checklists, calculators. But WARNING — the app is not a substitute for training. Highline is a life-safety activity.",
+    "slide3Title": "Choose your level",
+    "slide3Body": "Setting affects how the app talks to you. You can change it anytime in Settings.",
+    "next": "Next",
+    "start": "Let's go",
+    "skip": "Skip"
+  },
+  "novice": {
+    "advisoryTitle": "You're a beginner",
+    "advisoryBody": "Highline is NOT DIY from an app. Find an experienced rigger or join the community before building anything.",
+    "showCommunity": "Show community"
+  },
+  "rigWorkflow": {
+    "sectionPhases": "Build phases",
+    "sectionCrossCutting": "Cross-cutting layers (apply in all phases)",
+    "gateBadge": "GATE {{gate}}",
+    "gateFullA": "GATE A — Anchors approved",
+    "gateFullB": "GATE B — System approved before tensioning",
+    "gateFullC": "GATE C — Line approved for walking",
+    "p0": {
+      "title": "0. Plan at home",
+      "i1": "Weather + window (wind, storms, temperature)",
+      "i2": "Permit / landowner / access",
+      "i3": "Team: who comes, who knows rescue",
+      "i4": "Kit list by length (main, backup, weblock, pulleys, leashes)",
+      "i5": "Plan B: if we can't build → we leave"
+    },
+    "p1": {
+      "title": "1. Arrival and recon",
+      "i1": "Parking, access time, what to carry",
+      "i2": "Zone UNDER the line — who's allowed there",
+      "i3": "Air space, power lines, paths",
+      "i4": "Escape routes + phone signal",
+      "i5": "Photo of initial state"
+    },
+    "p2": {
+      "title": "2. Anchor assessment",
+      "i1": "Strength and condition (rock / tree / bolts / A-frame)",
+      "i2": "Load direction vs. anchor direction",
+      "i3": "Redundancy — 2 independent points each side",
+      "i4": "SPOF search (one element = one fall)",
+      "i5": "Abrasion protection (edges, padding)"
+    },
+    "p3": {
+      "title": "3. Anchor build",
+      "i1": "Main and backup SEPARATED (no shared element)",
+      "i2": "Tie-back where in doubt",
+      "i3": "Load balancing, angles < 60°",
+      "i4": "Shackles tightened and secured",
+      "i5": "Check: what happens if this element breaks"
+    },
+    "p4": {
+      "title": "4. Webbing transport",
+      "i1": "Tagline / throw / carry",
+      "i2": "Check for twists along entire length",
+      "i3": "Nothing lies on sharp edges",
+      "i4": "Leashes and rescue kit ready on site"
+    },
+    "p5": {
+      "title": "5. Tensioning",
+      "i1": "MA system (3:1 / compound), minimal redirect",
+      "i2": "Progress capture = weblock, line grip only temporary",
+      "i3": "Force monitoring (estimate / load cell)",
+      "i4": "Communication: 'pulling' / 'stop' / 'releasing'",
+      "i5": "Keep backup loose, but not resting on ground"
+    },
+    "p6": {
+      "title": "6. Pre-walk check",
+      "i1": "Walk both anchors — second pair of eyes",
+      "i2": "All knots and shackles again",
+      "i3": "Leash test (length, ring, knot)",
+      "i4": "Who does rescue and with what",
+      "i5": "Out loud: 'line is ok'"
+    },
+    "p7": {
+      "title": "7. Operation (walking)",
+      "i1": "Leash discipline — no exceptions",
+      "i2": "Zone under line guarded",
+      "i3": "Wind / electrostatic / fatigue → interrupt",
+      "i4": "Rotate people, breaks, water",
+      "i5": "Regular look at anchors"
+    },
+    "p8": {
+      "title": "8. Detension and leave",
+      "i1": "Order of release (people first, then tension)",
+      "i2": "Material check during packing (abrasion, deformation)",
+      "i3": "Log entry: force, time, incidents",
+      "i4": "Leave no trace",
+      "i5": "RLT — subtract days / hours from webbing"
+    },
+    "crossCutting": {
+      "material": {
+        "title": "Material",
+        "i1": "Certification and MBS",
+        "i2": "Age / RLT / load history",
+        "i3": "Inspection before and after"
+      },
+      "safety": {
+        "title": "Safety",
+        "i1": "Redundancy on everything that holds a person",
+        "i2": "No SPOF (single point of failure)",
+        "i3": "Rescue plan BEFORE anyone climbs on"
+      },
+      "people": {
+        "title": "People",
+        "i1": "One decides — lead rigger",
+        "i2": "Who guards zone under line",
+        "i3": "Roles spoken out loud at start"
+      }
+    }
+  },
+  "rigLog": {
+    "title": "Full rig log",
+    "subtitle": "Complete line build — 3 gates + log",
+    "menuLabel": "Full rig log",
+    "menuHint": "For building from scratch (5-10 min)",
+    "gateA": {
+      "title": "Gate A — Anchors approved",
+      "description": "After anchor assessment, before building.",
+      "a1": "Anchors assessed (strength, load direction, condition)",
+      "a1Detail": "Visual and mechanical. Rock/tree/bolts/A-frame — each has its own criteria. If you doubt anything, do not proceed.",
+      "a2": "Redundancy verified (2 independent points each side)",
+      "a2Detail": "Minimum 2 independent points per side, so if one fails the other holds. No redundancy, no build.",
+      "a3": "SPOF not found (no single point of failure)",
+      "a3Detail": "Walk the whole system with your eyes. One element = one fall? Do you see any single carabiner, single knot without backup? Remove."
+    },
+    "gateB": {
+      "title": "Gate B — System before tensioning",
+      "description": "After anchor build, transport, and rig before tension.",
+      "b1": "Main and backup separated (no shared element)",
+      "b1Detail": "Mainline and back-up must not share any element in the load path. Shackle, carabiner, anchor — each per line separately.",
+      "b2": "Weblock / progress capture secured",
+      "b2Detail": "Weblock is progress capture for Buckingham system. Tie-off tied, visually checked. Without tie-off = fatal.",
+      "b3": "Backup functional (loose, but not resting on ground)",
+      "b3Detail": "Back-up must hang freely (to catch on failure), but not so loose it lies on the ground. Test with weight."
+    },
+    "gateC": {
+      "title": "Gate C — Line approved for walking",
+      "description": "Second pair of eyes. Before highliner mounts.",
+      "c1": "Second check done (second pair of eyes, both anchors)",
+      "c1Detail": "Another team member walks both anchors independently. When the rigger no longer sees their mistakes after hours of building, second eye finds them.",
+      "c2": "Leash ok (length, ring, knot)",
+      "c2Detail": "Leash: correct length for the line, certified ring encompassing both lines, knot with tail min 10 cm.",
+      "c3": "Rescue plan and who does it",
+      "c3Detail": "Out loud: who, with what, where's the gear. Without rescue plan no one climbs on. Suspension trauma = 5 min limit."
+    },
+    "log": {
+      "title": "Build log (optional)",
+      "tensionKn": "Max tension (kN)",
+      "tensionKnHint": "Estimate or measured load cell",
+      "durationHours": "Line uptime (hours)",
+      "durationHoursHint": "How many hours the line was up (for RLT tracking)",
+      "incident": "Incident occurred?",
+      "incidentNote": "Incident description",
+      "incidentNoteHint": "What happened, how you resolved it",
+      "leadRigger": "Lead rigger",
+      "leadRiggerHint": "Who had final say"
+    },
+    "gateStatus": {
+      "complete": "Fully checked",
+      "partial": "Partially checked",
+      "skipped": "Skipped",
+      "notStarted": "Not started"
+    },
+    "skipGate": "Skip gate",
+    "confirmSkip": "Really skip this gate?",
+    "confirmSkipBody": "Skip will be saved to log. Recommended to go through each gate."
+  },
+  "quickCheck": {
+    "title": "Pre-walk quick check",
+    "subtitle": "10 key items, about 30 seconds",
+    "menuLabel": "Quick check",
+    "menuHint": "Before walking (30 sec)",
+    "categoryLabel": {
+      "gear": "Gear",
+      "anchor": "Anchor",
+      "material": "Material",
+      "weather": "Weather",
+      "rescue": "Rescue"
+    },
+    "reason": {
+      "nylonRule": "Highline under 40 m — critical material requirement",
+      "wind": "Line above ground — wind can cause failure",
+      "storm": "Higher / longer line — electrostatic discharge risk",
+      "treeAnchor": "Tree anchor — requires padding and inspection"
+    },
+    "item": {
+      "harness": "Harness correctly worn",
+      "harnessDetail": "Doubled buckle, waist belt above hips, leg loops tight. Visual check before mounting.",
+      "leash": "Leash through both lines",
+      "leashDetail": "Certified ring must encompass mainline and back-up. If only one → mainline failure drops you under the other.",
+      "anchor": "Anchor verified",
+      "anchorDetail": "Redundancy (min 2 points), leg angle < 45°, no sharp edges. Visual check on both sides.",
+      "backup": "Backup connection functional",
+      "backupDetail": "Backup ring or PAS on harness. Physically hang on backup alone, verify it holds.",
+      "rescuePlan": "Rescue plan clear",
+      "rescuePlanDetail": "Who will do the rescue, with what (rope, ascender, pulley), how long to reach you. Verbal check with team.",
+      "weblockTieoff": "Weblock tie-off tied",
+      "weblockTieoffDetail": "Final step of weblock rigging. Without tie-off, webbing can slip out under vibration. Visual check on both sides.",
+      "nylonRule": "All material nylon (< 40 m HL)",
+      "nylonRuleDetail": "Mainline, back-up and leash must all be nylon. Polyester or Dyneema on short HL = anchor peak over 12 kN.",
+      "wind": "Wind currently < 30 km/h",
+      "windDetail": "Ventusky / Windy / actual feel. Above 30 km/h detape starts, above 60 km/h every highline fails.",
+      "storm": "No storms expected in next 2 hours",
+      "stormDetail": "Radar (Meteoradar, Windy). Storm approach + rain = electrostatic discharge in UHMWPE, plasma 5000-15000°C. Derig.",
+      "treeAnchor": "Tree anchor verified",
+      "treeAnchorDetail": "Diameter > 30 cm, healthy tree, undamaged bark, padding between webbing and bark. If unsure — do not anchor."
+    }
+  },
+  "lineSafety": {
+    "sectionTitle": "Safety check",
+    "neverChecked": "Not checked yet",
+    "lastCheckedAt": "Last: {{date}}",
+    "lastCheckedComplete": "Last: {{date}} ✓",
+    "lastCheckedPartial": "Last: {{date}} ({{checked}}/{{total}})",
+    "listIntroForLine": "Recommended check for this line:",
+    "typeAndDims": "{{type}} · {{length}} m · {{height}} m above ground",
+    "typeAndLength": "{{type}} · {{length}} m",
+    "typeOnly": "{{type}}",
+    "startCheck": "Start check",
+    "openHistory": "Check history ({{count}})",
+    "openHistoryEmpty": "Check history",
+    "sessionTitle": "Check for: {{name}}",
+    "sessionSave": "Save check",
+    "sessionSaved": "Check saved",
+    "sessionSaveError": "Save failed",
+    "sessionEmpty": "You haven't checked any item. Save check with a note anyway?",
+    "sessionProgress": "{{checked}}/{{total}} checked",
+    "peek": "Show items",
+    "peekHide": "Hide items"
+  },
   "isaSafety": {
     "title": "ISA Safety Companion",
     "subtitle": "Highline safety reference",
@@ -124,29 +381,25 @@
     }
   },
   "cards": {
-    "commandments": {
-      "title": "10 Highline Commandments",
-      "summary": "Fundamental safety principles from which everything else derives",
-      "c1": "1. Always 3 bolts in an anchor",
-      "c1Detail": "One bolt = single point of failure. Three bolts withstand load even if one fails. Source: HowNot2 Bolting Bible, ISA:21.",
-      "c2": "2. Angle between anchor legs ≤ 45°",
-      "c2Detail": "Above 60° per-leg force grows exponentially; above 90° NEVER. 120° = each leg carries more than the total load. Source: ISA anchor best practice.",
-      "c3": "3. For HL under 40 m — all materials nylon",
-      "c3Detail": "Polyester and Dyneema lack the stretch to absorb fall energy. Short line + static material = anchor peak over 12 kN. Source: ISA:21 Appendix 5.",
-      "c4": "4. Bowline NEVER for HL anchor",
-      "c4Detail": "Cyclic loading loosens the knot. Use Figure-8 re-traced. Source: ISA:21 §3.3.2.",
-      "c5": "5. Working load ≤ 12 kN, backupfall ≤ 8 kN",
-      "c5Detail": "Never exceed either. Above limits = component failure risk. Source: ISA:21 §1.3.",
-      "c6": "6. Always 2 attachments to the line during operation",
-      "c6Detail": "Never disconnect primary attachment until secondary is load-tested. Applies to rigging, taping, rescue. Source: ISA Rescue best practice.",
-      "c7": "7. Wind over 60 km/h = practically every HL fails",
-      "c7Detail": "Derig before, not after. Historically 37 wind-related incidents, 10 with catastrophic failure. Source: ISA Wind Advisory 2020.",
-      "c8": "8. Buddy check before every walk",
-      "c8Detail": "Experience does not replace the check — most accidents happen behind routine. Check each other: harness, leash, backup. Source: ISA Safety culture.",
-      "c9": "9. Weblock always with tie-off",
-      "c9Detail": "Without tie-off, webbing can slip out under vibration. Final step of weblock rigging. Source: ISA:21 §3.11.1.2.",
-      "c10": "10. Storm approaching + rain = DERIG NOW",
-      "c10Detail": "Electrostatic discharge can melt fibers at 5000-15000°C even without direct lightning. UHMWPE most vulnerable (melts at 150°C). CZ incident 2024. Source: ISA Electrostatic Warning 12/2025."
+    "bowline": {
+      "title": "Bowline never for HL anchor",
+      "summary": "Critical rule — bowline loosens under cyclic loading",
+      "bw1": "Do not use bowline on the anchor",
+      "bw1Detail": "Repeated loading and unloading gradually loosens the knot. Risk of untying under load — fatal.",
+      "bw2": "Use Figure-8 re-traced",
+      "bw2Detail": "Figure-8 re-traced holds under cyclic loading. Standard for highline anchor.",
+      "bw3": "Tail min 10 cm",
+      "bw3Detail": "After tightening the knot, tail must be at least 10 cm (recommended 15+ cm). Shorter = risk of pulling through the knot."
+    },
+    "weblockTieoff": {
+      "title": "Weblock always with tie-off",
+      "summary": "Final step of weblock rigging — without it, webbing slips out",
+      "wt1": "Tie-off is the final step",
+      "wt1Detail": "After threading webbing through the weblock, tie off the tail (typically overhand + backup knot). Without it, webbing can gradually slip out.",
+      "wt2": "Visual check on both sides",
+      "wt2Detail": "Before walking, check tie-off on both weblocks. Part of buddy check.",
+      "wt3": "Without tie-off risks vibration slip",
+      "wt3Detail": "Vibration + gravity tensioning webbing = gradual slip from weblock. Especially on long lines with wind. Fatal if fails during walk."
     },
     "electrostatic": {
       "title": "Electrostatic Discharge Warning",
@@ -201,6 +454,24 @@
       "s3Detail": "Toxic blood floods heart → cardiac arrhythmia / arrest. Sit up slowly, W-position (knees to chest), then recovery position.",
       "s4": "This is NOT a rescue guide — call emergency services",
       "s4Detail": "Highline rescue requires training. Do not activate based on the app. Primarily call emergency (112 EU, 911 US). This card is awareness — so you know time is short."
+    },
+    "rigWorkflow": {
+      "title": "Complete rig workflow",
+      "summary": "Full tree of line building from home planning to leaving"
+    },
+    "novice": {
+      "title": "Starting out? Read this first",
+      "summary": "Basic rules for beginners before you go anywhere",
+      "n1": "Highline is NOT DIY from an app",
+      "n1Detail": "The app is reference material, not a first-rig guide. False sense of safety from an app = deadly. Training is essential.",
+      "n2": "Never build alone",
+      "n2Detail": "The first years you learn from experienced people. Go build with them as an observer, then a helper, only then as lead rigger. Takes years.",
+      "n3": "Find a community",
+      "n3Detail": "There are active groups worldwide — Facebook groups, personal contacts. Check the Community section in Settings for a list.",
+      "n4": "Take official courses",
+      "n4Detail": "ISA (International Slackline Association) certifies instructors. Rigger Cert = international standard.",
+      "n5": "Start with low park lines",
+      "n5Detail": "Longline < 20 cm above ground. Then trickline. Highline only after years of training and with someone experienced overseeing."
     },
     "isa21Limits": {
       "title": "ISA:21 Force Limits",

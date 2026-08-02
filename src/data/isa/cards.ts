@@ -18,7 +18,8 @@ export type CardCategory =
   | 'rule'
   | 'thresholds'
   | 'lifetime'
-  | 'warning';
+  | 'warning'
+  | 'workflow';
 
 export interface ChecklistItem {
   id: string;
@@ -50,26 +51,20 @@ export interface CardData {
 }
 
 export const CARDS: CardData[] = [
-  // 0. HERO: 10 Highline Commandments ------------------------------------
+  // 0. Nováček — "Začínáš? Přečti si nejdřív" (v0.7.3, hero pro novice)
   {
-    id: 'commandments',
-    category: 'commandments',
-    icon: 'star-circle',
-    titleKey: 'cards.commandments.title',
-    summaryKey: 'cards.commandments.summary',
+    id: 'novice',
+    category: 'checklist',
+    icon: 'account-question-outline',
+    titleKey: 'cards.novice.title',
+    summaryKey: 'cards.novice.summary',
     checklist: [
-      { id: 'c1', labelKey: 'cards.commandments.c1', detailKey: 'cards.commandments.c1Detail' },
-      { id: 'c2', labelKey: 'cards.commandments.c2', detailKey: 'cards.commandments.c2Detail' },
-      { id: 'c3', labelKey: 'cards.commandments.c3', detailKey: 'cards.commandments.c3Detail' },
-      { id: 'c4', labelKey: 'cards.commandments.c4', detailKey: 'cards.commandments.c4Detail' },
-      { id: 'c5', labelKey: 'cards.commandments.c5', detailKey: 'cards.commandments.c5Detail' },
-      { id: 'c6', labelKey: 'cards.commandments.c6', detailKey: 'cards.commandments.c6Detail' },
-      { id: 'c7', labelKey: 'cards.commandments.c7', detailKey: 'cards.commandments.c7Detail' },
-      { id: 'c8', labelKey: 'cards.commandments.c8', detailKey: 'cards.commandments.c8Detail' },
-      { id: 'c9', labelKey: 'cards.commandments.c9', detailKey: 'cards.commandments.c9Detail' },
-      { id: 'c10', labelKey: 'cards.commandments.c10', detailKey: 'cards.commandments.c10Detail' },
+      { id: 'n1', labelKey: 'cards.novice.n1', detailKey: 'cards.novice.n1Detail' },
+      { id: 'n2', labelKey: 'cards.novice.n2', detailKey: 'cards.novice.n2Detail' },
+      { id: 'n3', labelKey: 'cards.novice.n3', detailKey: 'cards.novice.n3Detail' },
+      { id: 'n4', labelKey: 'cards.novice.n4', detailKey: 'cards.novice.n4Detail' },
+      { id: 'n5', labelKey: 'cards.novice.n5', detailKey: 'cards.novice.n5Detail' },
     ],
-    reference: { source: 'ISA:21 (2023), ISA Wind Advisory 2020, ISA Electrostatic Warning 2025' },
   },
 
   // 1. ISA:21 Limits ------------------------------------------------------
@@ -249,5 +244,45 @@ export const CARDS: CardData[] = [
       { id: 's4', labelKey: 'cards.suspensionTrauma.s4', detailKey: 'cards.suspensionTrauma.s4Detail' },
     ],
     reference: { source: 'ISA Rescue awareness' },
+  },
+
+  // 11. Bowline nikdy pro HL anchor (extractované z desatera bod 4) -------
+  {
+    id: 'bowline-warning',
+    category: 'rule',
+    icon: 'alert-octagon',
+    titleKey: 'cards.bowline.title',
+    summaryKey: 'cards.bowline.summary',
+    checklist: [
+      { id: 'bw1', labelKey: 'cards.bowline.bw1', detailKey: 'cards.bowline.bw1Detail' },
+      { id: 'bw2', labelKey: 'cards.bowline.bw2', detailKey: 'cards.bowline.bw2Detail' },
+      { id: 'bw3', labelKey: 'cards.bowline.bw3', detailKey: 'cards.bowline.bw3Detail' },
+    ],
+    reference: { source: 'ISA:21 (2023) §3.3.2' },
+  },
+
+  // 12. Weblock tie-off (extractované z desatera bod 9) -------------------
+  {
+    id: 'weblock-tieoff',
+    category: 'rule',
+    icon: 'lock-check',
+    titleKey: 'cards.weblockTieoff.title',
+    summaryKey: 'cards.weblockTieoff.summary',
+    checklist: [
+      { id: 'wt1', labelKey: 'cards.weblockTieoff.wt1', detailKey: 'cards.weblockTieoff.wt1Detail' },
+      { id: 'wt2', labelKey: 'cards.weblockTieoff.wt2', detailKey: 'cards.weblockTieoff.wt2Detail' },
+      { id: 'wt3', labelKey: 'cards.weblockTieoff.wt3', detailKey: 'cards.weblockTieoff.wt3Detail' },
+    ],
+    reference: { source: 'ISA:21 (2023) §3.11.1.2' },
+  },
+
+  // 13. Kompletní rig workflow — celý strom stavby lajny (v0.7.3) ---------
+  {
+    id: 'rig-workflow',
+    category: 'workflow',
+    icon: 'clipboard-list-outline',
+    titleKey: 'cards.rigWorkflow.title',
+    summaryKey: 'cards.rigWorkflow.summary',
+    reference: { source: 'pm/idea_rig_log.md — 9 fází + 3 gates + průřezové vrstvy' },
   },
 ];

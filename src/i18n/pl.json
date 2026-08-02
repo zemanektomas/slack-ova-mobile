@@ -95,6 +95,263 @@
     "translateUnsupported": "Język nie obsługiwany",
     "translateUnsupportedHint": "Tłumaczenie na urządzeniu obsługuje tylko ograniczony zestaw języków. Oryginał pozostaje widoczny."
   },
+  "level": {
+    "sectionTitle": "Poziom doświadczenia",
+    "hint": "Ustawienie wpływa na ostrzeżenia i rekomendacje w aplikacji.",
+    "novice": "Początkujący",
+    "normal": "Normalny",
+    "pro": "Pro",
+    "noviceHint": "Przeglądam, zaczynam. Chcę widzieć ostrzeżenia i linki do społeczności.",
+    "normalHint": "Chodzę highline, znam podstawy. Standardowy widok.",
+    "proHint": "Rigger / instruktor. Ukryj ostrzeżenia, pokaż zaawansowaną treść."
+  },
+  "community": {
+    "title": "Społeczność",
+    "sectionLabel": "Społeczność",
+    "openBtn": "Pokaż społeczność",
+    "noCountry": "Kraj nie wykryty z opisu lajny.",
+    "isaMembers": "Członkowie ISA",
+    "slacklineGroups": "Grupy slackline",
+    "empty": "Brak grup w katalogu dla tego kraju.",
+    "loadFailed": "Nie udało się załadować społeczności (potrzeba internetu).",
+    "footerNote": "Źródło: Slackmap.com — Slackline groups & ISA members."
+  },
+  "onboarding": {
+    "title": "Witaj w Slackline.Ova",
+    "slide1Title": "Offline mapa slackline",
+    "slide1Body": "Katalog 8000+ lajn z slack.cz + Slackmap. Działa bez sygnału w terenie.",
+    "slide2Title": "Materiał referencyjny bezpieczeństwa",
+    "slide2Body": "ISA:21 zasady, checklisty, kalkulatory. Ale UWAGA — aplikacja nie zastępuje treningu. Highline to activity life-safety.",
+    "slide3Title": "Wybierz swój poziom",
+    "slide3Body": "Ustawienie wpływa na to jak aplikacja z tobą rozmawia. Możesz zmienić kiedykolwiek w Ustawieniach.",
+    "next": "Dalej",
+    "start": "Zaczynajmy",
+    "skip": "Pomiń"
+  },
+  "novice": {
+    "advisoryTitle": "Jesteś początkujący",
+    "advisoryBody": "Highline to NIE jest DIY z aplikacji. Znajdź doświadczonego riggera lub dołącz do społeczności zanim coś zbudujesz.",
+    "showCommunity": "Pokaż społeczność"
+  },
+  "rigWorkflow": {
+    "sectionPhases": "Fazy budowy",
+    "sectionCrossCutting": "Warstwy przekrojowe (dotyczy wszystkich faz)",
+    "gateBadge": "GATE {{gate}}",
+    "gateFullA": "GATE A — Kotwy zatwierdzone",
+    "gateFullB": "GATE B — System zatwierdzony przed napinaniem",
+    "gateFullC": "GATE C — Lajna zatwierdzona do wejścia",
+    "p0": {
+      "title": "0. Plan w domu",
+      "i1": "Pogoda + okno (wiatr, burze, temperatura)",
+      "i2": "Pozwolenie / właściciel / dostęp",
+      "i3": "Zespół: kto idzie, kto zna rescue",
+      "i4": "Lista sprzętu według długości (main, backup, weblock, kladky, leashe)",
+      "i5": "Plan B: gdy nie da się zbudować → wychodzimy"
+    },
+    "p1": {
+      "title": "1. Przyjazd i recon",
+      "i1": "Parkowanie, czas dostępu, co się niesie",
+      "i2": "Strefa POD lajną — kto może tam być",
+      "i3": "Przestrzeń powietrzna, linie energetyczne, ścieżki",
+      "i4": "Drogi ewakuacji + sygnał telefonu",
+      "i5": "Zdjęcie stanu początkowego"
+    },
+    "p2": {
+      "title": "2. Ocena kotew",
+      "i1": "Nośność i stan (skała / drzewo / borháky / A-frame)",
+      "i2": "Kierunek obciążenia vs. kierunek kotwy",
+      "i3": "Redundancja — 2 niezależne punkty na każdej stronie",
+      "i4": "Szukanie SPOF (jeden element = jeden upadek)",
+      "i5": "Ochrona przed otarciem (krawędzie, bandaż)"
+    },
+    "p3": {
+      "title": "3. Budowa kotew",
+      "i1": "Main i backup OSOBNO (nie dzielą elementu)",
+      "i2": "Tie-back tam gdzie wątpliwość",
+      "i3": "Wyrównanie obciążenia, kąty < 60°",
+      "i4": "Szekle dokręcone i zabezpieczone",
+      "i5": "Kontrola: co się stanie gdy ten element pęknie"
+    },
+    "p4": {
+      "title": "4. Transport popruhu",
+      "i1": "Tagline / przerzucenie / przenoszenie",
+      "i2": "Kontrola skręcenia na całej długości",
+      "i3": "Nic nie leży na ostrej krawędzi",
+      "i4": "Leashe i rescue kit gotowe na miejscu"
+    },
+    "p5": {
+      "title": "5. Tensioning (napinanie)",
+      "i1": "System MA (3:1 / compound), minimalny redirect",
+      "i2": "Progress capture = weblock, line grip tylko tymczasowo",
+      "i3": "Monitorowanie siły (szacunek / load cell)",
+      "i4": "Komunikacja: 'ciągnę' / 'stop' / 'puszczam'",
+      "i5": "Backup luźny, ale nie leżący na ziemi"
+    },
+    "p6": {
+      "title": "6. Kontrola przed wejściem",
+      "i1": "Obchód obu kotew — druga para oczu",
+      "i2": "Wszystkie węzły i szekle ponownie",
+      "i3": "Test leasha (długość, kruh, węzeł)",
+      "i4": "Kto robi rescue i czym",
+      "i5": "Na głos: 'lajna jest ok'"
+    },
+    "p7": {
+      "title": "7. Operacja (wejście)",
+      "i1": "Leash discipline — bez wyjątków",
+      "i2": "Strefa pod lajną pilnowana",
+      "i3": "Wiatr / elektrostatyka / zmęczenie → przerwać",
+      "i4": "Rotacja ludzi, przerwy, woda",
+      "i5": "Regularny rzut oka na kotwy"
+    },
+    "p8": {
+      "title": "8. Detension i wyjście",
+      "i1": "Kolejność zwalniania (najpierw ludzie, potem tension)",
+      "i2": "Kontrola sprzętu przy pakowaniu (otarcie, deformacja)",
+      "i3": "Wpis do logu: siła, czas, incydenty",
+      "i4": "Leave no trace",
+      "i5": "RLT — odjąć dni / godziny popruhu"
+    },
+    "crossCutting": {
+      "material": {
+        "title": "Materiał",
+        "i1": "Certyfikacja i MBS",
+        "i2": "Wiek / RLT / historia obciążenia",
+        "i3": "Inspekcja przed i po"
+      },
+      "safety": {
+        "title": "Bezpieczeństwo",
+        "i1": "Redundancja u wszystkiego co trzyma człowieka",
+        "i2": "Żaden SPOF (single point of failure)",
+        "i3": "Plan ratunku ZANIM ktoś wejdzie"
+      },
+      "people": {
+        "title": "Ludzie",
+        "i1": "Jeden decyduje — lead rigger",
+        "i2": "Kto pilnuje strefy pod lajną",
+        "i3": "Role powiedziane na głos na początku"
+      }
+    }
+  },
+  "rigLog": {
+    "title": "Pełny rig log",
+    "subtitle": "Cała budowa lajny — 3 gates + zapis",
+    "menuLabel": "Pełny rig log",
+    "menuHint": "Dla budowy od zera (5-10 min)",
+    "gateA": {
+      "title": "Gate A — Kotwy zatwierdzone",
+      "description": "Po ocenie kotew, przed budową.",
+      "a1": "Kotwy ocenione (nośność, kierunek obciążenia, stan)",
+      "a1Detail": "Wizualnie i mechanicznie. Skała/drzewo/borháky/A-frame — każdy ma własne kryteria. Gdy wątpisz w cokolwiek, nie idź dalej.",
+      "a2": "Redundancja zweryfikowana (2 niezależne punkty na każdej stronie)",
+      "a2Detail": "Minimum 2 niezależne punkty na stronę, aby przy awarii jednego drugi utrzymał. Bez redundancji nie budujesz.",
+      "a3": "SPOF nie znaleziony (żaden single point of failure)",
+      "a3Detail": "Przejdź cały system oczami. Jeden element = jeden upadek? Widzisz gdzieś pojedynczą karabinę, pojedynczy węzeł bez backupu? Usuń."
+    },
+    "gateB": {
+      "title": "Gate B — System przed napinaniem",
+      "description": "Po budowie kotew, transport i rig przed tension.",
+      "b1": "Main i backup oddzielone (nie dzielą elementu)",
+      "b1Detail": "Mainline i back-up nie mogą dzielić żadnego elementu w load path. Szekl, karabina, kotwa — każdy per lajna osobno.",
+      "b2": "Weblock / progress capture zabezpieczony",
+      "b2Detail": "Weblock to progress capture dla systemu Buckingham. Tie-off zawiązany, wizualnie sprawdzony. Bez tie-off = fatalne.",
+      "b3": "Backup funkcjonalny (luźny, ale nie leżący na ziemi)",
+      "b3Detail": "Back-up musi wisieć luźno (aby łapał przy awarii), ale nie tak luźno że leży na ziemi. Sprawdź wagą."
+    },
+    "gateC": {
+      "title": "Gate C — Lajna zatwierdzona do wejścia",
+      "description": "Druga para oczu. Przed wejściem highlinera.",
+      "c1": "Druga kontrola wykonana (druga para oczu, obie kotwy)",
+      "c1Detail": "Inny członek zespołu przejdzie obie kotwy niezależnie. Gdy rigger już nie widzi swoich błędów po godzinach budowy, drugie oko je znajdzie.",
+      "c2": "Leash ok (długość, kruh, węzeł)",
+      "c2Detail": "Odsedka: prawidłowa długość dla danej lajny, certyfikowany kruh obejmujący obie lajny, węzeł z ogonkiem min 10 cm.",
+      "c3": "Plan ratunku i kto go wykonuje",
+      "c3Detail": "Na głos: kto, czym, gdzie jest sprzęt. Bez planu ratunku nikt nie wchodzi na lajnę. Suspension trauma = 5 min limit."
+    },
+    "log": {
+      "title": "Zapis budowy (opcjonalne)",
+      "tensionKn": "Max tension (kN)",
+      "tensionKnHint": "Szacunek lub zmierzone load cell",
+      "durationHours": "Czas stania lajny (godziny)",
+      "durationHoursHint": "Ile godzin lajna wisiała (do RLT tracking)",
+      "incident": "Doszło do incydentu?",
+      "incidentNote": "Opis incydentu",
+      "incidentNoteHint": "Co się stało, jak rozwiązaliście",
+      "leadRigger": "Lead rigger",
+      "leadRiggerHint": "Kto miał finalne słowo"
+    },
+    "gateStatus": {
+      "complete": "Całkowicie zaznaczone",
+      "partial": "Częściowo zaznaczone",
+      "skipped": "Pominięto",
+      "notStarted": "Nierozpoczęte"
+    },
+    "skipGate": "Pomiń gate",
+    "confirmSkip": "Naprawdę pominąć ten gate?",
+    "confirmSkipBody": "Pominięcie zostanie zapisane w logu. Zalecane przejście każdego gate."
+  },
+  "quickCheck": {
+    "title": "Szybka kontrola przed chodem",
+    "subtitle": "10 kluczowych punktów, około 30 sekund",
+    "menuLabel": "Szybka kontrola",
+    "menuHint": "Przed wejściem (30 sec)",
+    "categoryLabel": {
+      "gear": "Sprzęt",
+      "anchor": "Kotwa",
+      "material": "Materiał",
+      "weather": "Pogoda",
+      "rescue": "Ratownictwo"
+    },
+    "reason": {
+      "nylonRule": "Highline poniżej 40 m — krytyczne wymaganie materiałowe",
+      "wind": "Lajna nad terenem — wiatr może spowodować awarię",
+      "storm": "Wyższa / dłuższa lajna — ryzyko wyładowania elektrostatycznego",
+      "treeAnchor": "Kotwa na drzewie — wymaga bandaża i inspekcji"
+    },
+    "item": {
+      "harness": "Sedák prawidłowo założony",
+      "harnessDetail": "Doubled buckle, waist belt nad biodrami, leg loops zaciśnięte. Sprawdź wizualnie przed wejściem.",
+      "leash": "Odsedka przez obie lajny",
+      "leashDetail": "Certyfikowany kruh musi obejmować mainline i back-up. Jeśli tylko jedną → przy awarii spadniesz pod drugą.",
+      "anchor": "Kotwa sprawdzona",
+      "anchorDetail": "Redundancja (min 2 punkty), kąt ramion < 45°, brak ostrych krawędzi. Wizualnie z obu stron.",
+      "backup": "Backup połączenie funkcjonalne",
+      "backupDetail": "Backup ring lub PAS na sedáku. Fizycznie zawiśnij na backupie sam, potwierdź że trzyma.",
+      "rescuePlan": "Plan ratunku jasny",
+      "rescuePlanDetail": "Kto zrobi ratunek, czym (rope, ascender, kladka), jak długo zajmie dotarcie do ciebie. Werbalnie z zespołem.",
+      "weblockTieoff": "Weblock tie-off zawiązany",
+      "weblockTieoffDetail": "Ostatni krok montażu weblocka. Bez tie-off popruh może wyślizgnąć się pod wibracją. Wizualnie z obu stron.",
+      "nylonRule": "Cały materiał nylon (< 40 m HL)",
+      "nylonRuleDetail": "Mainline, back-up i odsedka muszą być nylon. Polyester lub Dyneema na krótkim HL = siła na kotwie ponad 12 kN.",
+      "wind": "Wiatr aktualnie < 30 km/h",
+      "windDetail": "Ventusky / Windy / aktualne odczucie. Powyżej 30 km/h zaczyna się detape, powyżej 60 km/h każda highline zawodzi.",
+      "storm": "Burze nie grożą w najbliższych 2 godzinach",
+      "stormDetail": "Radar (Meteoradar, Windy). Storm approach + deszcz = wyładowanie elektrostatyczne w UHMWPE, plasma 5000-15000°C. Zdemontuj lajnę.",
+      "treeAnchor": "Kotwy na drzewie sprawdzone",
+      "treeAnchorDetail": "Średnica > 30 cm, zdrowe drzewo, kora nienaruszona, bandaż między popruhem a korą. Jeśli wątpliwość — nie kotwić."
+    }
+  },
+  "lineSafety": {
+    "sectionTitle": "Kontrola bezpieczeństwa",
+    "neverChecked": "Jeszcze nie sprawdzone",
+    "lastCheckedAt": "Ostatnio: {{date}}",
+    "lastCheckedComplete": "Ostatnio: {{date}} ✓",
+    "lastCheckedPartial": "Ostatnio: {{date}} ({{checked}}/{{total}})",
+    "listIntroForLine": "Zalecane sprawdzenie dla tej lajny:",
+    "typeAndDims": "{{type}} · {{length}} m · {{height}} m nad ziemią",
+    "typeAndLength": "{{type}} · {{length}} m",
+    "typeOnly": "{{type}}",
+    "startCheck": "Rozpocznij sprawdzenie",
+    "openHistory": "Historia sprawdzeń ({{count}})",
+    "openHistoryEmpty": "Historia sprawdzeń",
+    "sessionTitle": "Sprawdzenie dla: {{name}}",
+    "sessionSave": "Zapisz sprawdzenie",
+    "sessionSaved": "Sprawdzenie zapisane",
+    "sessionSaveError": "Zapis nieudany",
+    "sessionEmpty": "Nie zaznaczyłeś żadnego punktu. Zapisać sprawdzenie tylko z notatką?",
+    "sessionProgress": "{{checked}}/{{total}} zaznaczone",
+    "peek": "Pokaż punkty",
+    "peekHide": "Ukryj punkty"
+  },
   "isaSafety": {
     "title": "ISA Safety Companion",
     "subtitle": "Przewodnik bezpieczeństwa highline",
@@ -124,29 +381,25 @@
     }
   },
   "cards": {
-    "commandments": {
-      "title": "10 przykazań highline",
-      "summary": "Podstawowe zasady bezpieczeństwa, z których wszystko inne wynika",
-      "c1": "1. Zawsze 3 borháky w anchorze",
-      "c1Detail": "Jeden borhák = single point of failure. Trzy borháky wytrzymają obciążenie nawet gdy jeden zawiedzie. Źródło: HowNot2 Bolting Bible, ISA:21.",
-      "c2": "2. Kąt między nogami anchora ≤ 45°",
-      "c2Detail": "Powyżej 60° siła per-leg rośnie wykładniczo; powyżej 90° NIGDY. Kąt 120° = każda noga niesie więcej niż całe obciążenie. Źródło: ISA anchor best practice.",
-      "c3": "3. Dla HL poniżej 40 m — wszystkie materiały nylon",
-      "c3Detail": "Polyester i Dyneema nie mają wystarczającego stretch aby absorbować energię upadku. Krótka lajna + statyczny materiał = anchor peak przekroczy 12 kN. Źródło: ISA:21 Załącznik 5.",
-      "c4": "4. Bowline NIGDY dla anchora HL",
-      "c4Detail": "Cykliczne obciążenie rozluźnia węzeł. Używaj Figure-8 re-traced. Źródło: ISA:21 §3.3.2.",
-      "c5": "5. Working load ≤ 12 kN, backupfall ≤ 8 kN",
-      "c5Detail": "Nie przekraczaj żadnego. Powyżej limitów = ryzyko awarii komponentów. Źródło: ISA:21 §1.3.",
-      "c6": "6. Zawsze 2 attachmenty do lajny podczas operacji",
-      "c6Detail": "Nigdy nie odłączaj primary attachment dopóki secondary nie jest load-tested. Dotyczy rigging, taping, rescue. Źródło: ISA Rescue best practice.",
-      "c7": "7. Wiatr powyżej 60 km/h = praktycznie każdy HL zawiedzie",
-      "c7Detail": "Derig przed tym, nie po. Historycznie 37 wind-related incidents, 10 z katastroficzną awarią. Źródło: ISA Wind Advisory 2020.",
-      "c8": "8. Buddy check przed każdym wejściem",
-      "c8Detail": "Doświadczenie nie zastępuje kontroli — większość wypadków dzieje się za rutyną. Sprawdzajcie się wzajemnie: harness, leash, backup. Źródło: ISA Safety culture.",
-      "c9": "9. Weblock zawsze z tie-off",
-      "c9Detail": "Bez tie-off popruh może wyślizgnąć się pod wibracją. Ostatni krok riggingu weblocka. Źródło: ISA:21 §3.11.1.2.",
-      "c10": "10. Burza blisko + deszcz = DERIG NOW",
-      "c10Detail": "Electrostatic discharge może topić fibers przy 5000-15000°C nawet bez bezpośredniego pioruna. UHMWPE najbardziej wrażliwy (topi się przy 150°C). CZ incident 2024. Źródło: ISA Electrostatic Warning 12/2025."
+    "bowline": {
+      "title": "Bowline nigdy dla anchora HL",
+      "summary": "Krytyczna zasada — bowline rozwiązuje się pod cyklicznym obciążeniem",
+      "bw1": "Nie używaj bowline na anchorze",
+      "bw1Detail": "Powtarzalne obciążanie i luzowanie rozwiązuje węzeł. Ryzyko rozwiązania pod obciążeniem — śmiertelne.",
+      "bw2": "Używaj Figure-8 re-traced",
+      "bw2Detail": "Figure-8 re-traced trzyma pod cyklicznym obciążeniem. Standard dla anchora highline.",
+      "bw3": "Ogonek min 10 cm",
+      "bw3Detail": "Po zaciśnięciu węzła ogonek musi mieć co najmniej 10 cm (zalecane 15+ cm). Krótszy = ryzyko przeciągnięcia przez węzeł."
+    },
+    "weblockTieoff": {
+      "title": "Weblock zawsze z tie-off",
+      "summary": "Ostatni krok montażu weblocka — bez tego popruh wyślizgnie się",
+      "wt1": "Tie-off to ostatni krok",
+      "wt1Detail": "Po przeciągnięciu popruhu przez weblock zawiąż tail (typowo overhand + backup knot). Bez tego popruh może stopniowo wyślizgnąć się.",
+      "wt2": "Wizualna kontrola z obu stron",
+      "wt2Detail": "Przed wejściem sprawdź tie-off na obu weblockach. Część buddy check.",
+      "wt3": "Bez tie-off ryzyko przy wibracji",
+      "wt3Detail": "Wibracja + grawitacja napinająca popruh = stopniowe wyślizgnięcie z weblocka. Zwłaszcza na długich lajnach z wiatrem. Śmiertelne jeśli zawiedzie podczas wejścia."
     },
     "electrostatic": {
       "title": "Electrostatic Discharge Warning",
@@ -201,6 +454,24 @@
       "s3Detail": "Toksyczna krew wpływa do serca → arytmia serca / zatrzymanie. Sadzaj powoli, W-pozycja (kolana do klatki), potem recovery position.",
       "s4": "To NIE jest przewodnik rescue — dzwoń 112",
       "s4Detail": "Highline rescue wymaga treningu. Nie aktywuj według aplikacji. Przede wszystkim dzwoń 112 (GOPR, straż pożarna). Ta karta to awareness — abyś wiedział że masz mało czasu."
+    },
+    "rigWorkflow": {
+      "title": "Kompletny rig workflow",
+      "summary": "Całe drzewo budowy lajny od planu w domu do wyjścia"
+    },
+    "novice": {
+      "title": "Zaczynasz? Przeczytaj najpierw",
+      "summary": "Podstawowe zasady dla początkujących zanim gdziekolwiek pójdziesz",
+      "n1": "Highline to NIE jest DIY z aplikacji",
+      "n1Detail": "Aplikacja to materiał referencyjny, nie przewodnik pierwszej budowy. Fałszywe poczucie bezpieczeństwa z aplikacji = śmiertelnie niebezpieczne. Trening jest niezbędny.",
+      "n2": "Nigdy nie buduj sam",
+      "n2Detail": "Pierwsze lata uczysz się od doświadczonych. Idź budować z nimi jako obserwator, potem jako pomocnik, dopiero potem jako lead rigger. To trwa lata.",
+      "n3": "Znajdź społeczność",
+      "n3Detail": "Są aktywne grupy na całym świecie — grupy Facebook, osobiste kontakty. Sprawdź sekcję Społeczność w Ustawieniach.",
+      "n4": "Chodź na oficjalne kursy",
+      "n4Detail": "ISA (International Slackline Association) certyfikuje instruktorów. Rigger Cert = międzynarodowy standard.",
+      "n5": "Zacznij od niskich lajn parkowych",
+      "n5Detail": "Longline < 20 cm nad ziemią. Potem trickline. Highline dopiero po latach treningu i z kimś doświadczonym nadzorującym."
     },
     "isa21Limits": {
       "title": "Limity sił ISA:21",

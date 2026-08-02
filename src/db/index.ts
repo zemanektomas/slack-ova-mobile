@@ -34,6 +34,16 @@ async function migrate(db: SQLite.SQLiteDatabase): Promise<void> {
     // v4: ISA Safety Companion — session log (F5)
     // Tabulka + index vytvořeny v SCHEMA_SQL (CREATE IF NOT EXISTS), jen bumpujeme verzi.
   }
+  if (current < 5) {
+    // v5: Per-line Safety Check (F5 v0.7.2) — kontrola vázaná na konkrétní lajnu
+    // Tabulka + index vytvořeny v SCHEMA_SQL (CREATE IF NOT EXISTS), jen bumpujeme verzi.
+  }
+  if (current < 6) {
+    // v6: Full rig log mode (F5 v0.7.2) — check_type, gates_status, log_data
+    try { await db.execAsync(`ALTER TABLE line_safety_checks ADD COLUMN check_type TEXT NOT NULL DEFAULT 'quick'`); } catch {}
+    try { await db.execAsync(`ALTER TABLE line_safety_checks ADD COLUMN gates_status TEXT`); } catch {}
+    try { await db.execAsync(`ALTER TABLE line_safety_checks ADD COLUMN log_data TEXT`); } catch {}
+  }
   // Index na source — vytvoříme až po migraci (sloupec teď určitě existuje)
   try {
     await db.execAsync(`CREATE INDEX IF NOT EXISTS ix_slacklines_source ON slacklines(source)`);
