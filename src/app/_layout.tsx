@@ -12,7 +12,9 @@ import { seedFromSlackcz } from '../db/seedSlackcz';
 import { seedFromSlackmap } from '../db/slackmap';
 import { useAuthStore } from '../store/authStore';
 import { useMapStore } from '../store/mapStore';
+import { useLevelStore } from '../store/levelStore';
 import { useTheme } from '../theme';
+import { OnboardingSheet } from '../components/OnboardingSheet';
 
 const queryClient = new QueryClient();
 
@@ -21,8 +23,12 @@ export default function RootLayout() {
   const scheme = useColorScheme();
   const hydrate = useAuthStore((s) => s.hydrate);
   const hydrateMap = useMapStore((s) => s.hydrate);
+  const hydrateLevel = useLevelStore((s) => s.hydrate);
+  const onboardingSeen = useLevelStore((s) => s.onboardingSeen);
   const [i18nReady, setI18nReady] = useState(false);
   const [mapHydrated, setMapHydrated] = useState(false);
+  const [levelHydrated, setLevelHydrated] = useState(false);
+  const [showOnboarding, setShowOnboarding] = useState(false);
 
   useEffect(() => {
     initI18n()
@@ -50,11 +56,18 @@ export default function RootLayout() {
         // Ostrava center než stihne načíst persisted polohu → trh při startu.
         // auth hydrate (Slackmap JWT z secure-store) běží paralelně, ne čekáme —
         // sign-in/sign-out UI v Settings se zobrazí korektně po hydrate jakmile dorazí.
-        await Promise.all([hydrate(), hydrateMap()]);
+        await Promise.all([hydrate(), hydrateMap(), hydrateLevel()]);
       } catch (e) {
         console.warn('[init] hydrate failed', String(e));
       }
       setMapHydrated(true);
+      setLevelHydrated(true);
+      // Zobraz onboarding jen jednou při 1. instalaci (onboardingSeen === false)
+      // Čekáme na hydrate než uděláme rozhodnutí — jinak by se blesklo na starých instalacích.
+      const seen = useLevelStore.getState().onboardingSeen;
+      if (!seen) {
+        setShowOnboarding(true);
+      }
 
       try {
         const count = await getSlacklineCount();
@@ -93,7 +106,7 @@ export default function RootLayout() {
     })();
   }, [hydrate]);
 
-  if (!i18nReady || !mapHydrated) {
+  if (!i18nReady || !mapHydrated || !levelHydrated) {
     return <View style={{ flex: 1, backgroundColor: t.bg }} />;
   }
 
@@ -111,6 +124,10 @@ export default function RootLayout() {
         >
           <Stack.Screen name="index" options={{ headerShown: false }} />
         </Stack>
+        <OnboardingSheet
+          visible={showOnboarding}
+          onClose={() => setShowOnboarding(false)}
+        />
       </QueryClientProvider>
     </GestureHandlerRootView>
   );

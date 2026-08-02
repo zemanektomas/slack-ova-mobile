@@ -24,6 +24,8 @@ import MapLibreGL from '@maplibre/maplibre-react-native';
 import { useAuthStore } from '../store/authStore';
 import { useSlackmapAuth } from '../api/useSlackmapAuth';
 import { ISASafetySheet } from './ISASafetySheet';
+import { useLevelStore, UserLevel } from '../store/levelStore';
+import { CommunitySheet } from './CommunitySheet';
 
 // Verze z app.json — během dev mode `Constants.expoConfig`, v release přes
 // `Application` API. Pro náš účel ukázat uživateli stačí Constants (funguje vždy).
@@ -85,6 +87,14 @@ export function SettingsSheet({ visible, onClose }: SettingsSheetProps) {
 
   // ISA Safety Companion (F5) — nested sheet
   const [isaSheetOpen, setIsaSheetOpen] = useState(false);
+
+  // Level (v0.7.3)
+  const level = useLevelStore((s) => s.level);
+  const setLevel = useLevelStore((s) => s.setLevel);
+
+  // Community sheet (v0.7.3) — pro default country "CZ"
+  const [communityOpen, setCommunityOpen] = useState(false);
+  const [communityCountry, setCommunityCountry] = useState<string>('CZ');
 
   useEffect(() => {
     if (!visible) return;
@@ -373,6 +383,47 @@ export function SettingsSheet({ visible, onClose }: SettingsSheetProps) {
               </View>
             </View>
 
+            {/* Level switcher (v0.7.3) */}
+            <View style={styles.row}>
+              <Text style={[styles.rowLabel, { color: t.textMuted }]}>{tr('level.sectionTitle')}</Text>
+              <Text style={[styles.updateSubtext, { color: t.textDim, marginBottom: 8 }]}>
+                {tr('level.hint')}
+              </Text>
+              <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
+                {(['novice', 'normal', 'pro'] as UserLevel[]).map((l) => (
+                  <Chip
+                    key={l}
+                    label={tr(`level.${l}`)}
+                    active={level === l}
+                    onPress={() => setLevel(l)}
+                    theme={t}
+                  />
+                ))}
+              </View>
+              <Text style={[styles.updateSubtext, { color: t.textDim, marginTop: 6 }]}>
+                {tr(`level.${level}Hint`)}
+              </Text>
+            </View>
+
+            {/* Community (v0.7.3) */}
+            <View style={styles.row}>
+              <Text style={[styles.rowLabel, { color: t.textMuted }]}>{tr('community.sectionLabel')}</Text>
+              <View style={styles.updateRow}>
+                <Text style={[styles.updateLabel, { color: t.text, flex: 1 }]}>
+                  {tr('community.title')}
+                </Text>
+                <Pressable
+                  onPress={() => { setCommunityCountry('CZ'); setCommunityOpen(true); }}
+                  style={[styles.linkBtn, { borderColor: t.border }]}
+                >
+                  <MaterialCommunityIcons name="account-group-outline" size={14} color={t.accent} style={{ marginRight: 4 }} />
+                  <Text style={[styles.linkBtnText, { color: t.accent }]}>
+                    {tr('community.openBtn')}
+                  </Text>
+                </Pressable>
+              </View>
+            </View>
+
             <View style={styles.row}>
               <Text style={[styles.rowLabel, { color: t.textMuted }]}>{tr('isaSafety.sectionLabel')}</Text>
               <Text style={[styles.updateSubtext, { color: t.textDim, marginBottom: 8 }]}>
@@ -460,6 +511,13 @@ export function SettingsSheet({ visible, onClose }: SettingsSheetProps) {
 
       {/* Nested ISA Safety sheet — F5 */}
       <ISASafetySheet visible={isaSheetOpen} onClose={() => setIsaSheetOpen(false)} />
+
+      {/* Nested Community sheet — v0.7.3 */}
+      <CommunitySheet
+        visible={communityOpen}
+        countryCode={communityCountry}
+        onClose={() => setCommunityOpen(false)}
+      />
     </Modal>
   );
 }
