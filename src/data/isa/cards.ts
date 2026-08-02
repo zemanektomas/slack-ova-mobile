@@ -48,6 +48,10 @@ export interface CardData {
     source: string; // e.g. "ISA:21 (2023) §1.3"
     pdfKey?: string; // optional link to PDF in library
   };
+
+  // Kontextový kalkulátor v kartě (v0.7.4) — tlačítko pod obsahem karty
+  // otevře relevantní kalkulátor v modalu.
+  relatedCalculator?: 'angle' | 'force' | 'ma' | 'deviation';
 }
 
 export const CARDS: CardData[] = [
@@ -86,6 +90,7 @@ export const CARDS: CardData[] = [
       ],
     },
     reference: { source: 'ISA:21 (2023) §1.3, Příloha 2' },
+    relatedCalculator: 'force',  // → force estimator (kontext k 12 kN limit)
   },
 
   // 2. SERENE ------------------------------------------------------------
@@ -103,6 +108,7 @@ export const CARDS: CardData[] = [
       { id: 'ne', labelKey: 'cards.serene.noExtension', detailKey: 'cards.serene.noExtensionDetail' },
     ],
     reference: { source: 'ISA Rigger Cert syllabus' },
+    relatedCalculator: 'angle',  // → anchor angle (Efficient bod)
   },
 
   // 3. SNARE SANE --------------------------------------------------------
@@ -121,6 +127,7 @@ export const CARDS: CardData[] = [
       { id: 's2', labelKey: 'cards.snareSane.noExtension', detailKey: 'cards.snareSane.noExtensionDetail' },
     ],
     reference: { source: 'Balance Community — Building Highline Anchors' },
+    relatedCalculator: 'angle',  // → anchor angle (Small Angles bod)
   },
 
   // 4. Nylon rule sub-40m ------------------------------------------------
@@ -140,6 +147,7 @@ export const CARDS: CardData[] = [
       ],
     },
     reference: { source: 'ISA:21 (2023) Příloha 5' },
+    relatedCalculator: 'force',  // → force estimator (kontext k materiálu × délce)
   },
 
   // 5. Wind thresholds ---------------------------------------------------
@@ -274,6 +282,7 @@ export const CARDS: CardData[] = [
       { id: 'wt3', labelKey: 'cards.weblockTieoff.wt3', detailKey: 'cards.weblockTieoff.wt3Detail' },
     ],
     reference: { source: 'ISA:21 (2023) §3.11.1.2' },
+    relatedCalculator: 'ma',  // → MA (Buckingham s weblock jako progress capture)
   },
 
   // 13. Kompletní rig workflow — celý strom stavby lajny (v0.7.3) ---------
@@ -284,5 +293,6 @@ export const CARDS: CardData[] = [
     titleKey: 'cards.rigWorkflow.title',
     summaryKey: 'cards.rigWorkflow.summary',
     reference: { source: 'pm/idea_rig_log.md — 9 fází + 3 gates + průřezové vrstvy' },
+    relatedCalculator: 'deviation',  // → deviation (fáze 5 Tensioning)
   },
 ];

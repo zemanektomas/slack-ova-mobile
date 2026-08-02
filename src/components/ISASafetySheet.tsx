@@ -12,6 +12,7 @@ import { useTranslation } from 'react-i18next';
 import { useTheme } from '../theme';
 import { CARDS, CardData, ChecklistItem } from '../data/isa/cards';
 import { RIG_PHASES, CROSS_CUTTING_LAYERS, RigPhase, CrossCuttingLayer } from '../data/isa/rigLog';
+import { CalculatorsSheet, CalculatorType } from './calculators/CalculatorsSheet';
 
 interface ISASafetySheetProps {
   visible: boolean;
@@ -34,9 +35,11 @@ export function ISASafetySheet({ visible, onClose }: ISASafetySheetProps) {
   const t = useTheme();
   const { tr } = useTr();
   const [expandedCard, setExpandedCard] = useState<string | null>(null);
+  const [calcType, setCalcType] = useState<CalculatorType | null>(null);
 
   const handleClose = () => {
     setExpandedCard(null);
+    setCalcType(null);
     onClose();
   };
 
@@ -70,6 +73,7 @@ export function ISASafetySheet({ visible, onClose }: ISASafetySheetProps) {
                 onToggleExpand={() =>
                   setExpandedCard((prev) => (prev === card.id ? null : card.id))
                 }
+                onOpenCalculator={(type) => setCalcType(type)}
                 theme={t}
                 tr={tr}
               />
@@ -87,6 +91,13 @@ export function ISASafetySheet({ visible, onClose }: ISASafetySheetProps) {
           </View>
         </View>
       </View>
+
+      {/* Kontextový kalkulátor (v0.7.4) */}
+      <CalculatorsSheet
+        visible={calcType !== null}
+        type={calcType}
+        onClose={() => setCalcType(null)}
+      />
     </Modal>
   );
 }
@@ -97,12 +108,14 @@ function CardView({
   card,
   expanded,
   onToggleExpand,
+  onOpenCalculator,
   theme,
   tr,
 }: {
   card: CardData;
   expanded: boolean;
   onToggleExpand: () => void;
+  onOpenCalculator: (type: CalculatorType) => void;
   theme: ReturnType<typeof useTheme>;
   tr: (key: string, opts?: Record<string, unknown>) => string;
 }) {
@@ -184,6 +197,24 @@ function CardView({
             <Text style={[styles.hint, { color: theme.textMuted }]}>
               {tr(`cards.${card.id.replace(/-/g, '')}.hint`)}
             </Text>
+          )}
+
+          {/* Kontextový kalkulátor (v0.7.4) */}
+          {card.relatedCalculator && (
+            <Pressable
+              onPress={() => onOpenCalculator(card.relatedCalculator!)}
+              style={[styles.calcBtn, { borderColor: theme.accent, backgroundColor: theme.surface }]}
+            >
+              <MaterialCommunityIcons
+                name="calculator-variant-outline"
+                size={14}
+                color={theme.accent}
+                style={{ marginRight: 6 }}
+              />
+              <Text style={[styles.calcBtnText, { color: theme.accent }]}>
+                {tr('calc.openBtn')}
+              </Text>
+            </Pressable>
           )}
 
           {/* Reference source */}
@@ -405,6 +436,17 @@ const styles = StyleSheet.create({
     borderTopColor: 'rgba(150,150,150,0.2)',
   },
   refText: { fontSize: 11 },
+  calcBtn: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 10,
+    paddingHorizontal: 12,
+    marginTop: 12,
+    borderWidth: 1,
+    borderRadius: 8,
+  },
+  calcBtnText: { fontSize: 13, fontWeight: '600' },
   disclaimer: {
     fontSize: 11,
     marginTop: 16,

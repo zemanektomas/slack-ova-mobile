@@ -95,6 +95,67 @@
     "translateUnsupported": "Język nie obsługiwany",
     "translateUnsupportedHint": "Tłumaczenie na urządzeniu obsługuje tylko ograniczony zestaw języków. Oryginał pozostaje widoczny."
   },
+  "calc": {
+    "openBtn": "Otwórz kalkulator",
+    "angle": {
+      "title": "Kąt kotwy — siła na jedną nogę",
+      "totalLoad": "Całkowite obciążenie",
+      "angleLabel": "Kąt między nogami",
+      "perLegLabel": "Siła na jedną nogę",
+      "tableLabel": "Tabela referencyjna",
+      "col": { "angle": "Kąt", "perLeg": "Per-leg", "rating": "Ocena" },
+      "rating": {
+        "ideal": "🟢 ideał",
+        "ok": "🟢 OK",
+        "max": "🟡 max",
+        "caution": "🟡 uwaga",
+        "stop": "🔴 STOP",
+        "never": "💀 NIGDY"
+      },
+      "formula": "Wzór: F_per_leg = F_total ÷ (2 × cos(θ/2))",
+      "source": "Źródło: ISA anchor best practice + fizyka triangulacji."
+    },
+    "force": {
+      "title": "Siła przy upadku (peak force)",
+      "material": "Materiał",
+      "length": "Długość lajny",
+      "working": "Working tension",
+      "anchorPeak": "Peak na kotwie",
+      "leashPeak": "Peak na odsedku",
+      "tableLabel": "Peak na kotwie (wg długości)",
+      "col": { "length": "Długość" },
+      "source": "Źródło: Jörren 2015 (SlackLab) — dane 20m, ekstrapolacja dla dłuższych lajn.",
+      "disclaimer": "⚠ Szacunki — realne siły mierzy load cell (Enforcer, LineScale)."
+    },
+    "ma": {
+      "title": "Mechanical advantage (kladki)",
+      "movable": "Movable pulleys (ruchome)",
+      "fixed": "Fixed pulleys (redirect)",
+      "pull": "Twoja siła ciągnięcia",
+      "theoretical": "Teoretyczne MA",
+      "real": "Realne MA (z frikcją)",
+      "output": "Siła wyjściowa na weblock",
+      "pullDistance": "Pull distance ratio",
+      "pullDistanceUnit": "m tail : 1 m weblock",
+      "sweetSpot": "Sweet spot dla highline tensioning.",
+      "tooMuch": "Pull distance niemożliwa — użyj max 4 movable.",
+      "tableLabel": "Tabela referencyjna",
+      "col": { "movable": "Movable", "theory": "Teoria", "real": "Realne", "pullDist": "Pull dist" },
+      "buckingham": "Buckingham system (Balance Community)",
+      "formula": "Wzór: MA = 2^N_movable, efficiency = 0.9^(N_movable + N_fixed)",
+      "source": "Źródło: Balance Community — Buckingham Tensioning System."
+    },
+    "deviation": {
+      "title": "Siła na deviacji (redirect)",
+      "tension": "Tension lajny",
+      "angle": "Kąt deviacji",
+      "forceLabel": "Siła na deviacji",
+      "tableLabel": "Tabela referencyjna",
+      "col": { "angle": "Kąt", "force": "Siła", "ratio": "Stosunek" },
+      "warning": "⚠ Deviacja niesie więcej niż sama lajna. Kotwa dla deviacji musi być silniejsza niż dla kotwienia highline.",
+      "formula": "Wzór: F = 2 × T × sin(θ/2)"
+    }
+  },
   "level": {
     "sectionTitle": "Poziom doświadczenia",
     "hint": "Ustawienie wpływa na ostrzeżenia i rekomendacje w aplikacji.",
