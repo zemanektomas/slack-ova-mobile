@@ -8,8 +8,8 @@ Vznikla na ostravske slackline scene (Sl.Ova), ale data su globalni:
 pro celej svět.
 
 [![License](https://img.shields.io/badge/license-Apache%202.0-blue)](LICENSE)
-[![Latest release](https://img.shields.io/github/v/release/zemanektomas/slack-ova-mobile?label=Stahni%20APK&color=0e8a16)](https://github.com/zemanektomas/slack-ova-mobile/releases/latest)
-[![Platform](https://img.shields.io/badge/platform-Android-3DDC84?logo=android&logoColor=white)](https://github.com/zemanektomas/slack-ova-mobile/releases/latest)
+[![Google Play](https://img.shields.io/badge/Google%20Play-Slackline.Ova-0e8a16?logo=google-play&logoColor=white)](https://play.google.com/store/apps/details?id=cz.slackline.ova)
+[![Platform](https://img.shields.io/badge/platform-Android-3DDC84?logo=android&logoColor=white)](https://play.google.com/store/apps/details?id=cz.slackline.ova)
 
 ## Co umi
 
@@ -20,9 +20,13 @@ přes Mapy.cz / Google Maps / Locus / Sygic, čerň-bila paleta, čeština / eng
 
 ## Staženi
 
-Android APK na [Releases](https://github.com/zemanektomas/slack-ova-mobile/releases/latest).
-Alternativně v [Google Play Internal Testing](https://play.google.com/apps/internaltest/4701714531864286688)
-— opt-in přes Gmail.
+**[Slackline.Ova na Google Play](https://play.google.com/store/apps/details?id=cz.slackline.ova)** — to je hlavni cesta, tam si to stahneš normalně jak jinu apku.
+
+> ⚠️ **APK z GitHub Releases — od 30. 9. 2026 už nepůjdů nainstalovat.**
+> Google zavadi [Android Developer Verification](https://developer.android.com/developer-verification)
+> a APK z neregistrovanych zdrojů na běžnych Androidech zablokuje.
+> Slackline.Ova mame na Google Play zaregistrovanu, tož přes obchod to jede
+> dal bez problemu. Starše APK v Releases zůstanů jak archiv.
 
 iOS zatim ni — čeka na EAS Build a Apple Developer učet.
 
