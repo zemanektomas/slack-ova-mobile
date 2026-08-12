@@ -43,7 +43,7 @@ jobs:
           restore-keys: gradle-${{ runner.os }}-
 
       - name: Install npm deps
-        run: npm ci
+        run: npm install --legacy-peer-deps --no-audit --no-fund
 
       # Note: ESM `.js` extension patch on expo-sqlite/build/*.js (from memory
       # `reference_expo_sqlite_bug.md`) was originally a Windows + Node 22 dev
