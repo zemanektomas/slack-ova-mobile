@@ -262,7 +262,7 @@ export default function HomeScreen() {
         <BottomSheetFlatList
           ref={listRef}
           data={items}
-          keyExtractor={(item) => String((item as SlacklineListItem).id)}
+          keyExtractor={(item: unknown) => String((item as SlacklineListItem).id)}
           renderItem={renderItem as any}
           // Drag listu zavře keyboard — řeší Petrův case "tahám sheet a klávesnice
           // mi překryje text". `on-drag` blur na první scroll gesto.
@@ -276,7 +276,7 @@ export default function HomeScreen() {
             await seedFromSlackcz();
             try { await seedFromSlackmap(); } catch {}
           }} tintColor={t.accent} />}
-          onScrollToIndexFailed={(e) => {
+          onScrollToIndexFailed={(e: { index: number }) => {
             setTimeout(() => {
               listRef.current?.scrollToIndex({ index: e.index, animated: true, viewPosition: 0 });
             }, 100);
