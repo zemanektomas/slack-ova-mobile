@@ -2,7 +2,7 @@
   "expo": {
     "name": "Slackline.Ova",
     "slug": "slackline-ova",
-    "version": "0.7.10",
+    "version": "0.7.11",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "scheme": "slacklineova",
@@ -18,7 +18,7 @@
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "cz.slackline.ova",
-      "buildNumber": "29"
+      "buildNumber": "30"
     },
     "android": {
       "adaptiveIcon": {
@@ -26,7 +26,7 @@
         "backgroundColor": "#0f172a"
       },
       "package": "cz.slackline.ova",
-      "versionCode": 29
+      "versionCode": 30
     },
     "plugins": [
       "expo-router",
