@@ -1,6 +1,6 @@
 {
   "name": "slackline-ova",
-  "version": "0.7.5",
+  "version": "0.7.6",
   "main": "expo-router/entry",
   "scripts": {
     "start": "expo start --dev-client",
@@ -28,7 +28,6 @@
     "expo-crypto": "~13.0.2",
     "expo-file-system": "~17.0.1",
     "expo-image": "~1.12.15",
-    "expo-image-picker": "~15.0.7",
     "expo-localization": "~15.0.0",
     "expo-location": "~17.0.1",
     "expo-router": "~3.5.23",
