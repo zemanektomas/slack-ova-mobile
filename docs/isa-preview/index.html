@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Slackline.Ova — ISA preview</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="topbar">
+    <h1>Slackline.Ova — ISA <small>(preview / draft k revizi)</small></h1>
+    <nav class="tabs">
+      <button class="tab active" data-tab="cards">📚 Karty</button>
+      <button class="tab" data-tab="calculators">🧮 Kalkulátory</button>
+      <button class="tab" data-tab="notes">📝 Poznámky k revizi</button>
+    </nav>
+  </header>
+
+  <main>
+    <!-- CARDS TAB -->
+    <section id="cards" class="tab-content active">
+      <div class="filters">
+        <label>Kategorie:
+          <select id="filter-category">
+            <option value="all">Vše</option>
+            <option value="basics">Základ</option>
+            <option value="anchor">Kotvy</option>
+            <option value="safety-rules">Bezpečnostní pravidla</option>
+            <option value="environmental">Prostředí</option>
+            <option value="gear">Vybavení</option>
+            <option value="rescue">Rescue</option>
+            <option value="people">Lidé</option>
+          </select>
+        </label>
+        <label>Min. váha:
+          <select id="filter-weight">
+            <option value="1">1+ (vše)</option>
+            <option value="3" selected>3+ (užitečné)</option>
+            <option value="4">4+ (důležité)</option>
+            <option value="5">5 (kritické)</option>
+          </select>
+        </label>
+        <label>Stav:
+          <select id="filter-status">
+            <option value="all">Vše</option>
+            <option value="existing">Existující (14)</option>
+            <option value="new">Navrhované nové (19)</option>
+          </select>
+        </label>
+      </div>
+      <div id="cards-list"></div>
+    </section>
+
+    <!-- CALCULATORS TAB -->
+    <section id="calculators" class="tab-content">
+      <div id="calculators-list"></div>
+    </section>
+
+    <!-- NOTES TAB -->
+    <section id="notes" class="tab-content">
+      <div class="notes-block">
+        <h2>Legenda váhy (safety impact)</h2>
+        <ul>
+          <li><strong>5 — KRITICKÉ</strong>: přímý vliv na safety, absence → potenciální fatal</li>
+          <li><strong>4 — DŮLEŽITÉ</strong>: best practice, absence zvyšuje riziko</li>
+          <li><strong>3 — UŽITEČNÉ</strong>: dobrá praktika, ale ne kritická</li>
+          <li><strong>2 — NICE-TO-HAVE</strong>: referenční info</li>
+          <li><strong>1 — OPTIONAL</strong>: nadstavba</li>
+        </ul>
+
+        <h2>Post-cert learnings (co je neplatné v aktuálních kartách)</h2>
+        <ul>
+          <li>⚠️ <strong>„Main a backup musí být oddělené" je NEPLATNÉ</strong> — v některých situacích lze spojit přes 2 šekly (redundance šekle > redundance separátní kotvy). Přepisuje Rig Workflow kartu.</li>
+          <li>⚠️ <strong>BFK nepotřebuje separátní backup material</strong> — vícepramené BFK je sám o sobě redundantní.</li>
+          <li>✓ SNARE SANE 9 → 6 bodů (2026 update) — aplikace už reflektuje.</li>
+        </ul>
+
+        <h2>Návrh nové struktury apky</h2>
+        <p><strong>3 top-level taby</strong> místo dnešního overlay:</p>
+        <pre>┌─────────────────────────────────────┐
+│ [ Lajny ]  [ ISA ]  [ Nastavení ]   │
+├─────────────────────────────────────┤
+│    (aktivní tab obsah)              │
+└─────────────────────────────────────┘</pre>
+        <ul>
+          <li><strong>Lajny</strong> (default) — dnešní mapa + bottom sheet s listem</li>
+          <li><strong>ISA</strong> — bezpečnostní karty + kalkulátory</li>
+          <li><strong>Nastavení</strong> — settings + level switcher</li>
+        </ul>
+        <p><strong>Per-line integrace</strong>: krátký piktogram + text + link v detail lajny.</p>
+        <p><strong>Rig Log</strong>: jen per-line (jak dnes).</p>
+        <p><strong>Full ISA:21 offline</strong>: NEbude — jen odkazy.</p>
+
+        <h2>Jak preview používat</h2>
+        <ol>
+          <li>Prohlédnout karty (kliknutím rozbalit detail)</li>
+          <li>U každé zvážit: <strong>drž / smaž / rewrite / sloučit / nová</strong></li>
+          <li>Rozhodnutí zapisovat do <code>doc/app-review/isa-cards-review.md</code></li>
+          <li>Až finální seznam schválený → přeložit do RN (<code>apps/mobile/src/data/isa/cards.ts</code>)</li>
+        </ol>
+      </div>
+    </section>
+  </main>
+
+  <script src="cards-data.js"></script>
+  <script src="calculators-data.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
