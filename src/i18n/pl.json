@@ -227,7 +227,7 @@
     },
     "p3": {
       "title": "3. Budowa kotew",
-      "i1": "Main i backup OSOBNO (nie dzielą elementu)",
+      "i1": "Main i backup podłączone NIEZALEŻNIE (bez wspólnego SPOF)",
       "i2": "Tie-back tam gdzie wątpliwość",
       "i3": "Wyrównanie obciążenia, kąty < 60°",
       "i4": "Szekle dokręcone i zabezpieczone",
@@ -311,8 +311,8 @@
     "gateB": {
       "title": "Gate B — System przed napinaniem",
       "description": "Po budowie kotew, transport i rig przed tension.",
-      "b1": "Main i backup oddzielone (nie dzielą elementu)",
-      "b1Detail": "Mainline i back-up nie mogą dzielić żadnego elementu w load path. Szekl, karabina, kotwa — każdy per lajna osobno.",
+      "b1": "Main i backup podłączone niezależnie (bez wspólnego SPOF)",
+      "b1Detail": "Mogą dzielić redundantny materiał kotwiący — np. spanset i lina przewleczone przez dwa szekle, na jednym masterpoint, na drugim backup. Nie mogą dzielić jednego elementu, którego awaria zrzuci oba. Wg ISA:21 §3.10 masterpoint służy jednocześnie mainline i backupowi.",
       "b2": "Weblock / progress capture zabezpieczony",
       "b2Detail": "Weblock to progress capture dla systemu Buckingham. Tie-off zawiązany, wizualnie sprawdzony. Bez tie-off = fatalne.",
       "b3": "Backup funkcjonalny (luźny, ale nie leżący na ziemi)",

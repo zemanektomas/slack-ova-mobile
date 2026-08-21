@@ -9,7 +9,8 @@ import {
 import BottomSheet, { BottomSheetFlatList } from '@gorhom/bottom-sheet';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useSharedValue } from 'react-native-reanimated';
 import { useMapStore } from '../store/mapStore';
 import { useSyncStore } from '../store/syncStore';
 import { queryByBounds } from '../db/queries';
@@ -67,14 +68,23 @@ export default function HomeScreen() {
   const snapPoints = useMemo(() => ['15%', '50%', '92%'], []);
   const setSheetHeight = useMapStore((s) => s.setSheetHeight);
   const focusOn = useMapStore((s) => s.focusOn);
+  const insets = useSafeAreaInsets();
+
+  // Horní hrana sheetu v px, live z Gorhomu. Ovládací tlačítka mapy se podle ní
+  // pozicují přímo v UI threadu — jinak skáčou až po dosednutí animace.
+  const sheetPosition = useSharedValue(0);
 
   // Při změně snap point řekni mapě, jak velkou část obrazovky překrývá sheet,
   // aby mohla kamerou centrovat na střed VIDITELNÉ plochy mapy (ne celé obrazovky).
+  // Kamera stačí diskrétně (setCamera per frame by bylo plýtvání) — plynule
+  // sleduje sheet jen FAB blok, přes sheetPosition.
   const handleSheetChange = (index: number) => {
-    const winH = Dimensions.get('window').height;
+    // Kontejner je SafeAreaView edges={['top']}, takže o horní inset nižší než
+    // okno. Snap pointy jsou procenta z kontejneru, ne z okna.
+    const containerH = Dimensions.get('window').height - insets.top;
     const fractions = [0.15, 0.5, 0.92];
     const fraction = fractions[index] ?? 0;
-    setSheetHeight(winH * fraction);
+    setSheetHeight(containerH * fraction);
   };
 
   useEffect(() => {
@@ -194,6 +204,7 @@ export default function HomeScreen() {
           markers={items}
           selectedId={expandedId}
           onMarkerPress={handleMarkerPress}
+          sheetPosition={sheetPosition}
         />
       </View>
 
@@ -204,6 +215,12 @@ export default function HomeScreen() {
         index={1}
         snapPoints={snapPoints}
         onChange={handleSheetChange}
+        animatedPosition={sheetPosition}
+        // Gorhom 5 má enableDynamicSizing default TRUE — vloží do snapPoints
+        // další, z obsahu odvozený bod. Tím se posunou indexy a fractions[index]
+        // v handleSheetChange sáhne vedle (mapa uprostřed → tlačítka na maximu).
+        // Máme tři explicitní snap pointy, dynamický nechceme.
+        enableDynamicSizing={false}
         backgroundStyle={{ backgroundColor: t.surface }}
         // Drag handle větší — palcem těžké trefit default ~22px tall kontejner,
         // user tap propadl do search inputu pod ním (open keyboard nechtěně).

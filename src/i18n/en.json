@@ -227,7 +227,7 @@
     },
     "p3": {
       "title": "3. Anchor build",
-      "i1": "Main and backup SEPARATED (no shared element)",
+      "i1": "Main and backup connected INDEPENDENTLY (no shared single point of failure)",
       "i2": "Tie-back where in doubt",
       "i3": "Load balancing, angles < 60°",
       "i4": "Shackles tightened and secured",
@@ -311,8 +311,8 @@
     "gateB": {
       "title": "Gate B — System before tensioning",
       "description": "After anchor build, transport, and rig before tension.",
-      "b1": "Main and backup separated (no shared element)",
-      "b1Detail": "Mainline and back-up must not share any element in the load path. Shackle, carabiner, anchor — each per line separately.",
+      "b1": "Main and backup independently connected (no shared single point of failure)",
+      "b1Detail": "They may share redundant anchoring material — e.g. spanset and rope both threaded through two shackles, masterpoint on one, backup on the other. What they must not share is a single element whose failure drops both. Per ISA:21 §3.10 a masterpoint serves mainline and backup together.",
       "b2": "Weblock / progress capture secured",
       "b2Detail": "Weblock is progress capture for Buckingham system. Tie-off tied, visually checked. Without tie-off = fatal.",
       "b3": "Backup functional (loose, but not resting on ground)",

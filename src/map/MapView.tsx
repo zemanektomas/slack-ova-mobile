@@ -2,7 +2,8 @@
 // Sleduje bounds změny → mapStore, kreslí markery z viditelných slacklines.
 
 import { useEffect, useMemo, useRef } from 'react';
-import { StyleSheet, View, Pressable, Image } from 'react-native';
+import { StyleSheet, View, Pressable, Image, LayoutChangeEvent } from 'react-native';
+import Animated, { useAnimatedStyle, useSharedValue, type SharedValue } from 'react-native-reanimated';
 import { useTranslation } from 'react-i18next';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import MapLibreGL, { MapView, Camera, ShapeSource, CircleLayer, LineLayer, SymbolLayer } from '@maplibre/maplibre-react-native';
@@ -58,13 +59,39 @@ interface Props {
   markers: SlacklineListItem[];
   selectedId?: number | null;
   onMarkerPress?: (id: number) => void;
+  /**
+   * Horní hrana bottom sheetu (px od horní hrany kontejneru), z Gorhomu.
+   * Ovládací tlačítka se podle ní pozicují přímo v UI threadu, takže sledují
+   * tažení plynule. Diskrétní `sheetHeight` ze storu na to nestačí — aktualizuje
+   * se až při dosednutí, takže tlačítka po animaci skákala (v0.7.14).
+   */
+  sheetPosition?: SharedValue<number>;
 }
 
-export default function MapViewComponent({ markers, selectedId, onMarkerPress }: Props) {
+export default function MapViewComponent({ markers, selectedId, onMarkerPress, sheetPosition }: Props) {
   const t = useTheme();
   const { t: tr } = useTranslation();
   const kind = useMapStore((s) => s.kind);
   const sheetHeight = useMapStore((s) => s.sheetHeight);
+
+  // Výška kontejneru — měřená, ne dopočítaná z okna. Root obrazovky je
+  // SafeAreaView edges={['top']}, takže window height je o horní inset větší
+  // a procenta snap pointů z ní počítaná sedí vedle.
+  const containerH = useSharedValue(0);
+  const onContainerLayout = (e: LayoutChangeEvent) => {
+    containerH.value = e.nativeEvent.layout.height;
+  };
+
+  // Kolik sheet zabírá zdola + 12 px mezera. Počítá se v UI threadu z
+  // animatedPosition, takže tlačítka sledují tažení plynule. Fallback na
+  // diskrétní sheetHeight, kdyby prop nedorazil.
+  const controlsStyle = useAnimatedStyle(() => {
+    const occupied = sheetPosition
+      ? Math.max(0, containerH.value - sheetPosition.value)
+      : sheetHeight;
+    return { bottom: occupied + 12 };
+  }, [sheetHeight]);
+
   const setBounds = useMapStore((s) => s.setBounds);
   const setCenter = useMapStore((s) => s.setCenter);
   const initialCenter = useMapStore((s) => s.center);
@@ -122,6 +149,17 @@ export default function MapViewComponent({ markers, selectedId, onMarkerPress }:
       padding: { paddingBottom: sheetHeight, paddingTop: 0, paddingLeft: 0, paddingRight: 0 },
     });
   }, [focusTarget?.nonce]);
+
+  // Pinch a tap se po SDK 54 (gesture-handler 2.28) míchají — na konci pinch-out
+  // dorazí press event, trefí cluster a jeho handler odanimuje kameru zpátky
+  // DOVNITŘ. Uživatel to vidí jako "mapa se sama zazoomuje zpět" (v0.7.14).
+  // Press proto ignorujeme, pokud se mapa právě hýbala.
+  const lastMoveAt = useRef(0);
+  const markMoving = () => {
+    lastMoveAt.current = Date.now();
+  };
+  /** true = press přišel jako ocásek gesta, ne jako záměrný tap */
+  const pressDuringGesture = () => Date.now() - lastMoveAt.current < 300;
 
   const zoomBy = async (delta: number) => {
     if (!mapRef.current || !cameraRef.current) return;
@@ -208,7 +246,10 @@ export default function MapViewComponent({ markers, selectedId, onMarkerPress }:
   return (
     <View
       style={styles.container}
-      onLayout={() => setTimeout(refreshBounds, 200)}
+      onLayout={(e) => {
+        onContainerLayout(e);
+        setTimeout(refreshBounds, 200);
+      }}
     >
       <MapView
         ref={mapRef}
@@ -217,7 +258,10 @@ export default function MapViewComponent({ markers, selectedId, onMarkerPress }:
         rotateEnabled={false}
         pitchEnabled={false}
         compassEnabled={false}
+        onRegionWillChange={markMoving}
+        onRegionIsChanging={markMoving}
         onRegionDidChange={(feature: any) => {
+          markMoving();
           const vb = feature?.properties?.visibleBounds;
           const c = feature?.geometry?.coordinates;
           if (vb) {
@@ -265,6 +309,9 @@ export default function MapViewComponent({ markers, selectedId, onMarkerPress }:
           clusterRadius={40}
           clusterMaxZoomLevel={8}
           onPress={async (e: any) => {
+            // Ocásek pinch/pan gesta — ne záměrný tap. Bez tohohle kamera po
+            // pinch-out odanimuje zpátky dovnitř (cluster expansion zoom).
+            if (pressDuringGesture()) return;
             const feat = e?.features?.[0];
             if (!feat) return;
             if (feat.properties?.cluster) {
@@ -417,7 +464,7 @@ export default function MapViewComponent({ markers, selectedId, onMarkerPress }:
       )}
 
       {!hideControls && (
-        <View style={[styles.controls, { bottom: sheetHeight + 12 }]} pointerEvents="box-none">
+        <Animated.View style={[styles.controls, controlsStyle]} pointerEvents="box-none">
           <Pressable
             onPress={() => zoomBy(1)}
             style={[styles.ctrlBtn, { backgroundColor: t.surface, borderColor: t.border }]}
@@ -443,7 +490,7 @@ export default function MapViewComponent({ markers, selectedId, onMarkerPress }:
           >
             <MaterialCommunityIcons name="crosshairs-gps" size={20} color={userLoc ? t.userDot : t.text} />
           </Pressable>
-        </View>
+        </Animated.View>
       )}
     </View>
   );
