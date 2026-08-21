@@ -45,7 +45,14 @@ export async function queryByBounds(args: QueryByBoundsArgs): Promise<SlacklineL
     sortBy,
     sortDir,
     center,
-    limit = 1000,
+    // Stejný výsledek jde do seznamu I na mapu (HomeScreen předává `items` jako
+    // markers). S LIMIT 1000 + ORDER BY podle řazení tedy změna řazení měnila
+    // i markery na mapě — uřízlo se jiných 1000 řádků. Dataset má ~8100 lajn
+    // (7815 slackmap + 254 slack.cz), takže 10000 = strop se v praxi netrefí
+    // a mapa je na řazení nezávislá. Bounds filtr množinu stejně redukuje,
+    // plný počet nastane jen při úplně odzoomované mapě, kde jsou markery
+    // clusterované a všechny je potřeba pro správný count.
+    limit = 10000,
     search,
     sourceFilter = 'all',
   } = args;

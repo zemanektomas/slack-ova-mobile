@@ -227,7 +227,7 @@
     },
     "p3": {
       "title": "3. Stavba kotev",
-      "i1": "Main a backup ODDĚLENĚ (nesdílí prvek)",
+      "i1": "Main a backup připojeny NEZÁVISLE (žádný společný SPOF)",
       "i2": "Tie-back tam kde je pochybnost",
       "i3": "Vyrovnání zátěže, úhly < 60°",
       "i4": "Šekly dotažené a zajištěné",
@@ -311,8 +311,8 @@
     "gateB": {
       "title": "Gate B — Systém před natažením",
       "description": "Po stavbě kotev, transport a rig před tension.",
-      "b1": "Main a backup oddělené (nesdílí prvek)",
-      "b1Detail": "Hlavní lajna a back-up nesmějí sdílet žádný prvek v load path. Šekl, karabina, kotva — všechno per lajna samostatně.",
+      "b1": "Main a backup připojeny nezávisle (žádný společný SPOF)",
+      "b1Detail": "Můžou sdílet redundantní kotvicí materiál — např. spanset i lano protažené dvěma šekly, na jednom masterpoint, na druhém backup. Sdílet nesmějí jediný prvek, jehož selhání shodí obojí. Podle ISA:21 §3.10 masterpoint slouží mainline i backupu společně.",
       "b2": "Weblock / progress capture zajištěn",
       "b2Detail": "Weblock je progress capture pro Buckingham systém. Tie-off zavázán, vizuálně zkontrolován. Bez tie-off = fatal.",
       "b3": "Backup funkční (volný, ale ne prověšený na zem)",
