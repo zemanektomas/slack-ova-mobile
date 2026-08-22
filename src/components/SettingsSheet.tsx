@@ -25,6 +25,7 @@ import { useAuthStore } from '../store/authStore';
 import { useSlackmapAuth } from '../api/useSlackmapAuth';
 import { ISASafetySheet } from './ISASafetySheet';
 import { useLevelStore, UserLevel } from '../store/levelStore';
+import { useFontStore, FontSize } from '../store/fontStore';
 import { CommunitySheet } from './CommunitySheet';
 
 // Verze z app.json — během dev mode `Constants.expoConfig`, v release přes
@@ -91,6 +92,10 @@ export function SettingsSheet({ visible, onClose }: SettingsSheetProps) {
   // Level (v0.7.3)
   const level = useLevelStore((s) => s.level);
   const setLevel = useLevelStore((s) => s.setLevel);
+
+  // Velikost písma (v0.7.16) — "večer je to nečitelné na mobilu"
+  const fontSize = useFontStore((s) => s.fontSize);
+  const setFontSize = useFontStore((s) => s.setFontSize);
 
   // Community sheet (v0.7.3) — pro default country "CZ"
   const [communityOpen, setCommunityOpen] = useState(false);
@@ -390,7 +395,7 @@ export function SettingsSheet({ visible, onClose }: SettingsSheetProps) {
                 {tr('level.hint')}
               </Text>
               <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
-                {(['novice', 'normal', 'pro'] as UserLevel[]).map((l) => (
+                {(['beginner', 'walker', 'rigger'] as UserLevel[]).map((l) => (
                   <Chip
                     key={l}
                     label={tr(`level.${l}`)}
@@ -403,6 +408,26 @@ export function SettingsSheet({ visible, onClose }: SettingsSheetProps) {
               <Text style={[styles.updateSubtext, { color: t.textDim, marginTop: 6 }]}>
                 {tr(`level.${level}Hint`)}
               </Text>
+            </View>
+
+            {/* Velikost písma (v0.7.16) */}
+            <View style={styles.row}>
+              <Text style={[styles.rowLabel, { color: t.textMuted }]}>{tr('settings.fontSize')}</Text>
+              <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
+                {([
+                  ['normal', 'settings.fontNormal'],
+                  ['large', 'settings.fontLarge'],
+                  ['xlarge', 'settings.fontXlarge'],
+                ] as [FontSize, string][]).map(([size, key]) => (
+                  <Chip
+                    key={size}
+                    label={tr(key)}
+                    active={fontSize === size}
+                    onPress={() => setFontSize(size)}
+                    theme={t}
+                  />
+                ))}
+              </View>
             </View>
 
             {/* Community (v0.7.3) */}

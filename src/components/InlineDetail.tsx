@@ -345,8 +345,8 @@ export default function InlineDetail({ slacklineId }: { slacklineId: number }) {
         );
       })()}
 
-      {/* 11) Novice advisory — jen když level='novice' */}
-      {level === 'novice' && (
+      {/* 11) Advisory pro začátečníka — jen když level='beginner' */}
+      {level === 'beginner' && (
         <View style={[noviceStyles.box, { borderColor: '#e11d48', backgroundColor: t.surfaceAlt }]}>
           <View style={noviceStyles.header}>
             <MaterialCommunityIcons name="alert-outline" size={16} color="#e11d48" style={{ marginRight: 6 }} />

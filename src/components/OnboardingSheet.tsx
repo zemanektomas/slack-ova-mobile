@@ -84,7 +84,7 @@ export function OnboardingSheet({ visible, onClose }: Props) {
               <Text style={[styles.slideText, { color: t.textMuted, marginBottom: 16 }]}>
                 {tr('onboarding.slide3Body')}
               </Text>
-              {(['novice', 'normal', 'pro'] as UserLevel[]).map((l) => (
+              {(['beginner', 'walker', 'rigger'] as UserLevel[]).map((l) => (
                 <Pressable
                   key={l}
                   onPress={() => handleFinish(l)}
