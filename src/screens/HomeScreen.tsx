@@ -212,9 +212,8 @@ export default function HomeScreen() {
             // Tři odlišitelné stavy. Peek jen podbarvení, rozbalený navíc
             // accent pruh vlevo — bez toho nebylo poznat, ke které lajně
             // rozbalený text patří (feedback z tabletu 22.8.).
-            isPeeked && { backgroundColor: t.surfaceAlt },
             isExpanded && {
-              backgroundColor: t.surfaceAlt,
+              backgroundColor: t.surfaceActive,
               borderLeftWidth: 3,
               borderLeftColor: t.accent,
               paddingLeft: 9,          // 12 − 3, ať text nepoodskočí
@@ -242,23 +241,17 @@ export default function HomeScreen() {
           <Text style={[styles.colDistance, { color: t.text, fontSize: 12 * fontScale }]} numberOfLines={1}>
             {formatDistance(item.distance_km)}
           </Text>
-          {/* Afordance na zabalení — jinak není zřejmé, kam ťuknout. */}
-          {isExpanded && (
-            <MaterialCommunityIcons name="chevron-up" size={18} color={t.accent} />
-          )}
+          {/* Stav řádku ikonou, ne dalším řádkem. Slot má pevnou šířku i když je
+              prázdný — jinak by se sloupce při výběru posunuly. */}
+          <View style={styles.rowIcon}>
+            {isExpanded && (
+              <MaterialCommunityIcons name="chevron-up" size={18} color={t.accent} />
+            )}
+            {isPeeked && (
+              <MaterialCommunityIcons name="chevron-down" size={18} color={t.textMuted} />
+            )}
+          </View>
         </Pressable>
-        {/* Peek proužek — bez něj druhý tap nikdo neobjeví. */}
-        {isPeeked && (
-          <Pressable
-            style={[styles.peek, centered, { borderColor: t.border, backgroundColor: t.surfaceAlt }]}
-            onPress={() => onRowPress(item.id)}
-          >
-            <Text style={[styles.peekText, { color: t.textMuted, fontSize: 12 * fontScale }]}>
-              {tr('home.tapAgainForDetail')}
-            </Text>
-            <MaterialCommunityIcons name="chevron-down" size={18} color={t.textMuted} />
-          </Pressable>
-        )}
         {isExpanded && (
           <View style={centered}>
             <InlineDetail slacklineId={item.id} />
@@ -416,15 +409,7 @@ function SortHeader({
 
 const styles = StyleSheet.create({
   container: { flex: 1 },
-  peek: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: 4,
-    paddingVertical: 6,
-    borderBottomWidth: StyleSheet.hairlineWidth,
-  },
-  peekText: { fontWeight: '500' },
+  rowIcon: { width: 18, alignItems: 'center' },
   // sortBar matchuje `row` padding (12 horizontal, 8 vertical) + gap 8
   // pro perfektní zarovnání hlaviček s hodnotami níž.
   sortBar: {

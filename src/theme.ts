@@ -8,6 +8,7 @@ export interface Theme {
   bg: string;          // hlavní pozadí obrazovky
   surface: string;     // pozadí karet, listů, header baru
   surfaceAlt: string;  // pozadí sort baru, řádků pod hover
+  surfaceActive: string; // rozbalený řádek — surfaceAlt je proti bílé skoro neviditelný
   border: string;      // tenké oddělovače
   text: string;        // primary text
   textMuted: string;   // sekundární text, meta info
@@ -30,6 +31,7 @@ const light: Theme = {
   bg: '#f3f4f6',
   surface: '#ffffff',
   surfaceAlt: '#f9fafb',
+  surfaceActive: '#eef2f7',
   border: '#e5e7eb',
   text: '#111827',
   textMuted: '#6b7280',
@@ -52,6 +54,7 @@ const dark: Theme = {
   bg: '#0b0f17',
   surface: '#111827',
   surfaceAlt: '#1f2937',
+  surfaceActive: '#273449',
   border: '#1f2937',
   text: '#f3f4f6',
   textMuted: '#9ca3af',
