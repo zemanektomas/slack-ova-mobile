@@ -14,7 +14,8 @@
     "settingsLabel": "Map settings",
     "gpsLabel": "Find me",
     "zoomInLabel": "Zoom in",
-    "zoomOutLabel": "Zoom out"
+    "zoomOutLabel": "Zoom out",
+    "tapAgainForDetail": "Tap again for detail"
   },
   "sort": {
     "name": "Name",
@@ -66,7 +67,11 @@
     "signInFailed": "Sign in failed",
     "signOutConfirmTitle": "Sign out from Slackmap?",
     "signOutConfirmBody": "You'll need to sign in again to add or edit lines.",
-    "signOutConfirm": "Sign out"
+    "signOutConfirm": "Sign out",
+    "fontSize": "Text size",
+    "fontNormal": "Normal",
+    "fontLarge": "Large",
+    "fontXlarge": "Largest"
   },
   "detail": {
     "length": "Length",
@@ -103,7 +108,11 @@
       "angleLabel": "Angle between legs",
       "perLegLabel": "Force per leg",
       "tableLabel": "Reference table",
-      "col": { "angle": "Angle", "perLeg": "Per-leg", "rating": "Rating" },
+      "col": {
+        "angle": "Angle",
+        "perLeg": "Per-leg",
+        "rating": "Rating"
+      },
       "rating": {
         "ideal": "🟢 ideal",
         "ok": "🟢 OK",
@@ -123,7 +132,9 @@
       "anchorPeak": "Anchor peak",
       "leashPeak": "Leash peak",
       "tableLabel": "Anchor peak (by length)",
-      "col": { "length": "Length" },
+      "col": {
+        "length": "Length"
+      },
       "source": "Source: Jörren 2015 (SlackLab) — 20m data, extrapolated for longer lines.",
       "disclaimer": "⚠ Estimates — real forces measured with load cell (Enforcer, LineScale)."
     },
@@ -140,7 +151,12 @@
       "sweetSpot": "Sweet spot for highline tensioning.",
       "tooMuch": "Pull distance impractical — use max 4 movable.",
       "tableLabel": "Reference table",
-      "col": { "movable": "Movable", "theory": "Theory", "real": "Real", "pullDist": "Pull dist" },
+      "col": {
+        "movable": "Movable",
+        "theory": "Theory",
+        "real": "Real",
+        "pullDist": "Pull dist"
+      },
       "buckingham": "Buckingham system (Balance Community)",
       "formula": "Formula: MA = 2^N_movable, efficiency = 0.9^(N_movable + N_fixed)",
       "source": "Source: Balance Community — Buckingham Tensioning System."
@@ -151,7 +167,11 @@
       "angle": "Deviation angle",
       "forceLabel": "Force on deviation",
       "tableLabel": "Reference table",
-      "col": { "angle": "Angle", "force": "Force", "ratio": "Ratio" },
+      "col": {
+        "angle": "Angle",
+        "force": "Force",
+        "ratio": "Ratio"
+      },
       "warning": "⚠ Deviation carries more than the line itself. Anchor for deviation must be stronger than for highline anchoring.",
       "formula": "Formula: F = 2 × T × sin(θ/2)"
     }
@@ -159,12 +179,12 @@
   "level": {
     "sectionTitle": "Experience level",
     "hint": "Setting affects warnings and recommendations in the app.",
-    "novice": "Beginner",
-    "normal": "Normal",
-    "pro": "Pro",
-    "noviceHint": "Browsing, starting out. I want to see warnings and community links.",
-    "normalHint": "I walk highlines, know the basics. Standard view.",
-    "proHint": "Rigger / instructor. Hide advisories, show advanced content."
+    "beginner": "Beginner",
+    "walker": "Walker",
+    "rigger": "Rigger",
+    "beginnerHint": "Browsing, starting out. I want to see warnings and community links.",
+    "walkerHint": "I walk highlines, know the basics. Standard view.",
+    "riggerHint": "Rigger / instructor. Hide advisories, show advanced content."
   },
   "community": {
     "title": "Community",
@@ -537,7 +557,10 @@
     "isa21Limits": {
       "title": "ISA:21 Force Limits",
       "summary": "Key safety limits for highline systems",
-      "col": { "what": "Component", "limit": "Limit" },
+      "col": {
+        "what": "Component",
+        "limit": "Limit"
+      },
       "row": {
         "workingLoad": "Working load at anchors",
         "backupfall": "Backupfall force",
@@ -580,13 +603,21 @@
     "nylonRule": {
       "title": "Sub-40m Nylon Rule",
       "summary": "Webbing material compatibility with line length",
-      "col": { "length": "Length", "pa": "PA nylon", "pes": "PES polyester", "hmpe": "UHMWPE" },
+      "col": {
+        "length": "Length",
+        "pa": "PA nylon",
+        "pes": "PES polyester",
+        "hmpe": "UHMWPE"
+      },
       "hint": "Sub-40m highline = mainline + backup + leash all PA (nylon). Static materials (PES, UHMWPE) generate 2-3× higher peak forces = risk of exceeding ISA:21 limit 12 kN."
     },
     "wind": {
       "title": "Wind Advisory",
       "summary": "ISA thresholds for rig / derig decision",
-      "col": { "speed": "Wind speed", "action": "Recommendation" },
+      "col": {
+        "speed": "Wind speed",
+        "action": "Recommendation"
+      },
       "row": {
         "ok": "OK, rig safely",
         "caution": "Caution — detape starts",
@@ -598,8 +629,16 @@
     "rlt": {
       "title": "Recommended Lifetime (RLT)",
       "summary": "Recommended webbing lifetime by type and material",
-      "col": { "type": "Type (ISA:41)", "pa": "PA nylon", "pes": "PES polyester", "hmpe": "UHMWPE" },
-      "row": { "visual": "Visual inspection", "na": "No recommendation" },
+      "col": {
+        "type": "Type (ISA:41)",
+        "pa": "PA nylon",
+        "pes": "PES polyester",
+        "hmpe": "UHMWPE"
+      },
+      "row": {
+        "visual": "Visual inspection",
+        "na": "No recommendation"
+      },
       "hint": "Days = exposure to environment (UV, rain), NOT from manufacture date. Storage doesn't count."
     }
   }

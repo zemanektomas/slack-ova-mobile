@@ -12,6 +12,7 @@ import { useTranslation } from 'react-i18next';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useSharedValue } from 'react-native-reanimated';
 import { useMapStore } from '../store/mapStore';
+import { useFontStore } from '../store/fontStore';
 import { useSyncStore } from '../store/syncStore';
 import { queryByBounds } from '../db/queries';
 import { seedFromSlackcz } from '../db/seedSlackcz';
@@ -69,6 +70,12 @@ export default function HomeScreen() {
   const setSheetHeight = useMapStore((s) => s.setSheetHeight);
   const focusOn = useMapStore((s) => s.focusOn);
   const insets = useSafeAreaInsets();
+  const fontScale = useFontStore((s) => s.fontScale);
+
+  // Dvojí tap v seznamu: 1. tap jen vybere a přisune mapu (peek), 2. tap otevře
+  // detail. Bez toho detail zakryje okolní řádky hned a nejde procházet seznam
+  // a jen se dívat, kde která lajna je.
+  const [peekedId, setPeekedId] = useState<number | null>(null);
 
   // Horní hrana sheetu v px, live z Gorhomu. Ovládací tlačítka mapy se podle ní
   // pozicují přímo v UI threadu — jinak skáčou až po dosednutí animace.
@@ -127,7 +134,14 @@ export default function HomeScreen() {
     else { setSortBy(key); setSortDir('asc'); }
   };
 
-  const toggleExpand = (id: number) => {
+  /**
+   * @param focus posunout kameru na lajnu. `true` jen pro tap v seznamu — tam
+   *   může být lajna mimo výřez. Tap na marker kameru hýbat NESMÍ: na tu lajnu
+   *   se uživatel zrovna dívá, a hlavně po panování mapou dorazí falešný press
+   *   (gesture-handler 2.28), trefí marker a kamera odletí zpátky. Uživatel to
+   *   vidí jako "mapa se pořád vrací na vybranou lajnu" (v0.7.15).
+   */
+  const toggleExpand = (id: number, focus = true) => {
     if (expandedId === id) {
       setExpandedId(null);
       return;
@@ -140,7 +154,7 @@ export default function HomeScreen() {
     // 25.6.2026). Focus jde i přes mapStore (stejný mechanismus jako crosshair button
     // v inline detailu), takže `focusTarget.nonce` se inkrementuje a MapView dostane
     // signál na flyTo.
-    if (item?.first_anchor) {
+    if (focus && item?.first_anchor) {
       focusOn(item.first_anchor.latitude, item.first_anchor.longitude);
     }
     if (item) {
@@ -153,28 +167,49 @@ export default function HomeScreen() {
     }
   };
 
+  /** Tap na řádek seznamu — 1. vybere a přisune mapu, 2. rozbalí detail. */
+  const onRowPress = (id: number) => {
+    if (expandedId === id) {          // 3. tap = zavřít
+      setExpandedId(null);
+      return;
+    }
+    if (peekedId === id) {            // 2. tap = detail (kamera už je na místě)
+      setPeekedId(null);
+      toggleExpand(id, false);
+      return;
+    }
+    setExpandedId(null);              // 1. tap = jen vybrat + přisunout mapu
+    setPeekedId(id);
+    const item = items.find((it) => it.id === id);
+    if (item?.first_anchor) {
+      focusOn(item.first_anchor.latitude, item.first_anchor.longitude);
+    }
+  };
+
   const handleMarkerPress = (id: number) => {
+    setPeekedId(null);
     // Když je sheet v Collapsed stavu, vytáhni ho na Half ať uživatel vidí řádek
     sheetRef.current?.snapToIndex(1);
-    toggleExpand(id);
+    toggleExpand(id, false); // z mapy nikdy nehýbat kamerou — viz toggleExpand
   };
 
   const renderItem = ({ item }: { item: SlacklineListItem }) => {
     const isExpanded = expandedId === item.id;
+    const isPeeked = peekedId === item.id && !isExpanded;
     return (
       <View>
         <Pressable
           style={[
             styles.row,
             { borderColor: t.border },
-            isExpanded && { backgroundColor: t.surfaceAlt },
+            (isExpanded || isPeeked) && { backgroundColor: t.surfaceAlt },
           ]}
-          onPress={() => toggleExpand(item.id)}
+          onPress={() => onRowPress(item.id)}
         >
           <Text
             style={[
               styles.name,
-              { color: t.text },
+              { color: t.text, fontSize: 14 * fontScale },
               isExpanded && { color: t.accent, fontWeight: '700' },
             ]}
             numberOfLines={1}
@@ -182,16 +217,28 @@ export default function HomeScreen() {
           >
             {item.name}
           </Text>
-          <Text style={[styles.colLength, { color: t.text }]} numberOfLines={1}>
+          <Text style={[styles.colLength, { color: t.text, fontSize: 12 * fontScale }]} numberOfLines={1}>
             {item.length ? `${item.length} m` : ''}
           </Text>
-          <Text style={[styles.colHeight, { color: t.text }]} numberOfLines={1}>
+          <Text style={[styles.colHeight, { color: t.text, fontSize: 12 * fontScale }]} numberOfLines={1}>
             {item.height ? `${item.height} m` : ''}
           </Text>
-          <Text style={[styles.colDistance, { color: t.text }]} numberOfLines={1}>
+          <Text style={[styles.colDistance, { color: t.text, fontSize: 12 * fontScale }]} numberOfLines={1}>
             {formatDistance(item.distance_km)}
           </Text>
         </Pressable>
+        {/* Peek proužek — bez něj druhý tap nikdo neobjeví. */}
+        {isPeeked && (
+          <Pressable
+            style={[styles.peek, { borderColor: t.border, backgroundColor: t.surfaceAlt }]}
+            onPress={() => onRowPress(item.id)}
+          >
+            <Text style={[styles.peekText, { color: t.textMuted, fontSize: 12 * fontScale }]}>
+              {tr('home.tapAgainForDetail')}
+            </Text>
+            <MaterialCommunityIcons name="chevron-down" size={18} color={t.textMuted} />
+          </Pressable>
+        )}
         {isExpanded && <InlineDetail slacklineId={item.id} />}
       </View>
     );
@@ -202,7 +249,7 @@ export default function HomeScreen() {
       <View style={StyleSheet.absoluteFillObject}>
         <MapViewComponent
           markers={items}
-          selectedId={expandedId}
+          selectedId={expandedId ?? peekedId}
           onMarkerPress={handleMarkerPress}
           sheetPosition={sheetPosition}
         />
@@ -221,7 +268,10 @@ export default function HomeScreen() {
         // v handleSheetChange sáhne vedle (mapa uprostřed → tlačítka na maximu).
         // Máme tři explicitní snap pointy, dynamický nechceme.
         enableDynamicSizing={false}
-        backgroundStyle={{ backgroundColor: t.surface }}
+        // Lehce průhledný — pod sheetem se lajny načítají taky (bounds pokrývají
+        // i zakrytou plochu) a bez prosvítání mapy je matoucí, že seznam ukazuje
+        // něco, co není vidět. 92 % krytí: mapa je znát, seznam zůstává čitelný.
+        backgroundStyle={{ backgroundColor: t.surface + 'EB' }}
         // Drag handle větší — palcem těžké trefit default ~22px tall kontejner,
         // user tap propadl do search inputu pod ním (open keyboard nechtěně).
         // Feedback z Closed Alpha — víc tap-friendly hit area + výrazný indicator.
@@ -342,6 +392,15 @@ function SortHeader({
 
 const styles = StyleSheet.create({
   container: { flex: 1 },
+  peek: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 4,
+    paddingVertical: 6,
+    borderBottomWidth: StyleSheet.hairlineWidth,
+  },
+  peekText: { fontWeight: '500' },
   // sortBar matchuje `row` padding (12 horizontal, 8 vertical) + gap 8
   // pro perfektní zarovnání hlaviček s hodnotami níž.
   sortBar: {

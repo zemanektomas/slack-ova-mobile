@@ -14,7 +14,8 @@
     "settingsLabel": "Nastavení mapy",
     "gpsLabel": "Najdi mě",
     "zoomInLabel": "Přiblížit",
-    "zoomOutLabel": "Oddálit"
+    "zoomOutLabel": "Oddálit",
+    "tapAgainForDetail": "Ťukni znovu pro detail"
   },
   "sort": {
     "name": "Název",
@@ -66,7 +67,11 @@
     "signInFailed": "Přihlášení selhalo",
     "signOutConfirmTitle": "Odhlásit se ze Slackmap?",
     "signOutConfirmBody": "Pro přidávání a úpravy lajn se budeš muset znovu přihlásit.",
-    "signOutConfirm": "Odhlásit"
+    "signOutConfirm": "Odhlásit",
+    "fontSize": "Velikost písma",
+    "fontNormal": "Normální",
+    "fontLarge": "Větší",
+    "fontXlarge": "Největší"
   },
   "detail": {
     "length": "Délka",
@@ -103,7 +108,11 @@
       "angleLabel": "Úhel mezi rameny",
       "perLegLabel": "Síla na jedno rameno",
       "tableLabel": "Referenční tabulka",
-      "col": { "angle": "Úhel", "perLeg": "Per-leg", "rating": "Hodnocení" },
+      "col": {
+        "angle": "Úhel",
+        "perLeg": "Per-leg",
+        "rating": "Hodnocení"
+      },
       "rating": {
         "ideal": "🟢 ideál",
         "ok": "🟢 OK",
@@ -123,7 +132,9 @@
       "anchorPeak": "Peak na kotvě",
       "leashPeak": "Peak na odsedku",
       "tableLabel": "Peak na kotvě (dle délky)",
-      "col": { "length": "Délka" },
+      "col": {
+        "length": "Délka"
+      },
       "source": "Zdroj: Jörren 2015 (SlackLab) — 20m data, extrapolace pro delší lajny.",
       "disclaimer": "⚠ Odhady — reálné síly měří load cell (Enforcer, LineScale)."
     },
@@ -140,7 +151,12 @@
       "sweetSpot": "Sweet spot pro highline tensioning.",
       "tooMuch": "Pull distance nesmyslná — použij max 4 movable.",
       "tableLabel": "Referenční tabulka",
-      "col": { "movable": "Movable", "theory": "Teorie", "real": "Reálné", "pullDist": "Pull dist" },
+      "col": {
+        "movable": "Movable",
+        "theory": "Teorie",
+        "real": "Reálné",
+        "pullDist": "Pull dist"
+      },
       "buckingham": "Buckingham system (Balance Community)",
       "formula": "Formule: MA = 2^N_movable, efficiency = 0.9^(N_movable + N_fixed)",
       "source": "Zdroj: Balance Community — Buckingham Tensioning System."
@@ -151,7 +167,11 @@
       "angle": "Úhel deviace",
       "forceLabel": "Síla na deviaci",
       "tableLabel": "Referenční tabulka",
-      "col": { "angle": "Úhel", "force": "Síla", "ratio": "Poměr" },
+      "col": {
+        "angle": "Úhel",
+        "force": "Síla",
+        "ratio": "Poměr"
+      },
       "warning": "⚠ Deviace nese víc než sama lajna. Anchor pro deviaci musí být silnější než pro kotvení highline.",
       "formula": "Formule: F = 2 × T × sin(θ/2)"
     }
@@ -159,12 +179,12 @@
   "level": {
     "sectionTitle": "Úroveň zkušeností",
     "hint": "Nastavení určuje varování a doporučení v apce.",
-    "novice": "Nováček",
-    "normal": "Normál",
-    "pro": "Profi",
-    "noviceHint": "Prohlížím, začínám. Chci vidět varování a odkazy na komunitu.",
-    "normalHint": "Chodím highline, znám základy. Standardní pohled.",
-    "proHint": "Rigger / instruktor. Skryj advisories, zpřístupni advanced content."
+    "beginner": "Začátečník",
+    "walker": "Chodec",
+    "rigger": "Rigger",
+    "beginnerHint": "Prohlížím, začínám. Chci vidět varování a odkazy na komunitu.",
+    "walkerHint": "Chodím highline, znám základy. Standardní pohled.",
+    "riggerHint": "Rigger / instruktor. Skryj advisories, zpřístupni advanced content."
   },
   "community": {
     "title": "Komunita",
@@ -537,7 +557,10 @@
     "isa21Limits": {
       "title": "Limity sil ISA:21",
       "summary": "Klíčové bezpečnostní limity pro highline system",
-      "col": { "what": "Komponenta", "limit": "Limit" },
+      "col": {
+        "what": "Komponenta",
+        "limit": "Limit"
+      },
       "row": {
         "workingLoad": "Working load u kotev",
         "backupfall": "Backupfall force",
@@ -580,13 +603,21 @@
     "nylonRule": {
       "title": "Sub-40m Nylon Rule",
       "summary": "Kompatibilita materiálu popruhu s délkou lajny",
-      "col": { "length": "Délka", "pa": "PA nylon", "pes": "PES polyester", "hmpe": "UHMWPE" },
+      "col": {
+        "length": "Délka",
+        "pa": "PA nylon",
+        "pes": "PES polyester",
+        "hmpe": "UHMWPE"
+      },
       "hint": "Sub-40m highline = mainline + backup + leash všechno PA (nylon). Statický materiál (PES, UHMWPE) generuje 2-3× vyšší peak forces = risk překročení ISA:21 limitu 12 kN."
     },
     "wind": {
       "title": "Wind Advisory",
       "summary": "ISA prahové hodnoty pro rig / derig rozhodnutí",
-      "col": { "speed": "Rychlost větru", "action": "Doporučení" },
+      "col": {
+        "speed": "Rychlost větru",
+        "action": "Doporučení"
+      },
       "row": {
         "ok": "OK, rig safely",
         "caution": "Caution — začíná detape",
@@ -598,8 +629,16 @@
     "rlt": {
       "title": "Recommended Lifetime (RLT)",
       "summary": "Doporučená životnost popruhu podle typu a materiálu",
-      "col": { "type": "Typ (ISA:41)", "pa": "PA nylon", "pes": "PES polyester", "hmpe": "UHMWPE" },
-      "row": { "visual": "Vizuální inspekce", "na": "Bez doporučení" },
+      "col": {
+        "type": "Typ (ISA:41)",
+        "pa": "PA nylon",
+        "pes": "PES polyester",
+        "hmpe": "UHMWPE"
+      },
+      "row": {
+        "visual": "Vizuální inspekce",
+        "na": "Bez doporučení"
+      },
       "hint": "Dny = vystavení vlivům prostředí (UV, déšť), NIKOLI od data výroby. Skladování se nepočítá."
     }
   }

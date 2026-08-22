@@ -14,7 +14,8 @@
     "settingsLabel": "Ustawienia mapy",
     "gpsLabel": "Znajdź mnie",
     "zoomInLabel": "Przybliż",
-    "zoomOutLabel": "Oddal"
+    "zoomOutLabel": "Oddal",
+    "tapAgainForDetail": "Dotknij ponownie, aby zobaczyć szczegóły"
   },
   "sort": {
     "name": "Nazwa",
@@ -66,7 +67,11 @@
     "signInFailed": "Logowanie nieudane",
     "signOutConfirmTitle": "Wylogować ze Slackmap?",
     "signOutConfirmBody": "Aby dodawać lub edytować lajny, trzeba będzie zalogować się ponownie.",
-    "signOutConfirm": "Wyloguj"
+    "signOutConfirm": "Wyloguj",
+    "fontSize": "Wielkość tekstu",
+    "fontNormal": "Normalna",
+    "fontLarge": "Większa",
+    "fontXlarge": "Największa"
   },
   "detail": {
     "length": "Długość",
@@ -103,7 +108,11 @@
       "angleLabel": "Kąt między nogami",
       "perLegLabel": "Siła na jedną nogę",
       "tableLabel": "Tabela referencyjna",
-      "col": { "angle": "Kąt", "perLeg": "Per-leg", "rating": "Ocena" },
+      "col": {
+        "angle": "Kąt",
+        "perLeg": "Per-leg",
+        "rating": "Ocena"
+      },
       "rating": {
         "ideal": "🟢 ideał",
         "ok": "🟢 OK",
@@ -123,7 +132,9 @@
       "anchorPeak": "Peak na kotwie",
       "leashPeak": "Peak na odsedku",
       "tableLabel": "Peak na kotwie (wg długości)",
-      "col": { "length": "Długość" },
+      "col": {
+        "length": "Długość"
+      },
       "source": "Źródło: Jörren 2015 (SlackLab) — dane 20m, ekstrapolacja dla dłuższych lajn.",
       "disclaimer": "⚠ Szacunki — realne siły mierzy load cell (Enforcer, LineScale)."
     },
@@ -140,7 +151,12 @@
       "sweetSpot": "Sweet spot dla highline tensioning.",
       "tooMuch": "Pull distance niemożliwa — użyj max 4 movable.",
       "tableLabel": "Tabela referencyjna",
-      "col": { "movable": "Movable", "theory": "Teoria", "real": "Realne", "pullDist": "Pull dist" },
+      "col": {
+        "movable": "Movable",
+        "theory": "Teoria",
+        "real": "Realne",
+        "pullDist": "Pull dist"
+      },
       "buckingham": "Buckingham system (Balance Community)",
       "formula": "Wzór: MA = 2^N_movable, efficiency = 0.9^(N_movable + N_fixed)",
       "source": "Źródło: Balance Community — Buckingham Tensioning System."
@@ -151,7 +167,11 @@
       "angle": "Kąt deviacji",
       "forceLabel": "Siła na deviacji",
       "tableLabel": "Tabela referencyjna",
-      "col": { "angle": "Kąt", "force": "Siła", "ratio": "Stosunek" },
+      "col": {
+        "angle": "Kąt",
+        "force": "Siła",
+        "ratio": "Stosunek"
+      },
       "warning": "⚠ Deviacja niesie więcej niż sama lajna. Kotwa dla deviacji musi być silniejsza niż dla kotwienia highline.",
       "formula": "Wzór: F = 2 × T × sin(θ/2)"
     }
@@ -159,12 +179,12 @@
   "level": {
     "sectionTitle": "Poziom doświadczenia",
     "hint": "Ustawienie wpływa na ostrzeżenia i rekomendacje w aplikacji.",
-    "novice": "Początkujący",
-    "normal": "Normalny",
-    "pro": "Pro",
-    "noviceHint": "Przeglądam, zaczynam. Chcę widzieć ostrzeżenia i linki do społeczności.",
-    "normalHint": "Chodzę highline, znam podstawy. Standardowy widok.",
-    "proHint": "Rigger / instruktor. Ukryj ostrzeżenia, pokaż zaawansowaną treść."
+    "beginner": "Początkujący",
+    "walker": "Chodzący",
+    "rigger": "Rigger",
+    "beginnerHint": "Przeglądam, zaczynam. Chcę widzieć ostrzeżenia i linki do społeczności.",
+    "walkerHint": "Chodzę highline, znam podstawy. Standardowy widok.",
+    "riggerHint": "Rigger / instruktor. Ukryj ostrzeżenia, pokaż zaawansowaną treść."
   },
   "community": {
     "title": "Społeczność",
@@ -537,7 +557,10 @@
     "isa21Limits": {
       "title": "Limity sił ISA:21",
       "summary": "Kluczowe limity bezpieczeństwa dla systemu highline",
-      "col": { "what": "Element", "limit": "Limit" },
+      "col": {
+        "what": "Element",
+        "limit": "Limit"
+      },
       "row": {
         "workingLoad": "Working load na kotwach",
         "backupfall": "Backupfall force",
@@ -580,13 +603,21 @@
     "nylonRule": {
       "title": "Sub-40m Nylon Rule",
       "summary": "Kompatybilność materiału popruhu z długością lajny",
-      "col": { "length": "Długość", "pa": "PA nylon", "pes": "PES polyester", "hmpe": "UHMWPE" },
+      "col": {
+        "length": "Długość",
+        "pa": "PA nylon",
+        "pes": "PES polyester",
+        "hmpe": "UHMWPE"
+      },
       "hint": "Sub-40m highline = mainline + backup + leash wszystko PA (nylon). Statyczny materiał (PES, UHMWPE) generuje 2-3× wyższe peak forces = ryzyko przekroczenia limitu ISA:21 12 kN."
     },
     "wind": {
       "title": "Wind Advisory",
       "summary": "Progi ISA dla decyzji rig / derig",
-      "col": { "speed": "Prędkość wiatru", "action": "Rekomendacja" },
+      "col": {
+        "speed": "Prędkość wiatru",
+        "action": "Rekomendacja"
+      },
       "row": {
         "ok": "OK, rig safely",
         "caution": "Caution — zaczyna się detape",
@@ -598,8 +629,16 @@
     "rlt": {
       "title": "Recommended Lifetime (RLT)",
       "summary": "Rekomendowana żywotność popruhu według typu i materiału",
-      "col": { "type": "Typ (ISA:41)", "pa": "PA nylon", "pes": "PES polyester", "hmpe": "UHMWPE" },
-      "row": { "visual": "Wizualna inspekcja", "na": "Bez rekomendacji" },
+      "col": {
+        "type": "Typ (ISA:41)",
+        "pa": "PA nylon",
+        "pes": "PES polyester",
+        "hmpe": "UHMWPE"
+      },
+      "row": {
+        "visual": "Wizualna inspekcja",
+        "na": "Bez rekomendacji"
+      },
       "hint": "Dni = ekspozycja na środowisko (UV, deszcz), NIE od daty produkcji. Przechowywanie się nie liczy."
     }
   }

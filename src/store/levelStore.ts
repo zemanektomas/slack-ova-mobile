@@ -2,18 +2,25 @@
  * User experience level store — F5 v0.7.3.
  *
  * Rozděluje features / warnings v apce podle úrovně uživatele:
- *   - 'novice'      — Nováček (chodit / prohlížet, warnings, komunita, glossary)
- *   - 'normal'      — Normál (default, všechny základní features)
- *   - 'pro'         — Profi (advanced anchor, rescue, bolting reference — bez advisories)
+ *   - 'beginner'  — Začátečník (prohlížet, warnings, komunita, glossary)
+ *   - 'walker'    — Chodec (default, všechny základní features)
+ *   - 'rigger'    — Rigger (advanced anchor, rescue, bolting reference — bez advisories)
  *
- * Persistuje v AsyncStorage. Default: 'normal' pro existující uživatele,
- * 'novice' pro první instalaci (bez onboarding markeru).
+ * Pojmenování v0.7.16 podle domény (dřív novice/normal/pro). Staré hodnoty
+ * z AsyncStorage se při hydrate mapují, aby existujícím uživatelům nespadla
+ * úroveň na default.
+ *
+ * Persistuje v AsyncStorage. Default: 'walker' pro existující uživatele,
+ * 'beginner' pro první instalaci (bez onboarding markeru).
  */
 
 import { create } from 'zustand';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-export type UserLevel = 'novice' | 'normal' | 'pro';
+export type UserLevel = 'beginner' | 'walker' | 'rigger';
+
+/** Hodnoty uložené před v0.7.16. */
+const LEGACY: Record<string, UserLevel> = { novice: 'beginner', normal: 'walker', pro: 'rigger' };
 
 const STORAGE_KEY = 'user_level';
 const ONBOARDING_KEY = 'onboarding_seen';
@@ -27,7 +34,7 @@ interface LevelState {
 }
 
 export const useLevelStore = create<LevelState>((set) => ({
-  level: 'normal',            // default do doby než hydrate načte z AsyncStorage
+  level: 'walker',            // default do doby než hydrate načte z AsyncStorage
   onboardingSeen: true,        // default true aby se onboarding nezobrazil až po hydrate
   setLevel: (level) => {
     set({ level });
@@ -44,10 +51,10 @@ export const useLevelStore = create<LevelState>((set) => ({
         AsyncStorage.getItem(ONBOARDING_KEY),
       ]);
       const seen = onboardingRaw === '1';
-      // První instalace (žádný onboarding marker) → default level 'novice'
-      // Existující uživatel (má marker) → drží uložený level nebo 'normal'
-      const level: UserLevel = (levelRaw as UserLevel | null)
-        ?? (seen ? 'normal' : 'novice');
+      // První instalace (žádný onboarding marker) → default 'beginner'
+      // Existující uživatel (má marker) → uložený level, s mapováním starých názvů
+      const stored = levelRaw ? (LEGACY[levelRaw] ?? (levelRaw as UserLevel)) : null;
+      const level: UserLevel = stored ?? (seen ? 'walker' : 'beginner');
       set({ level, onboardingSeen: seen });
     } catch {}
   },

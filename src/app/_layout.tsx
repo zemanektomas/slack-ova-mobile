@@ -13,6 +13,7 @@ import { seedFromSlackmap } from '../db/slackmap';
 import { useAuthStore } from '../store/authStore';
 import { useMapStore } from '../store/mapStore';
 import { useLevelStore } from '../store/levelStore';
+import { useFontStore } from '../store/fontStore';
 import { useTheme } from '../theme';
 import { OnboardingSheet } from '../components/OnboardingSheet';
 
@@ -24,6 +25,7 @@ export default function RootLayout() {
   const hydrate = useAuthStore((s) => s.hydrate);
   const hydrateMap = useMapStore((s) => s.hydrate);
   const hydrateLevel = useLevelStore((s) => s.hydrate);
+  const hydrateFont = useFontStore((s) => s.hydrate);
   const onboardingSeen = useLevelStore((s) => s.onboardingSeen);
   const [i18nReady, setI18nReady] = useState(false);
   const [mapHydrated, setMapHydrated] = useState(false);
@@ -56,7 +58,7 @@ export default function RootLayout() {
         // Ostrava center než stihne načíst persisted polohu → trh při startu.
         // auth hydrate (Slackmap JWT z secure-store) běží paralelně, ne čekáme —
         // sign-in/sign-out UI v Settings se zobrazí korektně po hydrate jakmile dorazí.
-        await Promise.all([hydrate(), hydrateMap(), hydrateLevel()]);
+        await Promise.all([hydrate(), hydrateMap(), hydrateLevel(), hydrateFont()]);
       } catch (e) {
         console.warn('[init] hydrate failed', String(e));
       }
