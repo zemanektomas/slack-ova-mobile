@@ -4,13 +4,14 @@
 // uživatel co tappne řádek typicky řeší "kde to je / jak se tam dostanu",
 // ne "co o tom psal autor".
 
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { View, Text, StyleSheet, Pressable, Linking, ActivityIndicator, Alert } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { getSlacklineDetail } from '../db/queries';
 import { fetchAndCacheSlackmapDetail } from '../db/slackmap';
 import { useMapStore } from '../store/mapStore';
+import { useFontStore } from '../store/fontStore';
 import { useLangStore } from '../store/langStore';
 import { useTheme, Theme } from '../theme';
 import { translateOnDevice, UnsupportedSourceLangError, SupportedLang } from '../i18n/translate';
@@ -40,6 +41,7 @@ const initialTranslate = (): TranslateState => ({
 });
 
 export default function InlineDetail({ slacklineId }: { slacklineId: number }) {
+  const fs = useFontStore((s) => s.fontScale);  const styles = useMemo(() => makeStyles(fs), [fs]);  const noviceStyles = useMemo(() => makeNoviceStyles(fs), [fs]);  const communityStyles = useMemo(() => makeCommunityStyles(fs), [fs]);
   const t = useTheme();
   const { t: tr } = useTranslation();
   const focusOn = useMapStore((s) => s.focusOn);
@@ -394,7 +396,7 @@ export default function InlineDetail({ slacklineId }: { slacklineId: number }) {
 
 // -----------------------------------------------------------------------------
 
-const noviceStyles = StyleSheet.create({
+const makeNoviceStyles = (fs: number) => StyleSheet.create({
   box: {
     marginTop: 12,
     padding: 12,
@@ -403,13 +405,13 @@ const noviceStyles = StyleSheet.create({
     borderLeftWidth: 3,
   },
   header: { flexDirection: 'row', alignItems: 'center', marginBottom: 4 },
-  title: { fontSize: 13, fontWeight: '600' },
-  body: { fontSize: 12, lineHeight: 16 },
+  title: { fontSize: 13 * fs, fontWeight: '600' },
+  body: { fontSize: 12 * fs, lineHeight: 16 },
   link: { flexDirection: 'row', alignItems: 'center', marginTop: 8 },
-  linkText: { fontSize: 12, fontWeight: '500', marginLeft: 4 },
+  linkText: { fontSize: 12 * fs, fontWeight: '500', marginLeft: 4 },
 });
 
-const communityStyles = StyleSheet.create({
+const makeCommunityStyles = (fs: number) => StyleSheet.create({
   btn: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -418,7 +420,7 @@ const communityStyles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 8,
   },
-  btnText: { flex: 1, fontSize: 13, fontWeight: '500' },
+  btnText: { flex: 1, fontSize: 13 * fs, fontWeight: '500' },
 });
 
 // -----------------------------------------------------------------------------
@@ -437,6 +439,7 @@ function SafetySection({
   onStartQuick: () => void;
   onStartFull: () => void;
 }) {
+  const fs = useFontStore((s) => s.fontScale);  const safetyStyles = useMemo(() => makeSafetyStyles(fs), [fs]);
   const { items } = generateQuickCheckForLine(detail);
 
   const lastCheckLabel = lastCheck
@@ -527,10 +530,10 @@ function SafetySection({
                 style={{ marginRight: 6 }}
               />
               <View>
-                <Text style={{ color: t.accentOn, fontWeight: '600', fontSize: 13 }}>
+                <Text style={{ color: t.accentOn, fontWeight: '600', fontSize: 13 * fs }}>
                   {tr('quickCheck.menuLabel')}
                 </Text>
-                <Text style={{ color: t.accentOn, fontSize: 10, opacity: 0.85 }}>
+                <Text style={{ color: t.accentOn, fontSize: 10 * fs, opacity: 0.85 }}>
                   {tr('quickCheck.menuHint')}
                 </Text>
               </View>
@@ -546,10 +549,10 @@ function SafetySection({
                 style={{ marginRight: 6 }}
               />
               <View>
-                <Text style={{ color: t.accent, fontWeight: '600', fontSize: 13 }}>
+                <Text style={{ color: t.accent, fontWeight: '600', fontSize: 13 * fs }}>
                   {tr('rigLog.menuLabel')}
                 </Text>
-                <Text style={{ color: t.textDim, fontSize: 10 }}>
+                <Text style={{ color: t.textDim, fontSize: 10 * fs }}>
                   {tr('rigLog.menuHint')}
                 </Text>
               </View>
@@ -583,7 +586,7 @@ function formatCheckDate(iso: string, lang: SupportedLang): string {
   }
 }
 
-const safetyStyles = StyleSheet.create({
+const makeSafetyStyles = (fs: number) => StyleSheet.create({
   header: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -592,7 +595,7 @@ const safetyStyles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 8,
   },
-  title: { flex: 1, fontSize: 14, fontWeight: '600' },
+  title: { flex: 1, fontSize: 14 * fs, fontWeight: '600' },
   body: {
     borderWidth: 1,
     borderTopWidth: 0,
@@ -601,15 +604,15 @@ const safetyStyles = StyleSheet.create({
     padding: 12,
     marginTop: -1,
   },
-  lastCheck: { fontSize: 11, marginBottom: 10, fontStyle: 'italic' },
-  intro: { fontSize: 12, marginBottom: 2 },
-  typeText: { fontSize: 11, marginBottom: 6 },
+  lastCheck: { fontSize: 11 * fs, marginBottom: 10, fontStyle: 'italic' },
+  intro: { fontSize: 12 * fs, marginBottom: 2 },
+  typeText: { fontSize: 11 * fs, marginBottom: 6 },
   itemRow: {
     flexDirection: 'row',
     alignItems: 'center',
     paddingVertical: 4,
   },
-  itemLabel: { flex: 1, fontSize: 12 },
+  itemLabel: { flex: 1, fontSize: 12 * fs },
   startBtn: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -632,7 +635,7 @@ const safetyStyles = StyleSheet.create({
     paddingHorizontal: 8,
     borderRadius: 8,
   },
-  historyLink: { fontSize: 11, marginTop: 8, textAlign: 'center' },
+  historyLink: { fontSize: 11 * fs, marginTop: 8, textAlign: 'center' },
 });
 
 // Slackmap restriction `"none"` / `"none: ..."` znamená "žádná omezení" — nepatří
@@ -671,6 +674,7 @@ interface TranslatableBlockProps {
 }
 
 function TranslatableBlock({ t, tr, original, state, onTranslate, small }: TranslatableBlockProps) {
+  const fs = useFontStore((s) => s.fontScale);  const styles = useMemo(() => makeStyles(fs), [fs]);
   const showTranslated = state?.translated && !state.showOriginal;
   const displayText = showTranslated ? state!.translated! : original;
   const textStyle = small ? styles.sectionBody : styles.body;
@@ -704,6 +708,7 @@ function TranslatableBlock({ t, tr, original, state, onTranslate, small }: Trans
 }
 
 function Stat({ t, label, value }: { t: Theme; label: string; value: string }) {
+  const fs = useFontStore((s) => s.fontScale);  const styles = useMemo(() => makeStyles(fs), [fs]);
   return (
     <View style={styles.stat}>
       <Text style={[styles.statLabel, { color: t.textDim }]}>{label}</Text>
@@ -721,6 +726,7 @@ interface PointBlockProps {
 }
 
 function PointBlock({ t, label, point, onFocusMap, focusLabel }: PointBlockProps) {
+  const fs = useFontStore((s) => s.fontScale);  const styles = useMemo(() => makeStyles(fs), [fs]);
   if (!point) return null;
   // Tap na coords = preview bodu na mapě (Mapy.cz turistická). Pro plnohodnotnou
   // navigaci slouží samostatný "Navigovat" button mimo PointBlock — viz hlavní render.
@@ -749,7 +755,7 @@ function PointBlock({ t, label, point, onFocusMap, focusLabel }: PointBlockProps
   );
 }
 
-const styles = StyleSheet.create({
+const makeStyles = (fs: number) => StyleSheet.create({
   box: {
     paddingHorizontal: 12,
     paddingVertical: 10,
@@ -762,14 +768,14 @@ const styles = StyleSheet.create({
     marginHorizontal: -4,
   },
   stat: { flexBasis: '33.333%', paddingHorizontal: 4 },
-  statLabel: { fontSize: 9, textTransform: 'uppercase', letterSpacing: 0.5 },
-  statValue: { fontSize: 13, fontWeight: '600', marginTop: 1 },
-  body: { fontSize: 13, lineHeight: 18 },
-  restriction: { fontSize: 12, padding: 8, borderRadius: 4 },
+  statLabel: { fontSize: 9 * fs, textTransform: 'uppercase', letterSpacing: 0.5 },
+  statValue: { fontSize: 13 * fs, fontWeight: '600', marginTop: 1 },
+  body: { fontSize: 13 * fs, lineHeight: 18 },
+  restriction: { fontSize: 12 * fs, padding: 8, borderRadius: 4 },
   pointRow: { flexDirection: 'row', alignItems: 'center', paddingVertical: 2, gap: 8 },
-  pointLabel: { fontSize: 12, flexShrink: 0 },
+  pointLabel: { fontSize: 12 * fs, flexShrink: 0 },
   pointCoordsBtn: { flex: 1 },
-  pointCoords: { fontSize: 12, fontFamily: 'monospace', textAlign: 'right' },
+  pointCoords: { fontSize: 12 * fs, fontFamily: 'monospace', textAlign: 'right' },
   focusBtn: { padding: 2 },
   navigateBtn: {
     marginTop: 8,
@@ -779,17 +785,17 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     alignSelf: 'flex-start',
   },
-  navigateText: { fontSize: 13, fontWeight: '600' },
-  warning: { fontSize: 11, marginTop: 4, fontStyle: 'italic' },
+  navigateText: { fontSize: 13 * fs, fontWeight: '600' },
+  warning: { fontSize: 11 * fs, marginTop: 4, fontStyle: 'italic' },
   section: { marginTop: 8 },
-  sectionLabel: { fontSize: 11, textTransform: 'uppercase', letterSpacing: 0.5, marginBottom: 2 },
-  sectionBody: { fontSize: 13, lineHeight: 18 },
+  sectionLabel: { fontSize: 11 * fs, textTransform: 'uppercase', letterSpacing: 0.5, marginBottom: 2 },
+  sectionBody: { fontSize: 13 * fs, lineHeight: 18 },
   translateBtn: { flexDirection: 'row', alignItems: 'center', gap: 4, paddingVertical: 4, marginTop: 2 },
-  translateLabel: { fontSize: 11, opacity: 0.8 },
+  translateLabel: { fontSize: 11 * fs, opacity: 0.8 },
   accessRow: { marginTop: 6, gap: 2 },
-  accessItem: { fontSize: 12 },
-  nameHistory: { fontSize: 11, marginTop: 4, fontStyle: 'italic' },
-  location: { fontSize: 11, marginTop: 4 },
-  author: { fontSize: 11 },
-  attribution: { fontSize: 10, marginTop: 4, fontStyle: 'italic' },
+  accessItem: { fontSize: 12 * fs },
+  nameHistory: { fontSize: 11 * fs, marginTop: 4, fontStyle: 'italic' },
+  location: { fontSize: 11 * fs, marginTop: 4 },
+  author: { fontSize: 11 * fs },
+  attribution: { fontSize: 10 * fs, marginTop: 4, fontStyle: 'italic' },
 });

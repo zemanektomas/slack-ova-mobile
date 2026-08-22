@@ -29,6 +29,12 @@ import type { SlacklineListItem, SortKey, SortDir } from '../types';
 // viditelná v inline detailu pokud existuje.
 const SORT_KEYS: SortKey[] = ['name', 'length', 'height', 'distance'];
 
+// Na tabletu na šířku je sheet přes 1200 px — název lajny se roztáhne přes půl
+// obrazovky a hodnoty se odlepí až k pravému okraji, takže se řádek nedá přečíst
+// jedním pohledem. Obsah se drží v sloupci téhle šířky a centruje se.
+const CONTENT_MAX_WIDTH = 720;
+const centered = { maxWidth: CONTENT_MAX_WIDTH, width: '100%', alignSelf: 'center' } as const;
+
 // Lidsky čitelná vzdálenost. Pod 1 km v metrech (zaokrouhleno na 10 m),
 // jinak v km s jedním desetinným místem (do 100 km), pak celé km.
 function formatDistance(km: number | null | undefined): string {
@@ -201,8 +207,18 @@ export default function HomeScreen() {
         <Pressable
           style={[
             styles.row,
+            centered,
             { borderColor: t.border },
-            (isExpanded || isPeeked) && { backgroundColor: t.surfaceAlt },
+            // Tři odlišitelné stavy. Peek jen podbarvení, rozbalený navíc
+            // accent pruh vlevo — bez toho nebylo poznat, ke které lajně
+            // rozbalený text patří (feedback z tabletu 22.8.).
+            isPeeked && { backgroundColor: t.surfaceAlt },
+            isExpanded && {
+              backgroundColor: t.surfaceAlt,
+              borderLeftWidth: 3,
+              borderLeftColor: t.accent,
+              paddingLeft: 9,          // 12 − 3, ať text nepoodskočí
+            },
           ]}
           onPress={() => onRowPress(item.id)}
         >
@@ -226,11 +242,15 @@ export default function HomeScreen() {
           <Text style={[styles.colDistance, { color: t.text, fontSize: 12 * fontScale }]} numberOfLines={1}>
             {formatDistance(item.distance_km)}
           </Text>
+          {/* Afordance na zabalení — jinak není zřejmé, kam ťuknout. */}
+          {isExpanded && (
+            <MaterialCommunityIcons name="chevron-up" size={18} color={t.accent} />
+          )}
         </Pressable>
         {/* Peek proužek — bez něj druhý tap nikdo neobjeví. */}
         {isPeeked && (
           <Pressable
-            style={[styles.peek, { borderColor: t.border, backgroundColor: t.surfaceAlt }]}
+            style={[styles.peek, centered, { borderColor: t.border, backgroundColor: t.surfaceAlt }]}
             onPress={() => onRowPress(item.id)}
           >
             <Text style={[styles.peekText, { color: t.textMuted, fontSize: 12 * fontScale }]}>
@@ -239,7 +259,11 @@ export default function HomeScreen() {
             <MaterialCommunityIcons name="chevron-down" size={18} color={t.textMuted} />
           </Pressable>
         )}
-        {isExpanded && <InlineDetail slacklineId={item.id} />}
+        {isExpanded && (
+          <View style={centered}>
+            <InlineDetail slacklineId={item.id} />
+          </View>
+        )}
       </View>
     );
   };
@@ -284,7 +308,7 @@ export default function HomeScreen() {
         keyboardBlurBehavior="restore"
         android_keyboardInputMode="adjustResize"
       >
-        <View style={[styles.searchRow, { borderColor: t.border, backgroundColor: t.surfaceAlt }]}>
+        <View style={[styles.searchRow, { borderColor: t.border, backgroundColor: t.surfaceAlt }, centered]}>
           <MaterialCommunityIcons name="magnify" size={18} color={t.textMuted} />
           <TextInput
             value={search}
@@ -319,7 +343,7 @@ export default function HomeScreen() {
             widths matchují col* styly. Bez tohohle byly hlavičky a hodnoty
             posunutý (feedback z Closed Alpha — sortbar buttony měly flex-width
             podle textu, tedy "Vzdálenost" širší než "Délka"). */}
-        <View style={[styles.sortBar, { borderColor: t.border, backgroundColor: t.surfaceAlt }]}>
+        <View style={[styles.sortBar, { borderColor: t.border, backgroundColor: t.surfaceAlt }, centered]}>
           <SortHeader sortKey="name" sortBy={sortBy} sortDir={sortDir} onPress={toggleSort} label={tr('sort.name')} style={styles.sortColName} align="left" theme={t} />
           <SortHeader sortKey="length" sortBy={sortBy} sortDir={sortDir} onPress={toggleSort} label={tr('sort.length')} style={styles.sortColLength} align="right" theme={t} />
           <SortHeader sortKey="height" sortBy={sortBy} sortDir={sortDir} onPress={toggleSort} label={tr('sort.height')} style={styles.sortColHeight} align="right" theme={t} />
