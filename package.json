@@ -1,6 +1,6 @@
 {
   "name": "slackline-ova",
-  "version": "0.7.18",
+  "version": "0.7.19",
   "main": "expo-router/entry",
   "scripts": {
     "start": "expo start --dev-client",
@@ -13,7 +13,7 @@
   "dependencies": {
     "@expo/vector-icons": "^15.0.3",
     "@gorhom/bottom-sheet": "^5.2.14",
-    "@maplibre/maplibre-react-native": "^10.0.0",
+    "@maplibre/maplibre-react-native": "^11.3.7",
     "@react-native-async-storage/async-storage": "2.2.0",
     "@react-native-community/netinfo": "11.4.1",
     "@react-native-ml-kit/identify-languages": "^2.0.0",

@@ -2,7 +2,7 @@
   "expo": {
     "name": "Slackline.Ova",
     "slug": "slackline-ova",
-    "version": "0.7.18",
+    "version": "0.7.19",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "scheme": "slacklineova",
@@ -26,17 +26,12 @@
         "backgroundColor": "#0f172a"
       },
       "package": "cz.slackline.ova",
-      "versionCode": 37
+      "versionCode": 38
     },
     "plugins": [
       "expo-router",
       "expo-secure-store",
-      [
-        "@maplibre/maplibre-react-native",
-        {
-          "net": "open-source"
-        }
-      ],
+      "@maplibre/maplibre-react-native",
       [
         "expo-location",
         {
