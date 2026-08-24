@@ -6,18 +6,18 @@ import { StyleSheet, View, Pressable, Image, LayoutChangeEvent } from 'react-nat
 import Animated, { useAnimatedStyle, useSharedValue, type SharedValue } from 'react-native-reanimated';
 import { useTranslation } from 'react-i18next';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import MapLibreGL, { MapView, Camera, ShapeSource, CircleLayer, LineLayer, SymbolLayer } from '@maplibre/maplibre-react-native';
+import { Map, Camera, GeoJSONSource, Layer } from '@maplibre/maplibre-react-native';
 import { useMapStore, MapKind } from '../store/mapStore';
 import { useTheme } from '../theme';
 import { useUserLocation } from './useLocation';
 import type { SlacklineListItem } from '../types';
 
-MapLibreGL.setAccessToken(null);
+// v11 nemá setAccessToken — MapLibre je vendor-agnostic, token nikdy nebyl potřeba.
 
 const MAPY_KEY = process.env.EXPO_PUBLIC_MAPY_CZ_API_KEY ?? '';
 
-// Font glyphs URL pro SymbolLayer text rendering (cluster count). MapLibre potřebuje
-// glyphs endpoint pro `textField` v SymbolLayer. Použijem OpenMapTiles free font CDN
+// Font glyphs URL pro textovou vrstvu (cluster count). MapLibre potřebuje
+// glyphs endpoint pro `textField` v symbol vrstvě. Použijem OpenMapTiles free font CDN
 // (Open Sans Regular, fungujе s každým MapLibre style i bez vlastních fontů).
 const GLYPHS_URL = 'https://orangemug.github.io/font-glyphs/glyphs/{fontstack}/{range}.pbf';
 
@@ -101,20 +101,18 @@ export default function MapViewComponent({ markers, selectedId, onMarkerPress, s
   const userLoc = useUserLocation();
   const cameraRef = useRef<any>(null);
   const mapRef = useRef<any>(null);
-  // ShapeSource ref — potřebujem pro `getClusterExpansionZoom(feature)` při tap
+  // GeoJSONSource ref — potřebujem pro `getClusterExpansionZoom(clusterId)` při tap
   // na cluster (zoom in dokud se cluster nerozpadne na single markery).
   const pointsSourceRef = useRef<any>(null);
 
   const refreshBounds = async () => {
     try {
       if (!mapRef.current) return;
-      const vb = await mapRef.current.getVisibleBounds();
-      if (vb && vb.length === 2) {
-        // vb = [[ne_lon, ne_lat], [sw_lon, sw_lat]]
-        setBounds({
-          sw: { lat: vb[1][1], lon: vb[1][0] },
-          ne: { lat: vb[0][1], lon: vb[0][0] },
-        });
+      // v11: LngLatBounds je ploché [west, south, east, north] (GeoJSON RFC pořadí)
+      const b = await mapRef.current.getBounds();
+      if (b && b.length === 4) {
+        const [west, south, east, north] = b;
+        setBounds({ sw: { lat: south, lon: west }, ne: { lat: north, lon: east } });
       }
     } catch {}
   };
@@ -143,10 +141,10 @@ export default function MapViewComponent({ markers, selectedId, onMarkerPress, s
   useEffect(() => {
     if (!focusTarget || !cameraRef.current) return;
     cameraRef.current.setCamera({
-      centerCoordinate: [focusTarget.lon, focusTarget.lat],
-      zoomLevel: 15,
-      animationDuration: 600,
-      padding: { paddingBottom: sheetHeight, paddingTop: 0, paddingLeft: 0, paddingRight: 0 },
+      center: [focusTarget.lon, focusTarget.lat],
+      zoom: 15,
+      duration: 600,
+      padding: { bottom: sheetHeight, top: 0, left: 0, right: 0 },
     });
   }, [focusTarget?.nonce]);
 
@@ -165,7 +163,7 @@ export default function MapViewComponent({ markers, selectedId, onMarkerPress, s
     if (!mapRef.current || !cameraRef.current) return;
     try {
       const z = await mapRef.current.getZoom();
-      cameraRef.current.zoomTo(Math.max(1, Math.min(20, z + delta)), 200);
+      cameraRef.current.zoomTo(Math.max(1, Math.min(20, z + delta)), { duration: 200 });
     } catch {}
   };
 
@@ -177,10 +175,10 @@ export default function MapViewComponent({ markers, selectedId, onMarkerPress, s
     if (initialCenterApplied.current) return;
     if (!cameraRef.current || sheetHeight === 0) return;
     cameraRef.current.setCamera({
-      centerCoordinate: [initialCenter.lon, initialCenter.lat],
-      zoomLevel: initialZoom,
-      animationDuration: 0,
-      padding: { paddingBottom: sheetHeight, paddingTop: 0, paddingLeft: 0, paddingRight: 0 },
+      center: [initialCenter.lon, initialCenter.lat],
+      zoom: initialZoom,
+      duration: 0,
+      padding: { bottom: sheetHeight, top: 0, left: 0, right: 0 },
     });
     initialCenterApplied.current = true;
   }, [sheetHeight, initialCenter, initialZoom]);
@@ -251,44 +249,42 @@ export default function MapViewComponent({ markers, selectedId, onMarkerPress, s
         setTimeout(refreshBounds, 200);
       }}
     >
-      <MapView
+      <Map
         ref={mapRef}
         style={styles.map}
         mapStyle={mapStyle as any}
-        rotateEnabled={false}
-        pitchEnabled={false}
-        compassEnabled={false}
+        touchRotate={false}
+        touchPitch={false}
+        compass={false}
         onRegionWillChange={markMoving}
         onRegionIsChanging={markMoving}
-        onRegionDidChange={(feature: any) => {
+        onRegionDidChange={(e) => {
           markMoving();
-          const vb = feature?.properties?.visibleBounds;
-          const c = feature?.geometry?.coordinates;
-          if (vb) {
-            // vb = [[ne_lon, ne_lat], [sw_lon, sw_lat]]
-            setBounds({
-              sw: { lat: vb[1][1], lon: vb[1][0] },
-              ne: { lat: vb[0][1], lon: vb[0][0] },
-            });
+          // v11 dává stav výřezu rovnou v nativeEvent — žádné hrabání v properties.
+          const { center, bounds } = e.nativeEvent;
+          if (bounds && bounds.length === 4) {
+            const [west, south, east, north] = bounds;
+            setBounds({ sw: { lat: south, lon: west }, ne: { lat: north, lon: east } });
           }
-          if (c && Array.isArray(c) && c.length === 2) {
-            setCenter(c[1], c[0]); // [lon, lat] → lat, lon
+          if (center && center.length === 2) {
+            setCenter(center[1], center[0]); // [lng, lat] → lat, lon
           }
         }}
       >
         <Camera
           ref={cameraRef}
-          defaultSettings={{
-            centerCoordinate: [initialCenter.lon, initialCenter.lat],
-            zoomLevel: initialZoom,
+          initialViewState={{
+            center: [initialCenter.lon, initialCenter.lat],
+            zoom: initialZoom,
           }}
         />
-        <ShapeSource id="slacklines-lines-src" shape={lineGeojson}>
-          <LineLayer
+        <GeoJSONSource id="slacklines-lines-src" data={lineGeojson}>
+          <Layer
+            type="line"
             id="slacklines-lines"
             // Lines viditelné od zoom 9+ — souhlasí s clusterMaxZoomLevel: 8.
             // Pod tím (zoom 0-8) jsou clusters, čáry by jen rušily vizuál odzoomované mapy.
-            minZoomLevel={9}
+            minzoom={9}
             style={{
               lineColor: [
                 'case',
@@ -300,32 +296,35 @@ export default function MapViewComponent({ markers, selectedId, onMarkerPress, s
               lineOpacity: 0.95,
             }}
           />
-        </ShapeSource>
-        <ShapeSource
+        </GeoJSONSource>
+        <GeoJSONSource
           id="slacklines-points-src"
           ref={pointsSourceRef}
-          shape={pointGeojson}
+          data={pointGeojson}
           cluster
           clusterRadius={40}
-          clusterMaxZoomLevel={8}
-          onPress={async (e: any) => {
+          clusterMaxZoom={8}
+          onPress={async (e) => {
             // Ocásek pinch/pan gesta — ne záměrný tap. Bez tohohle kamera po
             // pinch-out odanimuje zpátky dovnitř (cluster expansion zoom).
             if (pressDuringGesture()) return;
-            const feat = e?.features?.[0];
+            const feat: any = e?.nativeEvent?.features?.[0];
             if (!feat) return;
             if (feat.properties?.cluster) {
               // Cluster tap — zoom in do oblasti kde se rozpadne na single markery.
               // MapLibre vrací zoom level kde MapBox clusters už nepřežijí.
               try {
-                const zoom = await pointsSourceRef.current?.getClusterExpansionZoom(feat);
+                // v11: cluster metody berou clusterId, ne celou feature
+                const zoom = await pointsSourceRef.current?.getClusterExpansionZoom(
+                  feat.properties.cluster_id,
+                );
                 const coords = feat.geometry?.coordinates;
                 if (zoom && coords && cameraRef.current) {
                   cameraRef.current.setCamera({
-                    centerCoordinate: coords,
-                    zoomLevel: zoom,
-                    animationDuration: 400,
-                    padding: { paddingBottom: sheetHeight, paddingTop: 0, paddingLeft: 0, paddingRight: 0 },
+                    center: coords,
+                    zoom,
+                    duration: 400,
+                    padding: { bottom: sheetHeight, top: 0, left: 0, right: 0 },
                   });
                 }
               } catch {}
@@ -336,7 +335,8 @@ export default function MapViewComponent({ markers, selectedId, onMarkerPress, s
           }}
         >
           {/* Cluster background circle — větší než single marker, kontrast vs. mapa */}
-          <CircleLayer
+          <Layer
+            type="circle"
             id="slacklines-clusters"
             filter={['has', 'point_count']}
             style={{
@@ -355,7 +355,8 @@ export default function MapViewComponent({ markers, selectedId, onMarkerPress, s
             }}
           />
           {/* Cluster count text — uvnitř kruhu */}
-          <SymbolLayer
+          <Layer
+            type="symbol"
             id="slacklines-cluster-count"
             filter={['has', 'point_count']}
             style={{
@@ -371,7 +372,8 @@ export default function MapViewComponent({ markers, selectedId, onMarkerPress, s
             }}
           />
           {/* Single pins (mimo cluster) — stejný jako předtím */}
-          <CircleLayer
+          <Layer
+            type="circle"
             id="slacklines-pins"
             filter={['!', ['has', 'point_count']]}
             style={{
@@ -390,24 +392,25 @@ export default function MapViewComponent({ markers, selectedId, onMarkerPress, s
               ],
             }}
           />
-        </ShapeSource>
+        </GeoJSONSource>
 
         {/* Anchor2 markery — bez clusteru, menší kruhy. Cluster count v points-src je
            jen z anchor1 (1 lajna = 1 počet). Anchor2 je vizuální completeness pro
            lajny s dvěma kotvami. */}
-        <ShapeSource
+        <GeoJSONSource
           id="slacklines-anchor2-src"
-          shape={anchor2Geojson}
-          onPress={(e: any) => {
-            const id = e?.features?.[0]?.properties?.slacklineId;
+          data={anchor2Geojson}
+          onPress={(e) => {
+            const id = (e?.nativeEvent?.features?.[0] as any)?.properties?.slacklineId;
             if (id && onMarkerPress) onMarkerPress(id);
           }}
         >
-          <CircleLayer
+          <Layer
+            type="circle"
             id="slacklines-anchor2-pins"
             // Anchor2 markery jen od zoom 9+ (stejně jako lines). V cluster zoom
             // jsou by jen ruseni — viditelný je jen anchor1 v clusteru.
-            minZoomLevel={9}
+            minzoom={9}
             style={{
               circleRadius: ['case', ['==', ['get', 'selected'], 1], 7, 4],
               circleColor: [
@@ -424,16 +427,17 @@ export default function MapViewComponent({ markers, selectedId, onMarkerPress, s
               ],
             }}
           />
-        </ShapeSource>
+        </GeoJSONSource>
 
-        {/* User polohu kreslíme čistě jako CircleLayer (halo + dot). PointAnnotation
+        {/* User polohu kreslíme čistě jako kruhové vrstvy (halo + dot). PointAnnotation
             v MapLibre RN je known issue — po camera move (flyTo, pan, focus na lajnu)
-            občas vypadne z renderu a vrátí se až další coordinate change. CircleLayer
-            přes ShapeSource je stabilní, MapLibre native side jasně mappuje source
+            občas vypadne z renderu a vrátí se až další coordinate change. kruhová vrstva
+            přes GeoJSONSource je stabilní, MapLibre native side jasně mappuje source
             update na re-render. Vizuálně místo čtverečku máme kruh — na mapě je to
             srozumitelnější ("tady jsem" vs. waypoint pin). */}
-        <ShapeSource id="user-location-src" shape={userGeojson}>
-          <CircleLayer
+        <GeoJSONSource id="user-location-src" data={userGeojson}>
+          <Layer
+            type="circle"
             id="user-location-halo"
             style={{
               circleRadius: 16,
@@ -441,7 +445,8 @@ export default function MapViewComponent({ markers, selectedId, onMarkerPress, s
               circleOpacity: 0.18,
             }}
           />
-          <CircleLayer
+          <Layer
+            type="circle"
             id="user-location-dot"
             style={{
               circleRadius: 6,
@@ -450,8 +455,8 @@ export default function MapViewComponent({ markers, selectedId, onMarkerPress, s
               circleStrokeWidth: 2,
             }}
           />
-        </ShapeSource>
-      </MapView>
+        </GeoJSONSource>
+      </Map>
 
       {!hideLogo && (
         <View style={styles.logoBox} pointerEvents="none">

@@ -20,7 +20,7 @@ import type { Lang } from '../i18n';
 import { useTheme } from '../theme';
 import { refreshGeometryFromSlackmap } from '../db/slackmap';
 import { getMeta } from '../db/index';
-import MapLibreGL from '@maplibre/maplibre-react-native';
+import { OfflineManager } from '@maplibre/maplibre-react-native';
 import { useAuthStore } from '../store/authStore';
 import { useSlackmapAuth } from '../api/useSlackmapAuth';
 import { ISASafetySheet } from './ISASafetySheet';
@@ -163,7 +163,7 @@ export function SettingsSheet({ visible, onClose }: SettingsSheetProps) {
             try {
               // clearAmbientCache mažе auto-cached tiles (ambient cache).
               // Explicit offline packs (zatím žádné nemáme) by zůstaly nedotčené.
-              await MapLibreGL.OfflineManager.clearAmbientCache();
+              await OfflineManager.clearAmbientCache();
               Alert.alert(tr('settings.clearCacheDone'), '');
             } catch (err: any) {
               Alert.alert(tr('settings.clearCacheFailed'), err?.message ?? '');
