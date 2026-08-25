@@ -89,7 +89,7 @@ export default function HomeScreen() {
 
   // Při změně snap point řekni mapě, jak velkou část obrazovky překrývá sheet,
   // aby mohla kamerou centrovat na střed VIDITELNÉ plochy mapy (ne celé obrazovky).
-  // Kamera stačí diskrétně (setCamera per frame by bylo plýtvání) — plynule
+  // Kamera stačí diskrétně (setStop per frame by bylo plýtvání) — plynule
   // sleduje sheet jen FAB blok, přes sheetPosition.
   const handleSheetChange = (index: number) => {
     // Kontejner je SafeAreaView edges={['top']}, takže o horní inset nižší než
