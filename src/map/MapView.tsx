@@ -1,7 +1,7 @@
 // MapLibre integrace. Mapy.cz raster tiles (aerial/outdoor) + OSM fallback.
 // Sleduje bounds změny → mapStore, kreslí markery z viditelných slacklines.
 
-import { useEffect, useMemo, useRef } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { StyleSheet, View, Pressable, Image, LayoutChangeEvent } from 'react-native';
 import Animated, { useAnimatedStyle, useSharedValue, type SharedValue } from 'react-native-reanimated';
 import { useTranslation } from 'react-i18next';
@@ -110,9 +110,17 @@ export default function MapViewComponent({ markers, selectedId, onMarkerPress, s
   // na cluster (zoom in dokud se cluster nerozpadne na single markery).
   const pointsSourceRef = useRef<GeoJSONSourceRef>(null);
 
+  // Nativní metody v11 (getBounds, getZoom, setStop) vyhodí NullPointerException,
+  // pokud je zavoláš dřív, než je nativní mapa hotová — a ta výjimka letí na
+  // hlavním vlákně Androidu, takže ji JS try/catch nechytí a spadne celá apka
+  // (v0.7.20). Proto se všechna nativní volání pouštějí až po onDidFinishLoadingMap.
+  // Ref i state: ref kvůli guardům bez stale closure, state kvůli useEffectu.
+  const [mapReady, setMapReady] = useState(false);
+  const mapReadyRef = useRef(false);
+
   const refreshBounds = async () => {
     try {
-      if (!mapRef.current) return;
+      if (!mapRef.current || !mapReadyRef.current) return;
       // v11: LngLatBounds je ploché [west, south, east, north] (GeoJSON RFC pořadí)
       const b = await mapRef.current.getBounds();
       if (b && b.length === 4) {
@@ -122,10 +130,16 @@ export default function MapViewComponent({ markers, selectedId, onMarkerPress, s
     } catch {}
   };
 
+  const handleMapReady = () => {
+    mapReadyRef.current = true;
+    setMapReady(true);
+    refreshBounds();
+  };
+
   const mapStyle = useMemo(() => buildStyle(kind), [kind]);
 
   const flyToUser = () => {
-    if (!userLoc || !cameraRef.current) return;
+    if (!userLoc || !cameraRef.current || !mapReadyRef.current) return;
     cameraRef.current.setStop({
       center: [userLoc.lon, userLoc.lat],
       duration: 600,
@@ -144,7 +158,7 @@ export default function MapViewComponent({ markers, selectedId, onMarkerPress, s
   // ad-hoc při fire pro padding, ale jeho změna nesmí refire focus.
   const focusTarget = useMapStore((s) => s.focusTarget);
   useEffect(() => {
-    if (!focusTarget || !cameraRef.current) return;
+    if (!focusTarget || !cameraRef.current || !mapReadyRef.current) return;
     cameraRef.current.setStop({
       center: [focusTarget.lon, focusTarget.lat],
       zoom: 15,
@@ -165,7 +179,7 @@ export default function MapViewComponent({ markers, selectedId, onMarkerPress, s
   const pressDuringGesture = () => Date.now() - lastMoveAt.current < 300;
 
   const zoomBy = async (delta: number) => {
-    if (!mapRef.current || !cameraRef.current) return;
+    if (!mapRef.current || !cameraRef.current || !mapReadyRef.current) return;
     try {
       const z = await mapRef.current.getZoom();
       cameraRef.current.zoomTo(Math.max(1, Math.min(20, z + delta)), { duration: 200 });
@@ -178,7 +192,7 @@ export default function MapViewComponent({ markers, selectedId, onMarkerPress, s
   const initialCenterApplied = useRef(false);
   useEffect(() => {
     if (initialCenterApplied.current) return;
-    if (!cameraRef.current || sheetHeight === 0) return;
+    if (!cameraRef.current || sheetHeight === 0 || !mapReady) return;
     cameraRef.current.setStop({
       center: [initialCenter.lon, initialCenter.lat],
       zoom: initialZoom,
@@ -186,7 +200,7 @@ export default function MapViewComponent({ markers, selectedId, onMarkerPress, s
       padding: { bottom: sheetHeight, top: 0, left: 0, right: 0 },
     });
     initialCenterApplied.current = true;
-  }, [sheetHeight, initialCenter, initialZoom]);
+  }, [sheetHeight, initialCenter, initialZoom, mapReady]);
 
   const userGeojson = userLoc
     ? {
@@ -261,6 +275,7 @@ export default function MapViewComponent({ markers, selectedId, onMarkerPress, s
         touchRotate={false}
         touchPitch={false}
         compass={false}
+        onDidFinishLoadingMap={handleMapReady}
         onRegionWillChange={markMoving}
         onRegionIsChanging={markMoving}
         onRegionDidChange={(e) => {
@@ -312,7 +327,7 @@ export default function MapViewComponent({ markers, selectedId, onMarkerPress, s
           onPress={async (e) => {
             // Ocásek pinch/pan gesta — ne záměrný tap. Bez tohohle kamera po
             // pinch-out odanimuje zpátky dovnitř (cluster expansion zoom).
-            if (pressDuringGesture()) return;
+            if (pressDuringGesture() || !mapReadyRef.current) return;
             const feat: any = e?.nativeEvent?.features?.[0];
             if (!feat) return;
             if (feat.properties?.cluster) {
