@@ -6,7 +6,10 @@ import { StyleSheet, View, Pressable, Image, LayoutChangeEvent } from 'react-nat
 import Animated, { useAnimatedStyle, useSharedValue, type SharedValue } from 'react-native-reanimated';
 import { useTranslation } from 'react-i18next';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { Map, Camera, GeoJSONSource, Layer } from '@maplibre/maplibre-react-native';
+import {
+  Map, Camera, GeoJSONSource, Layer,
+  type MapRef, type CameraRef, type GeoJSONSourceRef,
+} from '@maplibre/maplibre-react-native';
 import { useMapStore, MapKind } from '../store/mapStore';
 import { useTheme } from '../theme';
 import { useUserLocation } from './useLocation';
@@ -99,11 +102,13 @@ export default function MapViewComponent({ markers, selectedId, onMarkerPress, s
   const hideLogo = useMapStore((s) => s.hideLogo);
   const hideControls = useMapStore((s) => s.hideControls);
   const userLoc = useUserLocation();
-  const cameraRef = useRef<any>(null);
-  const mapRef = useRef<any>(null);
+  // Konkretni typy, ne `any` — pri migraci na v11 `any` spolklo prejmenovane
+  // metody (setCamera → setStop) a chyba spadla az za behu pri mountu.
+  const cameraRef = useRef<CameraRef>(null);
+  const mapRef = useRef<MapRef>(null);
   // GeoJSONSource ref — potřebujem pro `getClusterExpansionZoom(clusterId)` při tap
   // na cluster (zoom in dokud se cluster nerozpadne na single markery).
-  const pointsSourceRef = useRef<any>(null);
+  const pointsSourceRef = useRef<GeoJSONSourceRef>(null);
 
   const refreshBounds = async () => {
     try {
@@ -121,10 +126,10 @@ export default function MapViewComponent({ markers, selectedId, onMarkerPress, s
 
   const flyToUser = () => {
     if (!userLoc || !cameraRef.current) return;
-    cameraRef.current.setCamera({
-      centerCoordinate: [userLoc.lon, userLoc.lat],
-      animationDuration: 600,
-      padding: { paddingBottom: sheetHeight, paddingTop: 0, paddingLeft: 0, paddingRight: 0 },
+    cameraRef.current.setStop({
+      center: [userLoc.lon, userLoc.lat],
+      duration: 600,
+      padding: { bottom: sheetHeight, top: 0, left: 0, right: 0 },
     });
   };
 
@@ -140,7 +145,7 @@ export default function MapViewComponent({ markers, selectedId, onMarkerPress, s
   const focusTarget = useMapStore((s) => s.focusTarget);
   useEffect(() => {
     if (!focusTarget || !cameraRef.current) return;
-    cameraRef.current.setCamera({
+    cameraRef.current.setStop({
       center: [focusTarget.lon, focusTarget.lat],
       zoom: 15,
       duration: 600,
@@ -169,12 +174,12 @@ export default function MapViewComponent({ markers, selectedId, onMarkerPress, s
 
   // Při prvním mountu posuň kameru na initialCenter s ohledem na výšku sheetu,
   // aby se výchozí lokalita (Ostrava) zobrazila ve viditelné části mapy nad sheetem.
-  // defaultSettings v <Camera> tohle neumí — centruje vždy na střed MapView.
+  // initialViewState v <Camera> tohle neumí — centruje vždy na střed mapy.
   const initialCenterApplied = useRef(false);
   useEffect(() => {
     if (initialCenterApplied.current) return;
     if (!cameraRef.current || sheetHeight === 0) return;
-    cameraRef.current.setCamera({
+    cameraRef.current.setStop({
       center: [initialCenter.lon, initialCenter.lat],
       zoom: initialZoom,
       duration: 0,
@@ -282,7 +287,7 @@ export default function MapViewComponent({ markers, selectedId, onMarkerPress, s
           <Layer
             type="line"
             id="slacklines-lines"
-            // Lines viditelné od zoom 9+ — souhlasí s clusterMaxZoomLevel: 8.
+            // Lines viditelné od zoom 9+ — souhlasí s clusterMaxZoom: 8.
             // Pod tím (zoom 0-8) jsou clusters, čáry by jen rušily vizuál odzoomované mapy.
             minzoom={9}
             style={{
@@ -320,7 +325,7 @@ export default function MapViewComponent({ markers, selectedId, onMarkerPress, s
                 );
                 const coords = feat.geometry?.coordinates;
                 if (zoom && coords && cameraRef.current) {
-                  cameraRef.current.setCamera({
+                  cameraRef.current.setStop({
                     center: coords,
                     zoom,
                     duration: 400,
