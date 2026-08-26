@@ -44,6 +44,11 @@ async function migrate(db: SQLite.SQLiteDatabase): Promise<void> {
     try { await db.execAsync(`ALTER TABLE line_safety_checks ADD COLUMN gates_status TEXT`); } catch {}
     try { await db.execAsync(`ALTER TABLE line_safety_checks ADD COLUMN log_data TEXT`); } catch {}
   }
+  if (current < 7) {
+    // v7: F5 Gear + Reports (Vybaveni + Reporty taby, v0.8.0)
+    // Tabulky gear + reports + report_gear + indexy vytvoreny v SCHEMA_SQL (CREATE IF NOT EXISTS).
+    // Jen bumpujeme verzi.
+  }
   // Index na source — vytvoříme až po migraci (sloupec teď určitě existuje)
   try {
     await db.execAsync(`CREATE INDEX IF NOT EXISTS ix_slacklines_source ON slacklines(source)`);
