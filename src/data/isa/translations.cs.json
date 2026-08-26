@@ -109,6 +109,70 @@
         "na": "Bez doporučení"
       },
       "hint": "Dny = vystavení vlivům prostředí (UV, déšť), NIKOLI od data výroby. Skladování se nepočítá."
+    },
+    "forgottenLeash": {
+      "title": "Zapomenutá odsedka",
+      "summary": "Nejfatálnější recurring failure v highline",
+      "fl1": "🔴 DEADLIEST failure",
+      "fl1Detail": "Dokumentované fatality: Brazil 26.7.2025 (SUPER experienced guy zapomněl tie-in), Slovinsko 2023 (permanent nerve damage). Nejčastější příčina vážných HL úrazů.",
+      "fl2": "Experienced = complacency risk",
+      "fl2Detail": "Zkušení riggeři jsou v největším risku. Muscle memory = 'já vím co dělám, netřeba check' → jeden zapomenutý restart session stačí.",
+      "fl3": "Klasický vzorec",
+      "fl3Detail": "Break (voda / WC / telefon / rescue) → return na lajnu BEZ leash. Kritický přechodový moment.",
+      "fl4": "Buddy check před KAŽDÝM startem",
+      "fl4Detail": "Ne jen prvním session. Před každým vstupem na lajnu = fyzicky ověřit leash + PAS rukou.",
+      "fl5": "Verbální confirmation",
+      "fl5Detail": "Nahlas říct 'jsem tied in?' → 'ano, ověřeno'. Vyžaduje aktivní kognitivní check, ne muscle memory."
+    },
+    "masterpoint": {
+      "title": "Masterpoint doktrína (ISA 2025+)",
+      "summary": "Vždy konsolidovaný masterpoint, ne separated anchors",
+      "mp1": "Aktuální ISA guidance 2025+",
+      "mp1Detail": "Vždy konsolidovaný masterpoint kde main i backup vyusti. Nicolas Ospina 31.5.2025 (ISA Certified Rigger) cituje ISA guidelines.",
+      "mp2": "Formy masterpointu",
+      "mp2Detail": "Double ring / rigging plate / doubled sling. Kritérium: jeden common point pro main i backup.",
+      "mp3": "Anti-pattern: separated anchors",
+      "mp3Detail": "Hidden dependency. Roberto: 'if you lose main shackle, you lose main line AND main anchor too.'",
+      "mp4": "Výhody konsolidace",
+      "mp4Detail": "Snižuje extension při failure. Zjednodušuje inspekci (jeden bod = jasná kontrola). Redukuje kognitivní zátěž riggera.",
+      "mp5": "Přepisuje staré pravidlo",
+      "mp5Detail": "Staré: 'main a backup má být oddělené.' NEPLATÍ v 2025+. Validuje TZ post-cert learning z Ostrov 16-18.8.2026."
+    },
+    "bfkSlidingX": {
+      "title": "Kdy BFK, kdy Sliding-X",
+      "summary": "Decision framework pro longline + wind exposure",
+      "bsx1": "BFK self-sufficient pro:",
+      "bsx1Detail": "HL < 200-300m délky. Vertikálně rovnoběžné body. Stabilní load direction (žádný wind-driven asymmetric load).",
+      "bsx2": "Sliding-X POVINNÝ pro:",
+      "bsx2Detail": "HL > 200-300m (wind-driven asymmetric load může kolabsovat BFK). Wind exposure. Nerovnoběžné body. Weak nebo questionable rock.",
+      "bsx3": "Sascha BFK sufficiency rule",
+      "bsx3Detail": "'A BFK is sufficient as long as one of the ropes could get cut and the rest of the anchor remains above the 24kN MBS.' — Sascha Grill 28.2.2026.",
+      "bsx4": "Roberto rule of thumb",
+      "bsx4Detail": "'Anything greater than 200-300m, I'm going with sliding X.' — Roberto De Oliveira 1.3.2026 (800m longline failure case)."
+    },
+    "alWeblockCorrosion": {
+      "title": "Al weblock corrosion v perma-rig",
+      "summary": "Aktivní ISA incident 2026 — casting defect crack po 1-2 letech",
+      "awc1": "⚠️ Aktivní safety incident 2026",
+      "awc1Detail": "ISA aktivně řeší (x-ray plan navrhovaný ISA Safety Commission). 2 dokumentované případy: Roberto 20.3.2026 heavily used perma-rig weblock, Purelock 3-4 měsíce.",
+      "awc2": "Failure mode",
+      "awc2Detail": "Al weblock v perma-rig s vlhkostí → casting defect crack po 1-2 letech. Nothing happened, ale weblock fully damaged. Early warning.",
+      "awc3": "Prevence",
+      "awc3Detail": "Perma-rig weblock ROTATE každých 6 měsíců (nenechat na 1 místě 1+ rok). Steel weblock preferovaný pro perma-rig v humid environment.",
+      "awc4": "Salt air = ještě rychlejší",
+      "awc4Detail": "Coastal / marine sites vyžadují agresivnější re-inspection cycle. X-ray inspection doporučeno pro suspect Al weblocky."
+    },
+    "vortexCaveat": {
+      "title": "Vortex leash ring — tape gate shut!",
+      "summary": "Sascha Grill warning — gate se sám otevírá",
+      "vc1": "⚠️ Sám-otevírající gate",
+      "vc1Detail": "Sascha 10.7.2025: 'I stepped on the gate and it opened, I heard from a friend that they stepped on it while tandeming and even UNCLIPPED the line!'",
+      "vc2": "Doporučené použití",
+      "vc2Detail": "Pouze pro tandem highlining (kdy potřebuješ větší kroužek). VŽDY tape gate shut (electrical tape přes gate).",
+      "vc3": "Preferovaná alternativa",
+      "vc3Detail": "2× standard Slacktivity Highline Ring místo Vortex. Přidá redundance + odstraní gate risk.",
+      "vc4": "Kontrola před každou session",
+      "vc4Detail": "Ověř tape integritu. Nikdy nešlápni na gate stranu kroužku. Buddy check — druhý pár očí kontroluje gate."
     }
   }
 }

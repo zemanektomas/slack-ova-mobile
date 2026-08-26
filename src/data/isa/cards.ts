@@ -106,8 +106,10 @@ export const CARDS: CardData[] = [
       { id: 'r', labelKey: 'cards.serene.redundant', detailKey: 'cards.serene.redundantDetail' },
       { id: 'e2', labelKey: 'cards.serene.efficient', detailKey: 'cards.serene.efficientDetail' },
       { id: 'ne', labelKey: 'cards.serene.noExtension', detailKey: 'cards.serene.noExtensionDetail' },
+      // NEW 2026 update (Rodeo Rigs) — masterpoint doktrína
+      { id: 'mp', labelKey: 'cards.serene.masterpoint', detailKey: 'cards.serene.masterpointDetail' },
     ],
-    reference: { source: 'ISA Rigger Cert syllabus' },
+    reference: { source: 'ISA Rigger Cert syllabus + ISA 2025+ masterpoint doktrína (Nicolas Ospina 31.5.2025)' },
     relatedCalculator: 'angle',  // → anchor angle (Efficient bod)
   },
 
@@ -125,8 +127,10 @@ export const CARDS: CardData[] = [
       { id: 'r', labelKey: 'cards.snareSane.equalization', detailKey: 'cards.snareSane.equalizationDetail' },
       { id: 'e', labelKey: 'cards.snareSane.smallAngles', detailKey: 'cards.snareSane.smallAnglesDetail' },
       { id: 's2', labelKey: 'cards.snareSane.noExtension', detailKey: 'cards.snareSane.noExtensionDetail' },
+      // NEW 2026 update (Julian, Rodeo Rigs Anchors) — single-cause failures
+      { id: 'scf', labelKey: 'cards.snareSane.singleCauseFailures', detailKey: 'cards.snareSane.singleCauseFailuresDetail' },
     ],
-    reference: { source: 'Balance Community — Building Highline Anchors' },
+    reference: { source: 'Balance Community — Building Highline Anchors + single-cause concept (Julian 1.9.2025, Rodeo Rigs)' },
     relatedCalculator: 'angle',  // → anchor angle (Small Angles bod)
   },
 
@@ -216,8 +220,10 @@ export const CARDS: CardData[] = [
       { id: 't2', labelKey: 'cards.twoAttachments.t2', detailKey: 'cards.twoAttachments.t2Detail' },
       { id: 't3', labelKey: 'cards.twoAttachments.t3', detailKey: 'cards.twoAttachments.t3Detail' },
       { id: 't4', labelKey: 'cards.twoAttachments.t4', detailKey: 'cards.twoAttachments.t4Detail' },
+      // NEW 2026 update (Roberto 20.8.2026 Mistake Line) — anchor connections
+      { id: 't5', labelKey: 'cards.twoAttachments.t5', detailKey: 'cards.twoAttachments.t5Detail' },
     ],
-    reference: { source: 'ISA Rescue best practice' },
+    reference: { source: 'ISA Rescue best practice + Roberto De Oliveira 20.8.2026 (Mistake Line commentary)' },
   },
 
   // 9. Buddy Check --------------------------------------------------------
@@ -285,14 +291,110 @@ export const CARDS: CardData[] = [
     relatedCalculator: 'ma',  // → MA (Buckingham s weblock jako progress capture)
   },
 
-  // 13. Kompletní rig workflow — celý strom stavby lajny (v0.7.3) ---------
+  // 13. Kompletní rig workflow — celý strom stavby lajny (v0.7.3 + 2026 update)
   {
     id: 'rig-workflow',
     category: 'workflow',
     icon: 'clipboard-list-outline',
     titleKey: 'cards.rigWorkflow.title',
     summaryKey: 'cards.rigWorkflow.summary',
-    reference: { source: 'pm/idea_rig_log.md — 9 fází + 3 gates + průřezové vrstvy' },
+    checklist: [
+      { id: 'rw1', labelKey: 'cards.rigWorkflow.rw1', detailKey: 'cards.rigWorkflow.rw1Detail' },
+      { id: 'rw2', labelKey: 'cards.rigWorkflow.rw2', detailKey: 'cards.rigWorkflow.rw2Detail' },
+      { id: 'rw3', labelKey: 'cards.rigWorkflow.rw3', detailKey: 'cards.rigWorkflow.rw3Detail' },
+      // KRITICKÉ (2026 update — Roberto Mistake Line): single soft shackle
+      { id: 'rw4', labelKey: 'cards.rigWorkflow.rw4', detailKey: 'cards.rigWorkflow.rw4Detail' },
+      // NEW 2026: masterpoint doktrína ISA 2025+
+      { id: 'rw5', labelKey: 'cards.rigWorkflow.rw5', detailKey: 'cards.rigWorkflow.rw5Detail' },
+    ],
+    reference: { source: 'pm/idea_rig_log.md — 9 fází + 3 gates. Post-cert update 2026: Roberto De Oliveira 20.8.2026 (Mistake Line), Nicolas Ospina 31.5.2025 (masterpoint doktrína)' },
     relatedCalculator: 'deviation',  // → deviation (fáze 5 Tensioning)
+  },
+
+  // ============================================================================
+  // F5 MINI (v0.7.19+) — 5 nových karet z Rodeo Rigs analýzy 22.-25.8.2026
+  // ============================================================================
+
+  // 14. Zapomenutá odsedka — nejfatálnější failure (Rodeo Rigs Accidents) ---
+  {
+    id: 'forgotten-leash',
+    category: 'rule',
+    icon: 'alert-octagram',
+    titleKey: 'cards.forgottenLeash.title',
+    summaryKey: 'cards.forgottenLeash.summary',
+    checklist: [
+      { id: 'fl1', labelKey: 'cards.forgottenLeash.fl1', detailKey: 'cards.forgottenLeash.fl1Detail' },
+      { id: 'fl2', labelKey: 'cards.forgottenLeash.fl2', detailKey: 'cards.forgottenLeash.fl2Detail' },
+      { id: 'fl3', labelKey: 'cards.forgottenLeash.fl3', detailKey: 'cards.forgottenLeash.fl3Detail' },
+      { id: 'fl4', labelKey: 'cards.forgottenLeash.fl4', detailKey: 'cards.forgottenLeash.fl4Detail' },
+      { id: 'fl5', labelKey: 'cards.forgottenLeash.fl5', detailKey: 'cards.forgottenLeash.fl5Detail' },
+    ],
+    reference: { source: 'Rodeo Rigs Accidents — Roberto De Oliveira 26.7.2025 (Brazil fatality), Slovinsko 2023' },
+  },
+
+  // 15. Masterpoint doktrína ISA 2025+ (Nicolas Ospina) --------------------
+  {
+    id: 'masterpoint-doctrine',
+    category: 'rule',
+    icon: 'link-lock',
+    titleKey: 'cards.masterpoint.title',
+    summaryKey: 'cards.masterpoint.summary',
+    checklist: [
+      { id: 'mp1', labelKey: 'cards.masterpoint.mp1', detailKey: 'cards.masterpoint.mp1Detail' },
+      { id: 'mp2', labelKey: 'cards.masterpoint.mp2', detailKey: 'cards.masterpoint.mp2Detail' },
+      { id: 'mp3', labelKey: 'cards.masterpoint.mp3', detailKey: 'cards.masterpoint.mp3Detail' },
+      { id: 'mp4', labelKey: 'cards.masterpoint.mp4', detailKey: 'cards.masterpoint.mp4Detail' },
+      { id: 'mp5', labelKey: 'cards.masterpoint.mp5', detailKey: 'cards.masterpoint.mp5Detail' },
+    ],
+    reference: { source: 'Rodeo Rigs Anchors — Nicolas Ospina 31.5.2025 (ISA guidelines), Roberto De Oliveira 4.6.2026' },
+  },
+
+  // 16. Kdy BFK, kdy Sliding-X (decision framework) ------------------------
+  {
+    id: 'bfk-sliding-x',
+    category: 'rule',
+    icon: 'source-branch',
+    titleKey: 'cards.bfkSlidingX.title',
+    summaryKey: 'cards.bfkSlidingX.summary',
+    checklist: [
+      { id: 'bsx1', labelKey: 'cards.bfkSlidingX.bsx1', detailKey: 'cards.bfkSlidingX.bsx1Detail' },
+      { id: 'bsx2', labelKey: 'cards.bfkSlidingX.bsx2', detailKey: 'cards.bfkSlidingX.bsx2Detail' },
+      { id: 'bsx3', labelKey: 'cards.bfkSlidingX.bsx3', detailKey: 'cards.bfkSlidingX.bsx3Detail' },
+      { id: 'bsx4', labelKey: 'cards.bfkSlidingX.bsx4', detailKey: 'cards.bfkSlidingX.bsx4Detail' },
+    ],
+    reference: { source: 'Rodeo Rigs Anchors — Roberto De Oliveira 1.3.2026 (800m failure), Sascha Grill 28.2.2026 (BFK sufficiency rule)' },
+    relatedCalculator: 'angle',
+  },
+
+  // 17. Al weblock corrosion — aktivní ISA incident 2026 -------------------
+  {
+    id: 'al-weblock-corrosion',
+    category: 'warning',
+    icon: 'shield-alert',
+    titleKey: 'cards.alWeblockCorrosion.title',
+    summaryKey: 'cards.alWeblockCorrosion.summary',
+    checklist: [
+      { id: 'awc1', labelKey: 'cards.alWeblockCorrosion.awc1', detailKey: 'cards.alWeblockCorrosion.awc1Detail' },
+      { id: 'awc2', labelKey: 'cards.alWeblockCorrosion.awc2', detailKey: 'cards.alWeblockCorrosion.awc2Detail' },
+      { id: 'awc3', labelKey: 'cards.alWeblockCorrosion.awc3', detailKey: 'cards.alWeblockCorrosion.awc3Detail' },
+      { id: 'awc4', labelKey: 'cards.alWeblockCorrosion.awc4', detailKey: 'cards.alWeblockCorrosion.awc4Detail' },
+    ],
+    reference: { source: 'Rodeo Rigs Gear — Roberto De Oliveira 20.3.2026 (ISA Safety Commission x-ray plan)' },
+  },
+
+  // 18. Vortex leash ring caveat — TZ V KITU! ------------------------------
+  {
+    id: 'vortex-caveat',
+    category: 'warning',
+    icon: 'circle-outline',
+    titleKey: 'cards.vortexCaveat.title',
+    summaryKey: 'cards.vortexCaveat.summary',
+    checklist: [
+      { id: 'vc1', labelKey: 'cards.vortexCaveat.vc1', detailKey: 'cards.vortexCaveat.vc1Detail' },
+      { id: 'vc2', labelKey: 'cards.vortexCaveat.vc2', detailKey: 'cards.vortexCaveat.vc2Detail' },
+      { id: 'vc3', labelKey: 'cards.vortexCaveat.vc3', detailKey: 'cards.vortexCaveat.vc3Detail' },
+      { id: 'vc4', labelKey: 'cards.vortexCaveat.vc4', detailKey: 'cards.vortexCaveat.vc4Detail' },
+    ],
+    reference: { source: 'Rodeo Rigs Gear — Sascha Grill 10.7.2025' },
   },
 ];
