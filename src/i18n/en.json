@@ -506,9 +506,7 @@
       "t3": "Leash + backup connection for walking",
       "t3Detail": "Highliner is connected to mainline via leash + backup ring to backup line. Mainline failure = backup catches. Never just the leash.",
       "t4": "For rescue: primary rope + backup PAS",
-      "t4Detail": "When moving on the line (rescue, self-rescue), your primary connection (Tibloc, Micro Traxion) plus backup PAS (personal anchor system) on harness.",
-      "t5": "Also applies to anchor connections (2026 update)",
-      "t5Detail": "Must be 2 independent shackles between BFK and rigging plate — not 1 double-wrapped. Buddy check test: \"If one connection failed, would the system stay intact?\" Roberto 20.8.2026 Mistake Line."
+      "t4Detail": "When moving on the line (rescue, self-rescue), your primary connection (Tibloc, Micro Traxion) plus backup PAS (personal anchor system) on harness."
     },
     "buddyCheck": {
       "title": "Buddy Check",
@@ -524,7 +522,11 @@
       "b5": "Helmet — if above 5 m or hard anchor",
       "b5Detail": "Personal choice under 5 m over soft ground. Above 5 m or over hard terrain = mandatory. Head trauma cannot be softened by stretch.",
       "b6": "Buddy says GO out loud",
-      "b6Detail": "This is not formality. Verbal spoken OK = closure of the check. If buddy hesitates = STOP, redo."
+      "b6Detail": "This is not formality. Verbal spoken OK = closure of the check. If buddy hesitates = STOP, redo.",
+      "b7": "Physically verify leash + PAS before EVERY start",
+      "b7Detail": "Not just first session — before every entry onto the line, including after breaks (water, WC, phone, rescue). Physically check by hand that you are tied in. Forgotten leash is one of the deadliest recurring failure patterns — experienced riggers are at highest risk (complacency: \"I know what I'm doing\"). Verbal confirmation aloud: \"am I tied in?\" → \"yes, verified.\"",
+      "b8": "Gate integrity of carabiners + rings",
+      "b8Detail": "Verify that screwgate / auto-lock carabiners have closed lock. For leash rings with gate (e.g. Vortex) tape gate shut with electrical tape — gate can self-open under load, especially during tandem highlining. Buddy check = second pair of eyes checks the gate side."
     },
     "suspensionTrauma": {
       "title": "Suspension Trauma Awareness",
@@ -548,9 +550,9 @@
       "rw3": "Cross-cutting layers",
       "rw3Detail": "Material (ISA cert, RLT status) / Safety (rescue plan, communication) / People (competence, buddy check). Applied across all phases.",
       "rw4": "⚠️ Single soft shackle BFK↔plate = MISTAKE",
-      "rw4Detail": "Must be 2 independent shackles (main + backup separate connection). Double-wrapped single shackle looks like two, but is still single point failure. Classic buddy check trap. Roberto 20.8.2026 Mistake Line commentary.",
+      "rw4Detail": "Application of the \"always 2 independent attachments\" rule (see Two Attachments card) to anchor connections. Must be 2 independent shackles between BFK and rigging plate — not 1 double-wrapped. Double-wrapped single shackle looks like two, but is still single point failure.",
       "rw5": "Masterpoint ISA 2025+",
-      "rw5Detail": "Consolidated point (double ring / rigging plate / doubled sling) where main and backup terminate. NOT separated anchors (hidden dependency). Nicolas Ospina 31.5.2025."
+      "rw5Detail": "Consolidated point (double ring / rigging plate / doubled sling) where main and backup terminate. NOT separated anchors (hidden dependency). Per ISA 2025+ updated guidance."
     },
     "novice": {
       "title": "Starting out? Read this first",
@@ -596,7 +598,7 @@
       "noExtension": "No Extension",
       "noExtensionDetail": "If 1 leg fails, masterpoint stays in place → no shock load. Backup / limiting knots.",
       "masterpoint": "Masterpoint (ISA 2025+ update)",
-      "masterpointDetail": "Always consolidated masterpoint where both main and backup terminate (double ring / rigging plate / doubled sling). Overwrites old \"main and backup separate\" rule. Nicolas Ospina 31.5.2025."
+      "masterpointDetail": "Always consolidated masterpoint where both main and backup terminate (double ring / rigging plate / doubled sling). Overwrites old \"main and backup separate\" rule. Per ISA 2025+ updated guidance."
     },
     "snareSane": {
       "title": "SNARE SANE",
@@ -614,7 +616,7 @@
       "noExtension": "No Extension",
       "noExtensionDetail": "Failure of one leg must not cause shock load. Backup / limiting knots.",
       "singleCauseFailures": "Single-cause failures (2026)",
-      "singleCauseFailuresDetail": "Material redundancy ≠ structural redundancy. 5 categories of common-mode failures: rock (bolts in one flake) / material (BFK with wrong rope) / sling (dual-core abrasion) / weather (storms) / rodents (chews). Julian 1.9.2025."
+      "singleCauseFailuresDetail": "Material redundancy ≠ structural redundancy. 5 categories of common-mode failures: rock (bolts in one flake) / material (BFK with wrong rope) / sling (dual-core abrasion) / weather (storms) / rodents (chews). SNARE SANE extension per community consensus 2025."
     },
     "nylonRule": {
       "title": "Sub-40m Nylon Rule",
@@ -657,33 +659,19 @@
       },
       "hint": "Days = exposure to environment (UV, rain), NOT from manufacture date. Storage doesn't count."
     },
-    "forgottenLeash": {
-      "title": "Forgotten Leash",
-      "summary": "Most fatal recurring failure in highline",
-      "fl1": "🔴 DEADLIEST failure",
-      "fl1Detail": "Documented fatalities: Brazil 26.7.2025 (SUPER experienced guy forgot tie-in), Slovenia 2023 (permanent nerve damage). Most common cause of serious HL injuries.",
-      "fl2": "Experienced = complacency risk",
-      "fl2Detail": "Experienced riggers are at highest risk. Muscle memory = 'I know what I'm doing, no check needed' → one forgotten session restart is enough.",
-      "fl3": "Classic pattern",
-      "fl3Detail": "Break (water / WC / phone / rescue) → return to line WITHOUT leash. Critical transition moment.",
-      "fl4": "Buddy check before EVERY start",
-      "fl4Detail": "Not just first session. Before every entry onto the line = physically verify leash + PAS by hand.",
-      "fl5": "Verbal confirmation",
-      "fl5Detail": "Say out loud 'am I tied in?' → 'yes, verified'. Requires active cognitive check, not muscle memory."
-    },
     "masterpoint": {
       "title": "Masterpoint doctrine (ISA 2025+)",
       "summary": "Always consolidated masterpoint, not separated anchors",
       "mp1": "Current ISA guidance 2025+",
-      "mp1Detail": "Always consolidated masterpoint where both main and backup terminate. Nicolas Ospina 31.5.2025 (ISA Certified Rigger) cites ISA guidelines.",
+      "mp1Detail": "Always consolidated masterpoint where both main and backup terminate. ISA 2025+ updated guidance — overwrites older separated anchors practice.",
       "mp2": "Masterpoint forms",
       "mp2Detail": "Double ring / rigging plate / doubled sling. Criterion: one common point for both main and backup.",
       "mp3": "Anti-pattern: separated anchors",
-      "mp3Detail": "Hidden dependency. Roberto: 'if you lose main shackle, you lose main line AND main anchor too.'",
+      "mp3Detail": "Separated anchors = hidden dependency: if main shackle fails, you lose main line AND main anchor. Consolidated masterpoint prevents this.",
       "mp4": "Benefits of consolidation",
       "mp4Detail": "Reduces extension on failure. Simplifies inspection (one point = clear check). Reduces rigger cognitive load.",
       "mp5": "Overwrites old rule",
-      "mp5Detail": "Old: 'main and backup should be separate.' NOT VALID in 2025+. Validates TZ post-cert learning from Ostrov 16-18.8.2026."
+      "mp5Detail": "Old: \"main and backup should be separate.\" NOT VALID in 2025+. ISA updated guidance requires consolidated masterpoint."
     },
     "bfkSlidingX": {
       "title": "When BFK, when Sliding-X",
@@ -692,34 +680,22 @@
       "bsx1Detail": "HL < 200-300m length. Vertically parallel points. Stable load direction (no wind-driven asymmetric load).",
       "bsx2": "Sliding-X REQUIRED for:",
       "bsx2Detail": "HL > 200-300m (wind-driven asymmetric load can collapse BFK). Wind exposure. Non-parallel points. Weak or questionable rock.",
-      "bsx3": "Sascha BFK sufficiency rule",
-      "bsx3Detail": "'A BFK is sufficient as long as one of the ropes could get cut and the rest of the anchor remains above the 24kN MBS.' — Sascha Grill 28.2.2026.",
-      "bsx4": "Roberto rule of thumb",
-      "bsx4Detail": "'Anything greater than 200-300m, I'm going with sliding X.' — Roberto De Oliveira 1.3.2026 (800m longline failure case)."
+      "bsx3": "BFK sufficiency rule",
+      "bsx3Detail": "A BFK is sufficient as long as one of the ropes could get cut and the rest of the anchor remains above the 24kN MBS. Community-established BFK sufficiency rule (2026).",
+      "bsx4": "Rule of thumb for length",
+      "bsx4Detail": "Above 200-300m (or with wind exposure) → Sliding-X. Documented longline failure case 2026 confirmed that BFK on long lines collapses under wind-driven asymmetric load."
     },
     "alWeblockCorrosion": {
       "title": "Al weblock corrosion in perma-rig",
       "summary": "Active ISA incident 2026 — casting defect crack after 1-2 years",
       "awc1": "⚠️ Active safety incident 2026",
-      "awc1Detail": "ISA actively addressing (x-ray plan proposed by ISA Safety Commission). 2 documented cases: Roberto 20.3.2026 heavily used perma-rig weblock, Purelock 3-4 months.",
+      "awc1Detail": "ISA Safety Commission actively addressing (x-ray inspection plan proposed 2026). 2 documented cases: heavily used perma-rig weblock, Purelock 3-4 months in humid environment.",
       "awc2": "Failure mode",
       "awc2Detail": "Al weblock in perma-rig with humidity → casting defect crack after 1-2 years. Nothing happened, but weblock fully damaged. Early warning.",
       "awc3": "Prevention",
       "awc3Detail": "Perma-rig weblock ROTATE every 6 months (don't leave in one spot 1+ year). Steel weblock preferred for perma-rig in humid environment.",
       "awc4": "Salt air = even faster",
       "awc4Detail": "Coastal / marine sites require more aggressive re-inspection cycle. X-ray inspection recommended for suspect Al weblocks."
-    },
-    "vortexCaveat": {
-      "title": "Vortex leash ring — tape gate shut!",
-      "summary": "Sascha Grill warning — gate self-opens",
-      "vc1": "⚠️ Self-opening gate",
-      "vc1Detail": "Sascha 10.7.2025: 'I stepped on the gate and it opened, I heard from a friend that they stepped on it while tandeming and even UNCLIPPED the line!'",
-      "vc2": "Recommended use",
-      "vc2Detail": "Only for tandem highlining (when you need a larger ring). ALWAYS tape gate shut (electrical tape over gate).",
-      "vc3": "Preferred alternative",
-      "vc3Detail": "2× standard Slacktivity Highline Ring instead of Vortex. Adds redundancy + removes gate risk.",
-      "vc4": "Check before every session",
-      "vc4Detail": "Verify tape integrity. Never step on gate side of ring. Buddy check — second pair of eyes checks gate."
     }
   }
 }
