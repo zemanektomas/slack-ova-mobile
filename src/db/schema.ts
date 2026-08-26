@@ -1,7 +1,7 @@
 // SQLite schema pro lokální mirror serverové DB + lokální stav (outbox, cache).
 // Spouští se při startu, idempotentně (CREATE IF NOT EXISTS).
 
-export const SCHEMA_VERSION = 6;
+export const SCHEMA_VERSION = 7;
 
 export const SCHEMA_SQL = `
 CREATE TABLE IF NOT EXISTS slacklines (
@@ -121,6 +121,66 @@ CREATE TABLE IF NOT EXISTS line_safety_checks (
   log_data TEXT                         -- JSON: {tension_kn, duration_hours, incident, incident_note, lead_rigger}
 );
 
+-- v7: F5 Gear + Reports (Vybaveni + Reporty taby, v0.8.0)
+-- Master data: uzivatelovo vybaveni per kus.
+-- 6 kategorii (Q9 = C funkcni): webbing / anchor_system / personal / rescue / tools / other
+-- Prefill z assets/materials.json (Q8 = D bundled + user overlay), material_id = FK do JSON.
+CREATE TABLE IF NOT EXISTS gear (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  category TEXT NOT NULL,                 -- 'webbing' | 'anchor_system' | 'personal' | 'rescue' | 'tools' | 'other'
+  subtype TEXT,                           -- 'weblock' | 'shackle' | 'carabiner' | 'harness' | 'pas' | 'leash' | 'ring' | 'sling' | ...
+  material_family TEXT,                   -- 'nylon' | 'polyester' | 'uhmwpe' | 'aluminum' | 'steel' | ...
+  webbing_type TEXT,                      -- 'A+' | 'A' | 'B' | 'C' (jen pro webbing)
+  brand TEXT,
+  model TEXT,
+  serial TEXT,
+  length_m REAL,
+  width_mm REAL,
+  mbs_kn REAL,
+  wll_kn REAL,
+  purchase_date TEXT,                     -- ISO 8601
+  first_use_date TEXT,
+  retirement_date TEXT,
+  status TEXT NOT NULL DEFAULT 'active',  -- 'active' | 'retired' | 'lost' | 'sold' | 'damaged'
+  color TEXT,
+  photo_uri TEXT,                         -- fs://.../documentDirectory/gear/{id}/photo.jpg
+  thumbnail_uri TEXT,                     -- 400x400 pro list view
+  notes TEXT,
+  rlt_days_estimate INTEGER,              -- default z materials.json.rlt_days_default, user override
+  isa_cert TEXT,                          -- 'ISA:41 Type B' | 'ISA:51' | 'ISA:37' | ...
+  material_id TEXT,                       -- FK do assets/materials.json (napr. 'slacktivity-y2k-25mm'), nebo NULL = user overlay
+  created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+-- v7: Reports (rig + incident + near_miss v jedne tabulce, Q10 = D report typ s filter)
+CREATE TABLE IF NOT EXISTS reports (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  type TEXT NOT NULL,                     -- 'rig' | 'incident' | 'near_miss'
+  incident_category TEXT,                 -- pro type='incident' (fall/rescue/harness/weblock/anchor/webbing/environmental/vehicle/electrostatic/pre_accident/ppe/legal)
+  linked_report_id INTEGER,               -- FK reports.id (incident linked to rig session)
+  linked_gear_id INTEGER,                 -- FK gear.id (gear failure - napr. Al weblock crack)
+  slackline_id INTEGER,                   -- FK slacklines.id (nebo NULL pro lajnu mimo mapu)
+  line_name TEXT,                         -- fallback pokud slackline_id NULL
+  session_date TEXT NOT NULL,             -- ISO 8601
+  session_end TEXT,                       -- pro multi-day sessions (kurz apod.)
+  payload TEXT NOT NULL,                  -- JSON: A-G struktura pro rig (ADR-051), incident spec pro incident
+  status TEXT NOT NULL DEFAULT 'draft',   -- 'draft' | 'committed' | 'archived'
+  created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+-- v7: Junction table report <-> gear (kdo v reportu pouzil jaky gear + role)
+-- Umoznuje historii pouziti per kus (cross-ref 4: Vybaveni <-> Reporty)
+CREATE TABLE IF NOT EXISTS report_gear (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  report_id INTEGER NOT NULL,             -- FK reports.id
+  gear_id INTEGER NOT NULL,               -- FK gear.id
+  role TEXT,                              -- 'main' | 'backup' | 'leash' | 'anchor_a' | 'anchor_b' | 'rescue' | 'other'
+  peak_tension_kn REAL,                   -- max namerena tenze pri teto session (kdyz je load cell)
+  hours_used REAL                         -- doba expozice na lajne (pro RLT tracking)
+);
+
 CREATE INDEX IF NOT EXISTS ix_points_bbox ON points(latitude, longitude);
 CREATE INDEX IF NOT EXISTS ix_components_type ON components(component_type, slackline_id);
 CREATE INDEX IF NOT EXISTS ix_components_slackline ON components(slackline_id);
@@ -128,4 +188,12 @@ CREATE INDEX IF NOT EXISTS ix_crossings_slackline ON crossings(slackline_id);
 CREATE INDEX IF NOT EXISTS ix_crossings_user ON crossings(user_id);
 CREATE INDEX IF NOT EXISTS ix_isa_sessions_card ON isa_check_sessions(card_id, completed_at DESC);
 CREATE INDEX IF NOT EXISTS ix_line_safety_line ON line_safety_checks(slackline_id, timestamp DESC);
+-- v7 indexy
+CREATE INDEX IF NOT EXISTS ix_gear_category_status ON gear(category, status);
+CREATE INDEX IF NOT EXISTS ix_gear_subtype ON gear(subtype);
+CREATE INDEX IF NOT EXISTS ix_reports_type_date ON reports(type, session_date DESC);
+CREATE INDEX IF NOT EXISTS ix_reports_slackline ON reports(slackline_id);
+CREATE INDEX IF NOT EXISTS ix_reports_gear ON reports(linked_gear_id);
+CREATE INDEX IF NOT EXISTS ix_report_gear_report ON report_gear(report_id);
+CREATE INDEX IF NOT EXISTS ix_report_gear_gear ON report_gear(gear_id);
 `;
