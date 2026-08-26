@@ -517,7 +517,7 @@
         "isa_cert": null,
         "stretch_percent_at_5kn": 0.5,
         "rlt_days_default": null,
-        "notes": "Lehky soft shackle pro anchor buildy. Roberto (Rodeo Rigs 20.8.2026): NIKDY single soft shackle mezi BFK a rigging plate (mistake).",
+        "notes": "Lehky soft shackle pro anchor buildy. NIKDY single soft shackle mezi BFK a rigging plate — vzdy 2 nezavisle sekle (main + backup separate connection). Double-wrapped single shackle vypada jako 2, ale je stale single point failure.",
         "url": "https://slacktivity.com/en/soft-shackle"
       },
       {
@@ -1037,7 +1037,7 @@
         "isa_cert": null,
         "stretch_percent_at_5kn": null,
         "rlt_days_default": null,
-        "notes": "Vortex kruh, MBS 39 kN. NENI explicit ISA:37 cert (ale MBS OK). Sascha Grill (Rodeo Rigs): tape gate shut vzdy (tape gate).",
+        "notes": "Vortex kruh, MBS 39 kN. NENI explicit ISA:37 cert (ale MBS OK). Tape gate shut vzdy elektrickou paskou — gate se muze sam otevrit pod nasplapem, obzvlast pri tandem highlining. Community consensus: pouze pro tandem, jinak preferovat standard leash ring.",
         "url": "https://slacktivity.com/en/vortex-2"
       },
       {
@@ -1459,7 +1459,7 @@
         "isa_cert": "EN 15151-1",
         "stretch_percent_at_5kn": null,
         "rlt_days_default": null,
-        "notes": "Assisted braking belay device, rope 8.5-11 mm. ~200 g. Pozor: NE anti-panic (na rozdil od Rig/I'D). Roberto: pro descent NE-GriGri, pouzij Rig/I'D/Pinch.",
+        "notes": "Assisted braking belay device, rope 8.5-11 mm. ~200 g. Pozor: NE anti-panic (na rozdil od Rig/I'D). Community consensus: NEPOUZIVAT pro highline descent — anti-panic descender (Rig / I'D / Pinch) je bezpecnejsi pro rescue scenario.",
         "url": "https://www.petzl.com/US/en/Sport/Belay-devices/GRIGRI-PLUS"
       },
       {
