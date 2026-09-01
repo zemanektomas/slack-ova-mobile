@@ -463,24 +463,36 @@
   },
   "cards": {
     "bowline": {
-      "title": "Dračí smyčka nikdy na kotvě highline",
-      "summary": "Kritické pravidlo — bowline se cyklickým zatížením rozvazuje",
-      "bw1": "Nepoužívej bowline na kotvě",
+      "title": "Dračí smyčka na kotvě — pozor",
+      "summary": "Komunitní pravidlo (ne ISA) — smyčka se rozvazuje a je citlivá na ring load",
+      "bw1": "Nepoužívej dračí smyčku na kotvě",
       "bw1Detail": "Opakované zatěžování a povolování uzel rozvazuje. Riziko rozvázání pod zátěží — smrtelné.",
-      "bw2": "Používej provlékanou osmičku",
-      "bw2Detail": "Provlékaná osmička (Figure-8 re-traced) drží pod cyklickou zátěží. Standard pro highline anchor.",
-      "bw3": "Ocásek min 10 cm",
-      "bw3Detail": "Po utažení uzlu musí ocásek zbývat minimálně 10 cm (dopor. 15+ cm). Kratší = riziko protažení uzlem."
+      "bw2": "Hlavní režim selhání je ring load",
+      "bw2Detail": "Tah přes očko do stran (ring load) dračí smyčku převrátí a rozváže. Eskimo Bowline je vůči ring loadu odolnější geometrie.",
+      "bw3": "V laně místo ní provlékaná osmička",
+      "bw3Detail": "Provlékaná osmička drží pod cyklickou zátěží. Pozor — platí pro lano. V popruhu podle ISA:21 §3.3.2 nemá být v hlavní nosné dráze uzel žádný.",
+      "bw4": "Ocásek min 10 cm",
+      "bw4Detail": "Po utažení uzlu musí ocásek zbývat minimálně 10 cm (doporučeno 15+ cm). Kratší = riziko protažení uzlem."
+    },
+    "webbingKnots": {
+      "title": "Uzly v popruhu — kde smí a kde ne",
+      "summary": "ISA:21 §3.3.2 — v hlavní nosné dráze nikdy, tři výjimky",
+      "wk1": "V hlavní nosné dráze nikdy",
+      "wk1Detail": "Doslova: „Knots in webbings should never be used in the main load path.“ Uzel v popruhu snižuje pevnost a chová se jinak než v laně.",
+      "wk2": "Tři výjimky, a jen s krajní opatrností",
+      "wk2Detail": "Back-up popruhy · tie-off kotvítka (§3.11.1.2) · kotevní tie-back (§3.12.1). Jinde uzel v popruhu nemá co dělat.",
+      "wk3": "Na back-upu je uzel legitimní",
+      "wk3Detail": "§3.13.1.1: blokovací prvek back-upu smí být šitý spoj podle ISA:41 nebo bezpečný uzel. Na mainline tahle volba není."
     },
     "weblockTieoff": {
-      "title": "Weblock (kotvítko) vždy s tie-off",
-      "summary": "Poslední krok montáže kotvítka — bez tie-off se popruh vysmekne",
-      "wt1": "Tie-off je poslední krok montáže",
-      "wt1Detail": "Po nasazení popruhu do kotvítka udělej tie-off na ocasu popruhu (obvykle overhand + backup knot). Bez toho se popruh může postupně vysmeknout.",
-      "wt2": "Vizuální kontrola na obou stranách",
-      "wt2Detail": "Před chůzí zkontroluj tie-off na obou kotvítkách. Součást kontroly v páru.",
-      "wt3": "Bez tie-off riziko při vibraci",
-      "wt3Detail": "Vibrace + gravitační napínání popruhu = postupné vysmýkání ze kotvítka. Zejm. na dlouhých lajnách s větrem. Fatální pokud selže během chůze."
+      "title": "Kotvítko vždy s tie-off",
+      "summary": "Závěr montáže kotvítka — ISA:21 chce mechanismus proti průběžnému prokluzu",
+      "wt1": "Postup: dva oviny, očko, řetízek",
+      "wt1Detail": "Ocas veď za středovým rozvaděčem (pozor na zkrut), na JEDNU stranu šeklu. Očko oviň dvakrát kolem šeklu, protáhni další očko skrz obě smyčky, a když zbývá ~30 cm, ukonči řetízkem (daisy chain).",
+      "wt2": "Kontroluj, jestli se neutáhly oviny",
+      "wt2Detail": "Nekontroluje se jen „je tam tie-off“. Utažený ovin je příznak, že popruh v systému prokluzuje. Kontrolovat na obou kotvítkách před každou session.",
+      "wt3": "Bez tie-off hrozí průběžný prokluz",
+      "wt3Detail": "ISA:21 §3.11.1.2 žádá „mechanism or method to prevent continuous slippage“. Doložený případ: Ostrov u Děčína 2011 — popruh projel oběma kotvítky a zastavil se až na pojišťovacích uzlech."
     },
     "electrostatic": {
       "title": "Electrostatic Discharge Warning",
@@ -522,23 +534,21 @@
       "b5": "Helmet — pokud nad 5 m nebo hard anchor",
       "b5Detail": "Osobní volba pod 5 m nad soft ground. Nad 5 m nebo nad tvrdý terén = povinné. Krev z hlavy neochráníš stretchem.",
       "b6": "Buddy říká GO nahlas",
-      "b6Detail": "Není to formality. Slovní verbální OK = uzavření kontroly. Pokud buddy váhá = STOP, znovu.",
-      "b7": "Fyzicky ověřit odsedku + PAS před KAŽDÝM startem",
-      "b7Detail": "Ne jen prvním session — před každým vstupem na lajnu, včetně po přestávkách (voda, WC, telefon, rescue). Rukou zkontrolovat že jsi tied in. Zapomenutá odsedka je jeden z nejfatálnějších recurring failure vzorců — experienced riggeři jsou v největším riziku (complacency: „já vím co dělám\"). Nahlas verbální confirmation: „jsem tied in?\" → „ano, ověřeno.\"",
-      "b8": "Gate integrita karabin + kroužků",
-      "b8Detail": "Ověř že screwgate / auto-lock karabiny mají zavřený zámek. U leash rings s gate (napr. Vortex) tape gate shut electrical tape — gate se může sám otevřít pod nášlapem, zvláště při tandem highlining. Buddy check = druhý pár očí kontroluje gate stranu."
+      "b6Detail": "Není to formality. Slovní verbální OK = uzavření kontroly. Pokud buddy váhá = STOP, znovu."
     },
     "suspensionTrauma": {
-      "title": "Suspension Trauma Awareness",
-      "summary": "Kritická informace pro rescue situace (⚠️ NE rescue návod)",
-      "s1": "Unconscious highliner v odsedce = 5 minut critical",
-      "s1Detail": "Harness funguje jako turniket. Krev v nohou se stane deoxygenovanou. Při 15 minutach = smrt i u zdravého jedince bez zranění.",
-      "s2": "Conscious highliner v odsedce = 15-30 minut",
-      "s2Detail": "Pokud je vědomý, pohybuje se, může uvolnit harness. Ale i tak: čím rychleji dolů, tím lépe. Nedělej rutinní rescue.",
-      "s3": "Po sundání na zem: NIKDY neposazovat okamžitě naplocho",
-      "s3Detail": "Toxická krev nahrne do srdce → kardiální arytmie / zástava. Posazovat pomalu, W-pozice (kolena k hrudi), pak recovery position.",
-      "s4": "Toto NENÍ rescue návod — volej 112",
-      "s4Detail": "Highline rescue vyžaduje trénink. Neaktivuj podle apky. Primárně volej 112 (horská služba, HZS). Toto card je awareness — abys věděl že máš málo času."
+      "title": "Suspension trauma — základní přehled",
+      "summary": "Informace pro rescue situaci (⚠️ NENÍ to rescue návod)",
+      "s1": "Pevná časová hranice neexistuje",
+      "s1Detail": "Doba do prvních příznaků i doba od příznaků do bezvědomí se podle Lechner/Brugger 2019 „nedá předpovědět“. Údaj o pár minutách je nejhorší případ, ne pravidlo. Spěchej vždy, ale neplánuj podle čísla.",
+      "s2": "U bezvědomého jde nejdřív o dýchací cesty",
+      "s2Detail": "Přepadlá hlava a zapadlý jazyk mohou zabít během několika minut — dřív než samotné visení. Proto: stabilizovat hlavu, udržet trup vzpřímený smyčkami, a dostat ho dolů.",
+      "s3": "Po vyproštění ulož naplocho",
+      "s3Detail": "Aktuální doporučení: cABCDE a pacienta zpočátku položit NAPLOCHO. Starší rada držet ho v podřepu kvůli „návratu odkysličené krve“ byla odvolána — mechanismem je Bezold-Jarischův reflex, ne turniket.",
+      "s4": "Následná péče: arytmie, podchlazení, ledviny",
+      "s4Detail": "Po delším visení hrozí arytmie, podchlazení a selhání ledvin. Po zhruba dvou hodinách visení je potřeba nemocnice s dialýzou — řekni to při volání záchranky, mění to cílové pracoviště.",
+      "s5": "Tohle NENÍ rescue návod — volej 112",
+      "s5Detail": "Highline rescue vyžaduje trénink. Nepouštěj se do něj podle apky. Volej 112 (horská služba, HZS). Tahle karta má jen zajistit, že víš, o co jde."
     },
     "rigWorkflow": {
       "title": "Kompletní rig workflow",
@@ -548,11 +558,7 @@
       "rw2": "3 gates A/B/C",
       "rw2Detail": "A: kotvy schváleny (SNARE SANE). B: systém před tenzí (main + backup + weblock). C: lajna schválena k chůzi (rescue plán + buddy check).",
       "rw3": "Průřezové vrstvy",
-      "rw3Detail": "Materiál (ISA cert, RLT stav) / Bezpečnost (rescue plán, komunikace) / Lidé (kompetence, buddy check). Aplikuje se napříč všemi fázemi.",
-      "rw4": "⚠️ Single soft shackle BFK↔plate = MISTAKE",
-      "rw4Detail": "Aplikace pravidla „vždy 2 nezávislé attachments\" (viz karta Two Attachments) na anchor connections. Musí být 2 nezávislé šekle mezi BFK a rigging plate — ne 1 double-wrapped. Double-wrapped single shackle vypadá jako dva, ale je stále single point failure.",
-      "rw5": "Masterpoint ISA 2025+",
-      "rw5Detail": "Konsolidovaný bod (double ring / rigging plate / doubled sling) kam vyusti main i backup. NE separated anchors (hidden dependency). Per ISA 2025+ updated guidance."
+      "rw3Detail": "Materiál (ISA cert, RLT stav) / Bezpečnost (rescue plán, komunikace) / Lidé (kompetence, buddy check). Aplikuje se napříč všemi fázemi."
     },
     "novice": {
       "title": "Začínáš? Přečti si nejdřív",
@@ -596,9 +602,7 @@
       "efficient": "Efficient — efektivní",
       "efficientDetail": "Úhly mezi legs < 60° ideální, < 90° maximum. Nad 120° = catastrophic.",
       "noExtension": "No Extension — bez prodloužení",
-      "noExtensionDetail": "Pokud 1 leg selže, masterpoint se neposune → žádný shock load. Backup / limiting knots.",
-      "masterpoint": "Masterpoint (ISA 2025+ update)",
-      "masterpointDetail": "Vždy konsolidovaný masterpoint kde main i backup vyusti (double ring / rigging plate / doubled sling). Přepisuje staré pravidlo \"main a backup oddělené\". Per ISA 2025+ updated guidance."
+      "noExtensionDetail": "Pokud 1 leg selže, masterpoint se neposune → žádný shock load. Backup / limiting knots."
     },
     "snareSane": {
       "title": "SNARE SANE",
@@ -614,9 +618,7 @@
       "smallAngles": "Small Angles — malé úhly",
       "smallAnglesDetail": "Úhel mezi anchor legs < 60° ideální. 90° = per-leg 71%, 120° = 100%, > 120° = catastrophic.",
       "noExtension": "No Extension — bez prodloužení",
-      "noExtensionDetail": "Failure jednoho legu nesmí způsobit shock load. Backup / limiting knots.",
-      "singleCauseFailures": "Single-cause failures (2026)",
-      "singleCauseFailuresDetail": "Materiálová redundance ≠ strukturální redundance. 5 kategorií common-mode failures: rock (bolts v jednom flake) / materiál (BFK s wrong rope) / sling (dual-core abrasion) / weather (bouře) / rodents (chews). Rozšíření SNARE SANE per community consensus 2025."
+      "noExtensionDetail": "Failure jednoho legu nesmí způsobit shock load. Backup / limiting knots."
     },
     "nylonRule": {
       "title": "Sub-40m Nylon Rule",
@@ -658,44 +660,6 @@
         "na": "Bez doporučení"
       },
       "hint": "Dny = vystavení vlivům prostředí (UV, déšť), NIKOLI od data výroby. Skladování se nepočítá."
-    },
-    "masterpoint": {
-      "title": "Masterpoint doktrína (ISA 2025+)",
-      "summary": "Vždy konsolidovaný masterpoint, ne separated anchors",
-      "mp1": "Aktuální ISA guidance 2025+",
-      "mp1Detail": "Vždy konsolidovaný masterpoint kde main i backup vyusti. ISA 2025+ updated guidance — přepisuje starší praxi separated anchors.",
-      "mp2": "Formy masterpointu",
-      "mp2Detail": "Double ring / rigging plate / doubled sling. Kritérium: jeden common point pro main i backup.",
-      "mp3": "Anti-pattern: separated anchors",
-      "mp3Detail": "Separated anchors = hidden dependency: pokud selže main shackle, ztratíš main line I main anchor. Konsolidovaný masterpoint tomu předchází.",
-      "mp4": "Výhody konsolidace",
-      "mp4Detail": "Snižuje extension při failure. Zjednodušuje inspekci (jeden bod = jasná kontrola). Redukuje kognitivní zátěž riggera.",
-      "mp5": "Přepisuje staré pravidlo",
-      "mp5Detail": "Staré: \"main a backup má být oddělené.\" NEPLATÍ v 2025+. ISA updated guidance vyžaduje konsolidovaný masterpoint."
-    },
-    "bfkSlidingX": {
-      "title": "Kdy BFK, kdy Sliding-X",
-      "summary": "Decision framework pro longline + wind exposure",
-      "bsx1": "BFK self-sufficient pro:",
-      "bsx1Detail": "HL < 200-300m délky. Vertikálně rovnoběžné body. Stabilní load direction (žádný wind-driven asymmetric load).",
-      "bsx2": "Sliding-X POVINNÝ pro:",
-      "bsx2Detail": "HL > 200-300m (wind-driven asymmetric load může kolabsovat BFK). Wind exposure. Nerovnoběžné body. Weak nebo questionable rock.",
-      "bsx3": "BFK sufficiency rule",
-      "bsx3Detail": "BFK je sufficient tak dlouho, dokud po přeříznutí jedné rope zbytek anchoru drží nad 24 kN MBS. Community-established BFK sufficiency rule (2026).",
-      "bsx4": "Rule of thumb pro delku",
-      "bsx4Detail": "Nad 200-300m lajny (nebo při wind exposure) → Sliding-X. Dokumentované longline failure case 2026 potvrdilo že BFK na dlouhých lajnách kolabuje wind-driven asymmetric load."
-    },
-    "alWeblockCorrosion": {
-      "title": "Al weblock corrosion v perma-rig",
-      "summary": "Aktivní ISA incident 2026 — casting defect crack po 1-2 letech",
-      "awc1": "⚠️ Aktivní safety incident 2026",
-      "awc1Detail": "ISA Safety Commission aktivně řeší (x-ray inspection plan navrhovaný 2026). 2 dokumentované případy: heavily used perma-rig weblock, Purelock 3-4 měsíce v humid environment.",
-      "awc2": "Failure mode",
-      "awc2Detail": "Al weblock v perma-rig s vlhkostí → casting defect crack po 1-2 letech. Nothing happened, ale weblock fully damaged. Early warning.",
-      "awc3": "Prevence",
-      "awc3Detail": "Perma-rig weblock ROTATE každých 6 měsíců (nenechat na 1 místě 1+ rok). Steel weblock preferovaný pro perma-rig v humid environment.",
-      "awc4": "Salt air = ještě rychlejší",
-      "awc4Detail": "Coastal / marine sites vyžadují agresivnější re-inspection cycle. X-ray inspection doporučeno pro suspect Al weblocky."
     }
   }
 }

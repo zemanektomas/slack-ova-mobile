@@ -463,24 +463,36 @@
   },
   "cards": {
     "bowline": {
-      "title": "Bowline never for HL anchor",
-      "summary": "Critical rule — bowline loosens under cyclic loading",
-      "bw1": "Do not use bowline on the anchor",
-      "bw1Detail": "Repeated loading and unloading gradually loosens the knot. Risk of untying under load — fatal.",
-      "bw2": "Use Figure-8 re-traced",
-      "bw2Detail": "Figure-8 re-traced holds under cyclic loading. Standard for highline anchor.",
-      "bw3": "Tail min 10 cm",
-      "bw3Detail": "After tightening the knot, tail must be at least 10 cm (recommended 15+ cm). Shorter = risk of pulling through the knot."
+      "title": "Bowline on an anchor — caution",
+      "summary": "Community rule (not ISA) — it works loose and is sensitive to ring load",
+      "bw1": "Do not use a bowline on the anchor",
+      "bw1Detail": "Repeated loading and unloading works the knot loose. Risk of untying under load — fatal.",
+      "bw2": "The main failure mode is ring load",
+      "bw2Detail": "A sideways pull across the loop (ring load) capsizes and unties a bowline. The Eskimo Bowline is a geometry more resistant to ring load.",
+      "bw3": "In rope use a re-traced figure-8 instead",
+      "bw3Detail": "The re-traced figure-8 holds under cyclic loading. Note — this applies to rope. In webbing, ISA:21 §3.3.2 allows no knot at all in the main load path.",
+      "bw4": "Tail min 10 cm",
+      "bw4Detail": "After tightening, the tail must be at least 10 cm (15+ cm recommended). Shorter = risk of pulling through the knot."
+    },
+    "webbingKnots": {
+      "title": "Knots in webbing — where they may and may not go",
+      "summary": "ISA:21 §3.3.2 — never in the main load path, three exceptions",
+      "wk1": "Never in the main load path",
+      "wk1Detail": "Verbatim: “Knots in webbings should never be used in the main load path.” A knot in webbing reduces strength and behaves differently than in rope.",
+      "wk2": "Three exceptions, and only with extreme caution",
+      "wk2Detail": "Backup webbings · webbing locker tie-offs (§3.11.1.2) · anchor tie-backs (§3.12.1). Nowhere else does a knot belong in webbing.",
+      "wk3": "On the backup a knot is legitimate",
+      "wk3Detail": "§3.13.1.1: the backup blocking element may be a sewn connection per ISA:41 or a safe knot. On the mainline that choice does not exist."
     },
     "weblockTieoff": {
-      "title": "Weblock always with tie-off",
-      "summary": "Final step of weblock rigging — without it, webbing slips out",
-      "wt1": "Tie-off is the final step",
-      "wt1Detail": "After threading webbing through the weblock, tie off the tail (typically overhand + backup knot). Without it, webbing can gradually slip out.",
-      "wt2": "Visual check on both sides",
-      "wt2Detail": "Before walking, check tie-off on both weblocks. Part of buddy check.",
-      "wt3": "Without tie-off risks vibration slip",
-      "wt3Detail": "Vibration + gravity tensioning webbing = gradual slip from weblock. Especially on long lines with wind. Fatal if fails during walk."
+      "title": "Weblock always with a tie-off",
+      "summary": "Closing step of weblock rigging — ISA:21 wants a mechanism against continuous slippage",
+      "wt1": "Method: two wraps, a bight, a daisy chain",
+      "wt1Detail": "Run the tail behind the centre diverter (watch for twists), to ONE side of the shackle. Wrap a bight twice around the shackle, pass another bight through both loops, and with ~30 cm left finish with a daisy chain.",
+      "wt2": "Check whether any wrap has tightened",
+      "wt2Detail": "It is not enough that a tie-off is present. A tightened wrap means the webbing is slipping in the system. Check both weblocks before every session.",
+      "wt3": "Without a tie-off, continuous slippage",
+      "wt3Detail": "ISA:21 §3.11.1.2 requires a “mechanism or method to prevent continuous slippage”. Documented case: Ostrov, Czechia 2011 — the webbing ran through both weblocks and was stopped only by the safety knots."
     },
     "electrostatic": {
       "title": "Electrostatic Discharge Warning",
@@ -522,23 +534,21 @@
       "b5": "Helmet — if above 5 m or hard anchor",
       "b5Detail": "Personal choice under 5 m over soft ground. Above 5 m or over hard terrain = mandatory. Head trauma cannot be softened by stretch.",
       "b6": "Buddy says GO out loud",
-      "b6Detail": "This is not formality. Verbal spoken OK = closure of the check. If buddy hesitates = STOP, redo.",
-      "b7": "Physically verify leash + PAS before EVERY start",
-      "b7Detail": "Not just first session — before every entry onto the line, including after breaks (water, WC, phone, rescue). Physically check by hand that you are tied in. Forgotten leash is one of the deadliest recurring failure patterns — experienced riggers are at highest risk (complacency: \"I know what I'm doing\"). Verbal confirmation aloud: \"am I tied in?\" → \"yes, verified.\"",
-      "b8": "Gate integrity of carabiners + rings",
-      "b8Detail": "Verify that screwgate / auto-lock carabiners have closed lock. For leash rings with gate (e.g. Vortex) tape gate shut with electrical tape — gate can self-open under load, especially during tandem highlining. Buddy check = second pair of eyes checks the gate side."
+      "b6Detail": "This is not formality. Verbal spoken OK = closure of the check. If buddy hesitates = STOP, redo."
     },
     "suspensionTrauma": {
-      "title": "Suspension Trauma Awareness",
-      "summary": "Critical info for rescue situations (⚠️ NOT a rescue guide)",
-      "s1": "Unconscious highliner in harness = 5 minutes critical",
-      "s1Detail": "Harness acts as tourniquet. Blood in legs becomes deoxygenated. At 15 min = death even for healthy individual without injury.",
-      "s2": "Conscious highliner in harness = 15-30 minutes",
-      "s2Detail": "If conscious and moving, they can shift harness. But still: the faster down, the better. Do not do routine rescue.",
-      "s3": "After ground extraction: NEVER lay flat immediately",
-      "s3Detail": "Toxic blood floods heart → cardiac arrhythmia / arrest. Sit up slowly, W-position (knees to chest), then recovery position.",
-      "s4": "This is NOT a rescue guide — call emergency services",
-      "s4Detail": "Highline rescue requires training. Do not activate based on the app. Primarily call emergency (112 EU, 911 US). This card is awareness — so you know time is short."
+      "title": "Suspension trauma — the basics",
+      "summary": "Background for a rescue situation (⚠️ NOT a rescue guide)",
+      "s1": "There is no fixed time limit",
+      "s1Detail": "Per Lechner/Brugger 2019, both the time to first symptoms and the time from symptoms to unconsciousness “can not be predicted”. A few minutes is the worst case, not a rule. Always hurry, but do not plan around a number.",
+      "s2": "For an unconscious person the airway comes first",
+      "s2Detail": "A dropped head and obstructed airway can kill within minutes — sooner than the suspension itself. So: stabilise the head, keep the torso upright with slings, and get them down.",
+      "s3": "After extraction, lay them flat",
+      "s3Detail": "Current guidance: cABCDE and position the patient initially FLAT. The older advice to keep them crouched because of “returning deoxygenated blood” has been withdrawn — the mechanism is the Bezold-Jarisch reflex, not a tourniquet.",
+      "s4": "Aftercare: arrhythmia, hypothermia, kidneys",
+      "s4Detail": "After prolonged suspension there is a risk of arrhythmia, hypothermia and kidney failure. After roughly two hours of suspension a hospital with dialysis is needed — say so when calling, it changes the destination.",
+      "s5": "This is NOT a rescue guide — call emergency services",
+      "s5Detail": "Highline rescue requires training. Do not attempt it based on the app. Call emergency services (112 EU, 911 US). This card only makes sure you know what you are dealing with."
     },
     "rigWorkflow": {
       "title": "Complete rig workflow",
@@ -548,11 +558,7 @@
       "rw2": "3 gates A/B/C",
       "rw2Detail": "A: anchors approved (SNARE SANE). B: system before tension (main + backup + weblock). C: line approved to walk (rescue plan + buddy check).",
       "rw3": "Cross-cutting layers",
-      "rw3Detail": "Material (ISA cert, RLT status) / Safety (rescue plan, communication) / People (competence, buddy check). Applied across all phases.",
-      "rw4": "⚠️ Single soft shackle BFK↔plate = MISTAKE",
-      "rw4Detail": "Application of the \"always 2 independent attachments\" rule (see Two Attachments card) to anchor connections. Must be 2 independent shackles between BFK and rigging plate — not 1 double-wrapped. Double-wrapped single shackle looks like two, but is still single point failure.",
-      "rw5": "Masterpoint ISA 2025+",
-      "rw5Detail": "Consolidated point (double ring / rigging plate / doubled sling) where main and backup terminate. NOT separated anchors (hidden dependency). Per ISA 2025+ updated guidance."
+      "rw3Detail": "Material (ISA cert, RLT status) / Safety (rescue plan, communication) / People (competence, buddy check). Applied across all phases."
     },
     "novice": {
       "title": "Starting out? Read this first",
@@ -596,9 +602,7 @@
       "efficient": "Efficient",
       "efficientDetail": "Angles between legs < 60° ideal, < 90° maximum. Above 120° = catastrophic.",
       "noExtension": "No Extension",
-      "noExtensionDetail": "If 1 leg fails, masterpoint stays in place → no shock load. Backup / limiting knots.",
-      "masterpoint": "Masterpoint (ISA 2025+ update)",
-      "masterpointDetail": "Always consolidated masterpoint where both main and backup terminate (double ring / rigging plate / doubled sling). Overwrites old \"main and backup separate\" rule. Per ISA 2025+ updated guidance."
+      "noExtensionDetail": "If 1 leg fails, masterpoint stays in place → no shock load. Backup / limiting knots."
     },
     "snareSane": {
       "title": "SNARE SANE",
@@ -614,9 +618,7 @@
       "smallAngles": "Small Angles",
       "smallAnglesDetail": "Angle between anchor legs < 60° ideal. 90° = per-leg 71%, 120° = 100%, > 120° = catastrophic.",
       "noExtension": "No Extension",
-      "noExtensionDetail": "Failure of one leg must not cause shock load. Backup / limiting knots.",
-      "singleCauseFailures": "Single-cause failures (2026)",
-      "singleCauseFailuresDetail": "Material redundancy ≠ structural redundancy. 5 categories of common-mode failures: rock (bolts in one flake) / material (BFK with wrong rope) / sling (dual-core abrasion) / weather (storms) / rodents (chews). SNARE SANE extension per community consensus 2025."
+      "noExtensionDetail": "Failure of one leg must not cause shock load. Backup / limiting knots."
     },
     "nylonRule": {
       "title": "Sub-40m Nylon Rule",
@@ -658,44 +660,6 @@
         "na": "No recommendation"
       },
       "hint": "Days = exposure to environment (UV, rain), NOT from manufacture date. Storage doesn't count."
-    },
-    "masterpoint": {
-      "title": "Masterpoint doctrine (ISA 2025+)",
-      "summary": "Always consolidated masterpoint, not separated anchors",
-      "mp1": "Current ISA guidance 2025+",
-      "mp1Detail": "Always consolidated masterpoint where both main and backup terminate. ISA 2025+ updated guidance — overwrites older separated anchors practice.",
-      "mp2": "Masterpoint forms",
-      "mp2Detail": "Double ring / rigging plate / doubled sling. Criterion: one common point for both main and backup.",
-      "mp3": "Anti-pattern: separated anchors",
-      "mp3Detail": "Separated anchors = hidden dependency: if main shackle fails, you lose main line AND main anchor. Consolidated masterpoint prevents this.",
-      "mp4": "Benefits of consolidation",
-      "mp4Detail": "Reduces extension on failure. Simplifies inspection (one point = clear check). Reduces rigger cognitive load.",
-      "mp5": "Overwrites old rule",
-      "mp5Detail": "Old: \"main and backup should be separate.\" NOT VALID in 2025+. ISA updated guidance requires consolidated masterpoint."
-    },
-    "bfkSlidingX": {
-      "title": "When BFK, when Sliding-X",
-      "summary": "Decision framework for longline + wind exposure",
-      "bsx1": "BFK self-sufficient for:",
-      "bsx1Detail": "HL < 200-300m length. Vertically parallel points. Stable load direction (no wind-driven asymmetric load).",
-      "bsx2": "Sliding-X REQUIRED for:",
-      "bsx2Detail": "HL > 200-300m (wind-driven asymmetric load can collapse BFK). Wind exposure. Non-parallel points. Weak or questionable rock.",
-      "bsx3": "BFK sufficiency rule",
-      "bsx3Detail": "A BFK is sufficient as long as one of the ropes could get cut and the rest of the anchor remains above the 24kN MBS. Community-established BFK sufficiency rule (2026).",
-      "bsx4": "Rule of thumb for length",
-      "bsx4Detail": "Above 200-300m (or with wind exposure) → Sliding-X. Documented longline failure case 2026 confirmed that BFK on long lines collapses under wind-driven asymmetric load."
-    },
-    "alWeblockCorrosion": {
-      "title": "Al weblock corrosion in perma-rig",
-      "summary": "Active ISA incident 2026 — casting defect crack after 1-2 years",
-      "awc1": "⚠️ Active safety incident 2026",
-      "awc1Detail": "ISA Safety Commission actively addressing (x-ray inspection plan proposed 2026). 2 documented cases: heavily used perma-rig weblock, Purelock 3-4 months in humid environment.",
-      "awc2": "Failure mode",
-      "awc2Detail": "Al weblock in perma-rig with humidity → casting defect crack after 1-2 years. Nothing happened, but weblock fully damaged. Early warning.",
-      "awc3": "Prevention",
-      "awc3Detail": "Perma-rig weblock ROTATE every 6 months (don't leave in one spot 1+ year). Steel weblock preferred for perma-rig in humid environment.",
-      "awc4": "Salt air = even faster",
-      "awc4Detail": "Coastal / marine sites require more aggressive re-inspection cycle. X-ray inspection recommended for suspect Al weblocks."
     }
   }
 }
