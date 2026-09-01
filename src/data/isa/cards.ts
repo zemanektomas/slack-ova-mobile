@@ -255,26 +255,11 @@ export const CARDS: CardData[] = [
     reference: { source: 'Lechner & Brugger 2019 (Suspension Trauma / Harness Hang Syndrome) + ISA rescue awareness' },
   },
 
-  // 11. Dračí smyčka na kotvě ---------------------------------------------
-  // POZOR: dřív tahle karta citovala ISA:21 §3.3.2. To bylo špatně —
-  // slovo "bowline" se v celém ISA:21 (2023) nevyskytuje a §3.3.2 řeší něco
-  // jiného (viz karta webbing-knots níž). Reference opravena 31.8.2026.
-  {
-    id: 'bowline-warning',
-    category: 'rule',
-    icon: 'alert-octagon',
-    titleKey: 'cards.bowline.title',
-    summaryKey: 'cards.bowline.summary',
-    checklist: [
-      { id: 'bw1', labelKey: 'cards.bowline.bw1', detailKey: 'cards.bowline.bw1Detail' },
-      { id: 'bw2', labelKey: 'cards.bowline.bw2', detailKey: 'cards.bowline.bw2Detail' },
-      { id: 'bw3', labelKey: 'cards.bowline.bw3', detailKey: 'cards.bowline.bw3Detail' },
-      { id: 'bw4', labelKey: 'cards.bowline.bw4', detailKey: 'cards.bowline.bw4Detail' },
-    ],
-    reference: { source: 'ISA Rigger Cert syllabus + ITRS praxe (ne ISA:21 — standard uzly nejmenuje)' },
-  },
-
-  // 11b. Uzly v popruhu — skutečný obsah ISA:21 §3.3.2 --------------------
+  // 11. Uzly v popruhu — ISA:21 §3.3.2 -----------------------------------
+  // Poznamka: karta "bowline-warning" odstranena 1.9.2026 — bowline je 1 uzel
+  // z mnoha, samotny warning byl komunitni (summary sam priznaval "Komunitni
+  // pravidlo (ne ISA)"). V0.8.0+ pridame samostatnou knots reference kartu
+  // s obrazky pro pokryti vsech uzlu (jak povolenych, tak zakazanych).
   {
     id: 'webbing-knots',
     category: 'rule',

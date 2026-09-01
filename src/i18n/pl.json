@@ -462,18 +462,6 @@
     }
   },
   "cards": {
-    "bowline": {
-      "title": "Bowline na anchorze — uwaga",
-      "summary": "Zasada środowiskowa (nie ISA) — węzeł się luzuje i jest wrażliwy na ring load",
-      "bw1": "Nie używaj bowline na anchorze",
-      "bw1Detail": "Powtarzalne obciążanie i luzowanie rozwiązuje węzeł. Ryzyko rozwiązania pod obciążeniem — śmiertelne.",
-      "bw2": "Główny mechanizm awarii to ring load",
-      "bw2Detail": "Ciąg w bok przez oczko (ring load) wywraca i rozwiązuje bowline. Eskimo Bowline ma geometrię bardziej odporną na ring load.",
-      "bw3": "W linie zamiast niego ósemka przeplatana",
-      "bw3Detail": "Ósemka przeplatana trzyma pod cyklicznym obciążeniem. Uwaga — dotyczy liny. W taśmie według ISA:21 §3.3.2 w głównej ścieżce nośnej nie może być żadnego węzła.",
-      "bw4": "Ogonek min 10 cm",
-      "bw4Detail": "Po zaciśnięciu ogonek musi mieć co najmniej 10 cm (zalecane 15+ cm). Krótszy = ryzyko przeciągnięcia przez węzeł."
-    },
     "webbingKnots": {
       "title": "Węzły w taśmie — gdzie wolno, a gdzie nie",
       "summary": "ISA:21 §3.3.2 — nigdy w głównej ścieżce nośnej, trzy wyjątki",
