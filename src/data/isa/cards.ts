@@ -106,10 +106,8 @@ export const CARDS: CardData[] = [
       { id: 'r', labelKey: 'cards.serene.redundant', detailKey: 'cards.serene.redundantDetail' },
       { id: 'e2', labelKey: 'cards.serene.efficient', detailKey: 'cards.serene.efficientDetail' },
       { id: 'ne', labelKey: 'cards.serene.noExtension', detailKey: 'cards.serene.noExtensionDetail' },
-      // NEW 2026 update (Rodeo Rigs) — masterpoint doktrína
-      { id: 'mp', labelKey: 'cards.serene.masterpoint', detailKey: 'cards.serene.masterpointDetail' },
     ],
-    reference: { source: 'ISA Rigger Cert syllabus + ISA 2025+ updated masterpoint guidance' },
+    reference: { source: 'ISA Rigger Cert syllabus' },
     relatedCalculator: 'angle',  // → anchor angle (Efficient bod)
   },
 
@@ -127,10 +125,8 @@ export const CARDS: CardData[] = [
       { id: 'r', labelKey: 'cards.snareSane.equalization', detailKey: 'cards.snareSane.equalizationDetail' },
       { id: 'e', labelKey: 'cards.snareSane.smallAngles', detailKey: 'cards.snareSane.smallAnglesDetail' },
       { id: 's2', labelKey: 'cards.snareSane.noExtension', detailKey: 'cards.snareSane.noExtensionDetail' },
-      // NEW 2026 update — single-cause failures (community consensus)
-      { id: 'scf', labelKey: 'cards.snareSane.singleCauseFailures', detailKey: 'cards.snareSane.singleCauseFailuresDetail' },
     ],
-    reference: { source: 'Balance Community — Building Highline Anchors + single-cause failure concept (community consensus 2025)' },
+    reference: { source: 'Balance Community — Building Highline Anchors' },
     relatedCalculator: 'angle',  // → anchor angle (Small Angles bod)
   },
 
@@ -238,12 +234,8 @@ export const CARDS: CardData[] = [
       { id: 'b4', labelKey: 'cards.buddyCheck.b4', detailKey: 'cards.buddyCheck.b4Detail' },
       { id: 'b5', labelKey: 'cards.buddyCheck.b5', detailKey: 'cards.buddyCheck.b5Detail' },
       { id: 'b6', labelKey: 'cards.buddyCheck.b6', detailKey: 'cards.buddyCheck.b6Detail' },
-      // NEW: fyzicky check odsedky pred KAZDYM startem (integrace forgotten-leash core message)
-      { id: 'b7', labelKey: 'cards.buddyCheck.b7', detailKey: 'cards.buddyCheck.b7Detail' },
-      // NEW: gate integrita karabin + krouzku (integrace vortex-caveat check)
-      { id: 'b8', labelKey: 'cards.buddyCheck.b8', detailKey: 'cards.buddyCheck.b8Detail' },
     ],
-    reference: { source: 'ISA Safety culture + community consensus (2025-2026) on tie-in verification and gate integrity' },
+    reference: { source: 'ISA Safety culture' },
   },
 
   // 10. Suspension Trauma (info card, ne rescue guide) -------------------
@@ -258,11 +250,15 @@ export const CARDS: CardData[] = [
       { id: 's2', labelKey: 'cards.suspensionTrauma.s2', detailKey: 'cards.suspensionTrauma.s2Detail' },
       { id: 's3', labelKey: 'cards.suspensionTrauma.s3', detailKey: 'cards.suspensionTrauma.s3Detail' },
       { id: 's4', labelKey: 'cards.suspensionTrauma.s4', detailKey: 'cards.suspensionTrauma.s4Detail' },
+      { id: 's5', labelKey: 'cards.suspensionTrauma.s5', detailKey: 'cards.suspensionTrauma.s5Detail' },
     ],
-    reference: { source: 'ISA Rescue awareness' },
+    reference: { source: 'Lechner & Brugger 2019 (Suspension Trauma / Harness Hang Syndrome) + ISA rescue awareness' },
   },
 
-  // 11. Bowline nikdy pro HL anchor (extractované z desatera bod 4) -------
+  // 11. Dračí smyčka na kotvě ---------------------------------------------
+  // POZOR: dřív tahle karta citovala ISA:21 §3.3.2. To bylo špatně —
+  // slovo "bowline" se v celém ISA:21 (2023) nevyskytuje a §3.3.2 řeší něco
+  // jiného (viz karta webbing-knots níž). Reference opravena 31.8.2026.
   {
     id: 'bowline-warning',
     category: 'rule',
@@ -273,8 +269,24 @@ export const CARDS: CardData[] = [
       { id: 'bw1', labelKey: 'cards.bowline.bw1', detailKey: 'cards.bowline.bw1Detail' },
       { id: 'bw2', labelKey: 'cards.bowline.bw2', detailKey: 'cards.bowline.bw2Detail' },
       { id: 'bw3', labelKey: 'cards.bowline.bw3', detailKey: 'cards.bowline.bw3Detail' },
+      { id: 'bw4', labelKey: 'cards.bowline.bw4', detailKey: 'cards.bowline.bw4Detail' },
     ],
-    reference: { source: 'ISA:21 (2023) §3.3.2' },
+    reference: { source: 'ISA Rigger Cert syllabus + ITRS praxe (ne ISA:21 — standard uzly nejmenuje)' },
+  },
+
+  // 11b. Uzly v popruhu — skutečný obsah ISA:21 §3.3.2 --------------------
+  {
+    id: 'webbing-knots',
+    category: 'rule',
+    icon: 'vector-link',
+    titleKey: 'cards.webbingKnots.title',
+    summaryKey: 'cards.webbingKnots.summary',
+    checklist: [
+      { id: 'wk1', labelKey: 'cards.webbingKnots.wk1', detailKey: 'cards.webbingKnots.wk1Detail' },
+      { id: 'wk2', labelKey: 'cards.webbingKnots.wk2', detailKey: 'cards.webbingKnots.wk2Detail' },
+      { id: 'wk3', labelKey: 'cards.webbingKnots.wk3', detailKey: 'cards.webbingKnots.wk3Detail' },
+    ],
+    reference: { source: 'ISA:21 (2023) §3.3.2, §3.13.1.1' },
   },
 
   // 12. Weblock tie-off (extractované z desatera bod 9) -------------------
@@ -304,67 +316,32 @@ export const CARDS: CardData[] = [
       { id: 'rw1', labelKey: 'cards.rigWorkflow.rw1', detailKey: 'cards.rigWorkflow.rw1Detail' },
       { id: 'rw2', labelKey: 'cards.rigWorkflow.rw2', detailKey: 'cards.rigWorkflow.rw2Detail' },
       { id: 'rw3', labelKey: 'cards.rigWorkflow.rw3', detailKey: 'cards.rigWorkflow.rw3Detail' },
-      // KRITICKÉ (2026 update — two-attachments principle applied to anchor connections)
-      { id: 'rw4', labelKey: 'cards.rigWorkflow.rw4', detailKey: 'cards.rigWorkflow.rw4Detail' },
-      // NEW 2026: masterpoint doktrína ISA 2025+
-      { id: 'rw5', labelKey: 'cards.rigWorkflow.rw5', detailKey: 'cards.rigWorkflow.rw5Detail' },
     ],
-    reference: { source: 'pm/idea_rig_log.md — 9 fází + 3 gates. Post-2025 community consensus updates: single-shackle warning applied via two-attachments principle, masterpoint per ISA 2025+ guidance' },
+    reference: { source: 'pm/idea_rig_log.md — 9 fází + 3 gates + průřezové vrstvy' },
     relatedCalculator: 'deviation',  // → deviation (fáze 5 Tensioning)
   },
 
-  // ============================================================================
-  // F5 MINI (v0.7.19+) — 3 nove karty z ISA 2025+ updates + community consensus
-  // Rodeo Rigs = interni research zdroj (viz doc/), zde citujeme jen public.
-  // ============================================================================
-
-  // 14. Masterpoint doktrina — ISA 2025+ update ----------------------------
-  {
-    id: 'masterpoint-doctrine',
-    category: 'rule',
-    icon: 'link-lock',
-    titleKey: 'cards.masterpoint.title',
-    summaryKey: 'cards.masterpoint.summary',
-    checklist: [
-      { id: 'mp1', labelKey: 'cards.masterpoint.mp1', detailKey: 'cards.masterpoint.mp1Detail' },
-      { id: 'mp2', labelKey: 'cards.masterpoint.mp2', detailKey: 'cards.masterpoint.mp2Detail' },
-      { id: 'mp3', labelKey: 'cards.masterpoint.mp3', detailKey: 'cards.masterpoint.mp3Detail' },
-      { id: 'mp4', labelKey: 'cards.masterpoint.mp4', detailKey: 'cards.masterpoint.mp4Detail' },
-      { id: 'mp5', labelKey: 'cards.masterpoint.mp5', detailKey: 'cards.masterpoint.mp5Detail' },
-    ],
-    reference: { source: 'ISA 2025+ updated guidance on masterpoint consolidation' },
-  },
-
-  // 15. Kdy BFK, kdy Sliding-X (decision framework) ------------------------
-  {
-    id: 'bfk-sliding-x',
-    category: 'rule',
-    icon: 'source-branch',
-    titleKey: 'cards.bfkSlidingX.title',
-    summaryKey: 'cards.bfkSlidingX.summary',
-    checklist: [
-      { id: 'bsx1', labelKey: 'cards.bfkSlidingX.bsx1', detailKey: 'cards.bfkSlidingX.bsx1Detail' },
-      { id: 'bsx2', labelKey: 'cards.bfkSlidingX.bsx2', detailKey: 'cards.bfkSlidingX.bsx2Detail' },
-      { id: 'bsx3', labelKey: 'cards.bfkSlidingX.bsx3', detailKey: 'cards.bfkSlidingX.bsx3Detail' },
-      { id: 'bsx4', labelKey: 'cards.bfkSlidingX.bsx4', detailKey: 'cards.bfkSlidingX.bsx4Detail' },
-    ],
-    reference: { source: 'Balance Community — Building Highline Anchors, ISA anchor guidelines, community consensus (2025-2026)' },
-    relatedCalculator: 'angle',
-  },
-
-  // 16. Al weblock corrosion — aktivni ISA incident 2026 -------------------
-  {
-    id: 'al-weblock-corrosion',
-    category: 'warning',
-    icon: 'shield-alert',
-    titleKey: 'cards.alWeblockCorrosion.title',
-    summaryKey: 'cards.alWeblockCorrosion.summary',
-    checklist: [
-      { id: 'awc1', labelKey: 'cards.alWeblockCorrosion.awc1', detailKey: 'cards.alWeblockCorrosion.awc1Detail' },
-      { id: 'awc2', labelKey: 'cards.alWeblockCorrosion.awc2', detailKey: 'cards.alWeblockCorrosion.awc2Detail' },
-      { id: 'awc3', labelKey: 'cards.alWeblockCorrosion.awc3', detailKey: 'cards.alWeblockCorrosion.awc3Detail' },
-      { id: 'awc4', labelKey: 'cards.alWeblockCorrosion.awc4', detailKey: 'cards.alWeblockCorrosion.awc4Detail' },
-    ],
-    reference: { source: 'ISA Safety Commission active investigation 2026 (x-ray plan for suspect Al weblocks)' },
-  },
 ];
+// ============================================================================
+// STRICT-PUBLIC-ONLY policy (1.9.2026):
+//
+// V produkci jen karty s odkazem na publikovany dokument (ISA:21 § / kapitola,
+// ISA safety advisory, Balance Community published article, ISA syllabus, etc.).
+// Community consensus a "ISA 2025+ updated guidance" (bez publikovaneho zdroje)
+// NEPATRI do produkce — komunitni pravidla se meni pri kazde diskuzi (napr.
+// tape-mitigation hypothesis 24.8. -> vyvracena Moritzem 31.8.).
+//
+// Odstraneno 1.9.2026 (viz commit + doc/app-review/isa-cards-review.md sekce 10):
+//   - masterpoint-doctrine  (ISA 2025+ guidance, neni publikovany dokument)
+//   - bfk-sliding-x         (community rule, 200-300m threshold ne v standardu)
+//   - al-weblock-corrosion  (ISA active investigation, jeste ne final advisory)
+//   - serene.mp             (masterpoint item, community)
+//   - snare-sane.scf        (single-cause failures, community)
+//   - buddy-check.b7, b8    (forgotten-leash + gate integrity, community)
+//   - rig-workflow.rw4, rw5 (single-shackle + masterpoint, community)
+//
+// Community insights zustavaji v internim doc/app-review/isa-cards-review.md
+// sekce 10 jako historicky zaznam. V0.8.0+ pridat verification field:
+//   'published' | 'active-investigation' | 'community'
+// pro pripadny navrat community karet pod "Advanced" gate s warning bannerem.
+// ============================================================================
