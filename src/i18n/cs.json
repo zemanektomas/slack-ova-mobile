@@ -462,18 +462,6 @@
     }
   },
   "cards": {
-    "bowline": {
-      "title": "Dračí smyčka na kotvě — pozor",
-      "summary": "Komunitní pravidlo (ne ISA) — smyčka se rozvazuje a je citlivá na ring load",
-      "bw1": "Nepoužívej dračí smyčku na kotvě",
-      "bw1Detail": "Opakované zatěžování a povolování uzel rozvazuje. Riziko rozvázání pod zátěží — smrtelné.",
-      "bw2": "Hlavní režim selhání je ring load",
-      "bw2Detail": "Tah přes očko do stran (ring load) dračí smyčku převrátí a rozváže. Eskimo Bowline je vůči ring loadu odolnější geometrie.",
-      "bw3": "V laně místo ní provlékaná osmička",
-      "bw3Detail": "Provlékaná osmička drží pod cyklickou zátěží. Pozor — platí pro lano. V popruhu podle ISA:21 §3.3.2 nemá být v hlavní nosné dráze uzel žádný.",
-      "bw4": "Ocásek min 10 cm",
-      "bw4Detail": "Po utažení uzlu musí ocásek zbývat minimálně 10 cm (doporučeno 15+ cm). Kratší = riziko protažení uzlem."
-    },
     "webbingKnots": {
       "title": "Uzly v popruhu — kde smí a kde ne",
       "summary": "ISA:21 §3.3.2 — v hlavní nosné dráze nikdy, tři výjimky",

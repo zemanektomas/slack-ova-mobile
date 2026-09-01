@@ -462,18 +462,6 @@
     }
   },
   "cards": {
-    "bowline": {
-      "title": "Bowline on an anchor — caution",
-      "summary": "Community rule (not ISA) — it works loose and is sensitive to ring load",
-      "bw1": "Do not use a bowline on the anchor",
-      "bw1Detail": "Repeated loading and unloading works the knot loose. Risk of untying under load — fatal.",
-      "bw2": "The main failure mode is ring load",
-      "bw2Detail": "A sideways pull across the loop (ring load) capsizes and unties a bowline. The Eskimo Bowline is a geometry more resistant to ring load.",
-      "bw3": "In rope use a re-traced figure-8 instead",
-      "bw3Detail": "The re-traced figure-8 holds under cyclic loading. Note — this applies to rope. In webbing, ISA:21 §3.3.2 allows no knot at all in the main load path.",
-      "bw4": "Tail min 10 cm",
-      "bw4Detail": "After tightening, the tail must be at least 10 cm (15+ cm recommended). Shorter = risk of pulling through the knot."
-    },
     "webbingKnots": {
       "title": "Knots in webbing — where they may and may not go",
       "summary": "ISA:21 §3.3.2 — never in the main load path, three exceptions",
