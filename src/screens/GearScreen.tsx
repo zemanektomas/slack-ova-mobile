@@ -1,9 +1,10 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { View, Text, ScrollView, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useTranslation } from 'react-i18next';
 import { useTheme } from '../theme';
+import { useFontStore } from '../store/fontStore';
 
 /**
  * Vybaveni tab — Level 1 (kategorie overview)
@@ -20,6 +21,7 @@ import { useTheme } from '../theme';
 export default function GearScreen() {
   const { t } = useTranslation();
   const theme = useTheme();
+  const fs = useFontStore((s) => s.fontScale);
   const [search, setSearch] = useState('');
 
   // TODO v0.8.0: nacist ze SQLite gear tabulky (schema v7)
@@ -32,7 +34,7 @@ export default function GearScreen() {
     { id: 'other', icon: 'dots-horizontal', count: 0, label: 'Ostatni', hint: 'Helmy, obuv, boxy' },
   ];
 
-  const s = styles(theme);
+  const s = useMemo(() => styles(theme, fs), [theme, fs]);
 
   return (
     <SafeAreaView style={s.container} edges={['top']}>
@@ -92,7 +94,7 @@ export default function GearScreen() {
   );
 }
 
-const styles = (t: ReturnType<typeof useTheme>) => StyleSheet.create({
+const styles = (t: ReturnType<typeof useTheme>, fs: number) => StyleSheet.create({
   container: { flex: 1, backgroundColor: t.bg },
   header: {
     flexDirection: 'row',
@@ -103,7 +105,7 @@ const styles = (t: ReturnType<typeof useTheme>) => StyleSheet.create({
     borderBottomWidth: StyleSheet.hairlineWidth,
     borderBottomColor: t.border,
   },
-  title: { fontSize: 20, fontWeight: '600', color: t.text },
+  title: { fontSize: 20 * fs, fontWeight: '600', color: t.text },
   searchWrap: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -115,7 +117,7 @@ const styles = (t: ReturnType<typeof useTheme>) => StyleSheet.create({
     borderRadius: 8,
     gap: 8,
   },
-  searchInput: { flex: 1, color: t.text, fontSize: 15 },
+  searchInput: { flex: 1, color: t.text, fontSize: 15 * fs },
   scroll: { paddingVertical: 8 },
   categoryRow: {
     flexDirection: 'row',
@@ -127,9 +129,9 @@ const styles = (t: ReturnType<typeof useTheme>) => StyleSheet.create({
   categoryIcon: { width: 32 },
   categoryTextWrap: { flex: 1 },
   categoryTitleRow: { flexDirection: 'row', alignItems: 'baseline', gap: 6 },
-  categoryLabel: { fontSize: 16, fontWeight: '500', color: t.text },
-  categoryCount: { fontSize: 14, color: t.textDim },
-  categoryHint: { fontSize: 13, color: t.textDim, marginTop: 2 },
+  categoryLabel: { fontSize: 16 * fs, fontWeight: '500', color: t.text },
+  categoryCount: { fontSize: 14 * fs, color: t.textDim },
+  categoryHint: { fontSize: 13 * fs, color: t.textDim, marginTop: 2 },
   summaryBar: {
     paddingHorizontal: 16,
     paddingVertical: 12,
@@ -137,7 +139,7 @@ const styles = (t: ReturnType<typeof useTheme>) => StyleSheet.create({
     borderTopColor: t.border,
     marginTop: 8,
   },
-  summaryText: { fontSize: 13, color: t.textDim, textAlign: 'center' },
+  summaryText: { fontSize: 13 * fs, color: t.textDim, textAlign: 'center' },
   placeholderNote: {
     margin: 16,
     padding: 12,
@@ -146,7 +148,7 @@ const styles = (t: ReturnType<typeof useTheme>) => StyleSheet.create({
     borderLeftWidth: 3,
     borderLeftColor: t.textDim,
   },
-  placeholderText: { fontSize: 12, color: t.textDim, fontStyle: 'italic' },
+  placeholderText: { fontSize: 12 * fs, color: t.textDim, fontStyle: 'italic' },
   fab: {
     position: 'absolute',
     bottom: 24,

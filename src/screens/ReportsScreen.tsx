@@ -1,9 +1,10 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { View, Text, ScrollView, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useTranslation } from 'react-i18next';
 import { useTheme } from '../theme';
+import { useFontStore } from '../store/fontStore';
 
 type FilterType = 'all' | 'rig' | 'incident' | 'near_miss';
 
@@ -24,13 +25,14 @@ type FilterType = 'all' | 'rig' | 'incident' | 'near_miss';
 export default function ReportsScreen() {
   const { t } = useTranslation();
   const theme = useTheme();
+  const fs = useFontStore((s) => s.fontScale);
   const [search, setSearch] = useState('');
   const [filter, setFilter] = useState<FilterType>('all');
 
   // TODO v0.8.1: nacist ze SQLite reports tabulky (schema v7)
   const counts = { all: 0, rig: 0, incident: 0, near_miss: 0 };
 
-  const s = styles(theme);
+  const s = useMemo(() => styles(theme, fs), [theme, fs]);
 
   return (
     <SafeAreaView style={s.container} edges={['top']}>
@@ -92,7 +94,7 @@ export default function ReportsScreen() {
   );
 }
 
-const styles = (t: ReturnType<typeof useTheme>) => StyleSheet.create({
+const styles = (t: ReturnType<typeof useTheme>, fs: number) => StyleSheet.create({
   container: { flex: 1, backgroundColor: t.bg },
   header: {
     flexDirection: 'row',
@@ -103,7 +105,7 @@ const styles = (t: ReturnType<typeof useTheme>) => StyleSheet.create({
     borderBottomWidth: StyleSheet.hairlineWidth,
     borderBottomColor: t.border,
   },
-  title: { fontSize: 20, fontWeight: '600', color: t.text },
+  title: { fontSize: 20 * fs, fontWeight: '600', color: t.text },
   searchWrap: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -115,7 +117,7 @@ const styles = (t: ReturnType<typeof useTheme>) => StyleSheet.create({
     borderRadius: 8,
     gap: 8,
   },
-  searchInput: { flex: 1, color: t.text, fontSize: 15 },
+  searchInput: { flex: 1, color: t.text, fontSize: 15 * fs },
   filterRow: {
     flexDirection: 'row',
     paddingHorizontal: 16,
@@ -135,7 +137,7 @@ const styles = (t: ReturnType<typeof useTheme>) => StyleSheet.create({
     backgroundColor: t.accent,
     borderColor: t.accent,
   },
-  filterChipText: { fontSize: 13, color: t.text },
+  filterChipText: { fontSize: 13 * fs, color: t.text },
   filterChipTextActive: { color: t.accentOn },
   scroll: { flexGrow: 1, paddingVertical: 8 },
   emptyState: {
@@ -143,8 +145,8 @@ const styles = (t: ReturnType<typeof useTheme>) => StyleSheet.create({
     padding: 40,
     marginTop: 40,
   },
-  emptyTitle: { fontSize: 18, fontWeight: '500', color: t.text, marginTop: 16 },
-  emptyHint: { fontSize: 14, color: t.textDim, marginTop: 8, textAlign: 'center', lineHeight: 20 },
+  emptyTitle: { fontSize: 18 * fs, fontWeight: '500', color: t.text, marginTop: 16 },
+  emptyHint: { fontSize: 14 * fs, color: t.textDim, marginTop: 8, textAlign: 'center', lineHeight: 20 * fs },
   placeholderNote: {
     margin: 16,
     padding: 12,
@@ -153,7 +155,7 @@ const styles = (t: ReturnType<typeof useTheme>) => StyleSheet.create({
     borderLeftWidth: 3,
     borderLeftColor: t.textDim,
   },
-  placeholderText: { fontSize: 12, color: t.textDim, fontStyle: 'italic' },
+  placeholderText: { fontSize: 12 * fs, color: t.textDim, fontStyle: 'italic' },
   fab: {
     position: 'absolute',
     bottom: 24,

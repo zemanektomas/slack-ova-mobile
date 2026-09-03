@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import {
   ActivityIndicator,
   Alert,
@@ -103,6 +103,9 @@ export function SettingsSheet({ visible, onClose, mode = 'modal' }: SettingsShee
   // Velikost písma (v0.7.16) — "večer je to nečitelné na mobilu"
   const fontSize = useFontStore((s) => s.fontSize);
   const setFontSize = useFontStore((s) => s.setFontSize);
+  // v0.7.28: fontScale pro styling nasobitel
+  const fs = useFontStore((s) => s.fontScale);
+  const styles = useMemo(() => makeStyles(fs), [fs]);
 
   // Community sheet (v0.7.3) — pro default country "CZ"
   const [communityOpen, setCommunityOpen] = useState(false);
@@ -584,6 +587,8 @@ function Chip({
   onPress: () => void;
   theme: ReturnType<typeof useTheme>;
 }) {
+  const fs = useFontStore((s) => s.fontScale);
+  const styles = useMemo(() => makeStyles(fs), [fs]);
   return (
     <Pressable
       onPress={onPress}
@@ -603,12 +608,12 @@ function Chip({
           style={{ marginRight: 6 }}
         />
       )}
-      <Text style={{ color: active ? theme.accentOn : theme.text, fontSize: 13 }}>{label}</Text>
+      <Text style={{ color: active ? theme.accentOn : theme.text, fontSize: 13 * fs }}>{label}</Text>
     </Pressable>
   );
 }
 
-const styles = StyleSheet.create({
+const makeStyles = (fs: number) => StyleSheet.create({
   backdrop: {
     flex: 1,
     // 0.6 opacity (předtím 0.4) — víc kontrastní zatmavení, Settings sheet
@@ -630,10 +635,10 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingVertical: 12,
   },
-  title: { fontSize: 18, fontWeight: '600' },
+  title: { fontSize: 18 * fs, fontWeight: '600' },
   scroll: { flexGrow: 0 },
   row: { paddingVertical: 10, paddingHorizontal: 16 },
-  rowLabel: { fontSize: 12, textTransform: 'uppercase', marginBottom: 8, letterSpacing: 0.5 },
+  rowLabel: { fontSize: 12 * fs, textTransform: 'uppercase', marginBottom: 8, letterSpacing: 0.5 },
   chip: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -659,7 +664,7 @@ const styles = StyleSheet.create({
     height: 10,
     borderRadius: 5,
   },
-  legendText: { fontSize: 11 },
+  legendText: { fontSize: 11 * fs },
   updateRow: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -667,8 +672,8 @@ const styles = StyleSheet.create({
     paddingVertical: 6,
     gap: 12,
   },
-  updateLabel: { fontSize: 13, fontWeight: '500' },
-  updateSubtext: { fontSize: 11, marginTop: 2 },
+  updateLabel: { fontSize: 13 * fs, fontWeight: '500' },
+  updateSubtext: { fontSize: 11 * fs, marginTop: 2 },
   linkBtn: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -679,8 +684,8 @@ const styles = StyleSheet.create({
     minWidth: 100,
     justifyContent: 'center',
   },
-  linkBtnText: { fontSize: 12, fontWeight: '500' },
-  offlineHint: { fontSize: 11, marginTop: 6, fontStyle: 'italic' },
+  linkBtnText: { fontSize: 12 * fs, fontWeight: '500' },
+  offlineHint: { fontSize: 11 * fs, marginTop: 6, fontStyle: 'italic' },
   footer: {
     flexDirection: 'row',
     padding: 16,

@@ -1,7 +1,9 @@
+import { useMemo } from 'react';
 import { View, StyleSheet, Text } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useTranslation } from 'react-i18next';
 import { useTheme } from '../theme';
+import { useFontStore } from '../store/fontStore';
 import { ISASafetyContent } from '../components/ISASafetySheet';
 
 /**
@@ -16,7 +18,8 @@ import { ISASafetyContent } from '../components/ISASafetySheet';
 export default function IsaCompanionScreen() {
   const { t: tr } = useTranslation();
   const t = useTheme();
-  const s = styles(t);
+  const fs = useFontStore((s) => s.fontScale);
+  const s = useMemo(() => styles(t, fs), [t, fs]);
 
   return (
     <SafeAreaView style={s.container} edges={['top']}>
@@ -29,7 +32,7 @@ export default function IsaCompanionScreen() {
   );
 }
 
-const styles = (t: ReturnType<typeof useTheme>) =>
+const styles = (t: ReturnType<typeof useTheme>, fs: number) =>
   StyleSheet.create({
     container: {
       flex: 1,
@@ -43,12 +46,12 @@ const styles = (t: ReturnType<typeof useTheme>) =>
       borderBottomColor: t.border,
     },
     title: {
-      fontSize: 20,
+      fontSize: 20 * fs,
       fontWeight: '600',
       color: t.text,
     },
     subtitle: {
-      fontSize: 13,
+      fontSize: 13 * fs,
       color: t.textMuted,
       marginTop: 2,
     },

@@ -5,7 +5,7 @@
  * 3 slidy: vítej, safety disclaimer, výběr úrovně.
  */
 
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import {
   Modal,
   Pressable,
@@ -17,6 +17,7 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
 import { useTheme } from '../theme';
 import { useLevelStore, UserLevel } from '../store/levelStore';
+import { useFontStore } from '../store/fontStore';
 
 interface Props {
   visible: boolean;
@@ -24,6 +25,8 @@ interface Props {
 }
 
 export function OnboardingSheet({ visible, onClose }: Props) {
+  const fs = useFontStore((s) => s.fontScale);
+  const styles = useMemo(() => makeStyles(fs), [fs]);
   const t = useTheme();
   const { t: tr } = useTranslation();
   const [slide, setSlide] = useState(0);
@@ -148,7 +151,7 @@ export function OnboardingSheet({ visible, onClose }: Props) {
   );
 }
 
-const styles = StyleSheet.create({
+const makeStyles = (fs: number) => StyleSheet.create({
   backdrop: {
     flex: 1,
     backgroundColor: 'rgba(0,0,0,0.7)',
@@ -163,7 +166,7 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   title: {
-    fontSize: 20,
+    fontSize: 20 * fs,
     fontWeight: '700',
     textAlign: 'center',
     marginBottom: 8,
@@ -173,15 +176,15 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
   },
   slideTitle: {
-    fontSize: 16,
+    fontSize: 16 * fs,
     fontWeight: '600',
     marginTop: 12,
     marginBottom: 8,
     textAlign: 'center',
   },
   slideText: {
-    fontSize: 13,
-    lineHeight: 19,
+    fontSize: 13 * fs,
+    lineHeight: 19 * fs,
     textAlign: 'center',
     marginBottom: 4,
   },
@@ -192,8 +195,8 @@ const styles = StyleSheet.create({
     marginBottom: 8,
     alignSelf: 'stretch',
   },
-  levelBtnLabel: { fontSize: 14, fontWeight: '600' },
-  levelBtnHint: { fontSize: 11, marginTop: 2 },
+  levelBtnLabel: { fontSize: 14 * fs, fontWeight: '600' },
+  levelBtnHint: { fontSize: 11 * fs, marginTop: 2 },
   footer: {
     flexDirection: 'row',
     justifyContent: 'space-between',

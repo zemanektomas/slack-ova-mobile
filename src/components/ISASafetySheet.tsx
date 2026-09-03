@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react';
+import { useFontStore } from '../store/fontStore';
 import {
   Modal,
   Pressable,
@@ -35,6 +36,8 @@ interface ISASafetySheetProps {
 export function ISASafetySheet({ visible, onClose }: ISASafetySheetProps) {
   const t = useTheme();
   const { tr } = useTr();
+  const fs = useFontStore((s) => s.fontScale);
+  const styles = useMemo(() => makeStyles(fs), [fs]);
 
   return (
     <Modal
@@ -78,6 +81,8 @@ export function ISASafetySheet({ visible, onClose }: ISASafetySheetProps) {
 export function ISASafetyContent() {
   const t = useTheme();
   const { tr } = useTr();
+  const fs = useFontStore((s) => s.fontScale);
+  const styles = useMemo(() => makeStyles(fs), [fs]);
   const [expandedCard, setExpandedCard] = useState<string | null>(null);
   const [expandedCategory, setExpandedCategory] = useState<string | null>(null);
   const [calcType, setCalcType] = useState<CalculatorType | null>(null);
@@ -172,6 +177,8 @@ function CardView({
   theme: ReturnType<typeof useTheme>;
   tr: (key: string, opts?: Record<string, unknown>) => string;
 }) {
+  const fs = useFontStore((s) => s.fontScale);
+  const styles = useMemo(() => makeStyles(fs), [fs]);
   return (
     <View style={[styles.card, { borderColor: theme.border, backgroundColor: theme.surfaceAlt }]}>
       <Pressable onPress={onToggleExpand} style={styles.cardHeader}>
@@ -292,6 +299,8 @@ function WorkflowContent({
   theme: ReturnType<typeof useTheme>;
   tr: (key: string, opts?: Record<string, unknown>) => string;
 }) {
+  const fs = useFontStore((s) => s.fontScale);
+  const wfStyles = useMemo(() => makeWfStyles(fs), [fs]);
   return (
     <View>
       {/* SECTION: Build phases */}
@@ -350,7 +359,7 @@ function WorkflowContent({
               color={theme.text}
               style={{ marginRight: 8 }}
             />
-            <Text style={[wfStyles.phaseTitle, { color: theme.text, fontSize: 13 }]}>
+            <Text style={[wfStyles.phaseTitle, { color: theme.text, fontSize: 13 * fs }]}>
               {tr(layer.titleKey)}
             </Text>
           </View>
@@ -379,6 +388,8 @@ function ChecklistRow({
   theme: ReturnType<typeof useTheme>;
   tr: (key: string) => string;
 }) {
+  const fs = useFontStore((s) => s.fontScale);
+  const styles = useMemo(() => makeStyles(fs), [fs]);
   return (
     <View style={styles.checklistItem}>
       <View style={styles.checklistRow}>
@@ -410,7 +421,9 @@ function useTr() {
 
 // -----------------------------------------------------------------------------
 
-const styles = StyleSheet.create({
+// v0.7.28: makeStyles(fs) - fontSize + lineHeight nasobene fontScale.
+// Vsechny komponenty co pouzivaji styles ctou fs pres useFontStore + useMemo.
+const makeStyles = (fs: number) => StyleSheet.create({
   backdrop: {
     flex: 1,
     backgroundColor: 'rgba(0,0,0,0.6)',
@@ -430,8 +443,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingVertical: 12,
   },
-  title: { fontSize: 18, fontWeight: '600' },
-  subtitle: { fontSize: 12, marginTop: 2 },
+  title: { fontSize: 18 * fs, fontWeight: '600' },
+  subtitle: { fontSize: 12 * fs, marginTop: 2 },
   scroll: { flexGrow: 0 },
   card: {
     marginHorizontal: 16,
@@ -445,8 +458,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     padding: 14,
   },
-  cardTitle: { fontSize: 15, fontWeight: '600' },
-  cardSummary: { fontSize: 12, marginTop: 2 },
+  cardTitle: { fontSize: 15 * fs, fontWeight: '600' },
+  cardSummary: { fontSize: 12 * fs, marginTop: 2 },
   cardBody: {
     paddingHorizontal: 14,
     paddingBottom: 14,
@@ -457,8 +470,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingVertical: 8,
   },
-  checklistLabel: { fontSize: 14, flex: 1 },
-  checklistDetail: { fontSize: 12, marginLeft: 28, marginBottom: 8, lineHeight: 16 },
+  checklistLabel: { fontSize: 14 * fs, flex: 1 },
+  checklistDetail: { fontSize: 12 * fs, marginLeft: 28, marginBottom: 8, lineHeight: 16 * fs },
   tableWrap: {
     borderWidth: 1,
     borderRadius: 8,
@@ -472,12 +485,12 @@ const styles = StyleSheet.create({
     paddingHorizontal: 8,
   },
   tableHead: { borderBottomWidth: 1.5 },
-  tableCell: { flex: 1, fontSize: 12 },
-  tableCellHead: { fontWeight: '600', fontSize: 12 },
+  tableCell: { flex: 1, fontSize: 12 * fs },
+  tableCellHead: { fontWeight: '600', fontSize: 12 * fs },
   hint: {
-    fontSize: 12,
+    fontSize: 12 * fs,
     marginTop: 12,
-    lineHeight: 16,
+    lineHeight: 16 * fs,
     fontStyle: 'italic',
   },
   refBox: {
@@ -488,7 +501,7 @@ const styles = StyleSheet.create({
     borderTopWidth: 0.5,
     borderTopColor: 'rgba(150,150,150,0.2)',
   },
-  refText: { fontSize: 11 },
+  refText: { fontSize: 11 * fs },
   calcBtn: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -499,12 +512,12 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 8,
   },
-  calcBtnText: { fontSize: 13, fontWeight: '600' },
+  calcBtnText: { fontSize: 13 * fs, fontWeight: '600' },
   disclaimer: {
-    fontSize: 11,
+    fontSize: 11 * fs,
     marginTop: 16,
     marginHorizontal: 16,
-    lineHeight: 15,
+    lineHeight: 15 * fs,
     fontStyle: 'italic',
     textAlign: 'center',
   },
@@ -533,15 +546,15 @@ const styles = StyleSheet.create({
     borderRadius: 8,
   },
   categoryLabel: {
-    fontSize: 15,
+    fontSize: 15 * fs,
     fontWeight: '600',
   },
   categoryCount: {
-    fontSize: 13,
+    fontSize: 13 * fs,
     fontWeight: '400',
   },
   categoryHint: {
-    fontSize: 12,
+    fontSize: 12 * fs,
     marginTop: 2,
   },
   categoryCards: {
@@ -550,9 +563,9 @@ const styles = StyleSheet.create({
   },
 });
 
-const wfStyles = StyleSheet.create({
+const makeWfStyles = (fs: number) => StyleSheet.create({
   sectionLabel: {
-    fontSize: 10,
+    fontSize: 10 * fs,
     textTransform: 'uppercase',
     letterSpacing: 0.5,
     fontWeight: '600',
@@ -568,7 +581,7 @@ const wfStyles = StyleSheet.create({
     marginBottom: 4,
   },
   phaseTitle: {
-    fontSize: 13,
+    fontSize: 13 * fs,
     fontWeight: '600',
   },
   phaseItem: {
@@ -579,13 +592,13 @@ const wfStyles = StyleSheet.create({
   },
   bullet: {
     width: 12,
-    fontSize: 11,
-    lineHeight: 16,
+    fontSize: 11 * fs,
+    lineHeight: 16 * fs,
   },
   phaseItemText: {
     flex: 1,
-    fontSize: 12,
-    lineHeight: 16,
+    fontSize: 12 * fs,
+    lineHeight: 16 * fs,
   },
   gate: {
     flexDirection: 'row',
@@ -599,7 +612,7 @@ const wfStyles = StyleSheet.create({
     alignSelf: 'flex-start',
   },
   gateText: {
-    fontSize: 11,
+    fontSize: 11 * fs,
     fontWeight: '600',
   },
 });

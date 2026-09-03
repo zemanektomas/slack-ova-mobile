@@ -5,6 +5,7 @@
  * Použit z ISASafetySheet CardView, když karta má relatedCalculator.
  */
 
+import { useMemo } from 'react';
 import { Modal, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
@@ -13,6 +14,7 @@ import { AnchorAngleCalculator } from './AnchorAngleCalculator';
 import { ForceEstimator } from './ForceEstimator';
 import { MACalculator } from './MACalculator';
 import { DeviationCalculator } from './DeviationCalculator';
+import { useFontStore } from '../../store/fontStore';
 
 export type CalculatorType = 'angle' | 'force' | 'ma' | 'deviation';
 
@@ -37,6 +39,8 @@ const ICONS: Record<CalculatorType, string> = {
 };
 
 export function CalculatorsSheet({ visible, type, onClose }: Props) {
+  const fs = useFontStore((s) => s.fontScale);
+  const styles = useMemo(() => makeStyles(fs), [fs]);
   const t = useTheme();
   const { t: tr } = useTranslation();
 
@@ -88,7 +92,7 @@ export function CalculatorsSheet({ visible, type, onClose }: Props) {
   );
 }
 
-const styles = StyleSheet.create({
+const makeStyles = (fs: number) => StyleSheet.create({
   backdrop: {
     flex: 1,
     backgroundColor: 'rgba(0,0,0,0.6)',
@@ -107,7 +111,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingVertical: 12,
   },
-  title: { fontSize: 18, fontWeight: '600' },
+  title: { fontSize: 18 * fs, fontWeight: '600' },
   scroll: { flexGrow: 0 },
   footer: {
     flexDirection: 'row',
