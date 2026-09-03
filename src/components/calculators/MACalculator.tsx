@@ -3,10 +3,11 @@
  * Mechanical advantage compound pulley + Buckingham reference.
  */
 
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { useTheme } from '../../theme';
+import { useFontStore } from '../../store/fontStore';
 import {
   BUCKINGHAM_CONFIGS,
   MA_REFERENCE_TABLE,
@@ -23,6 +24,8 @@ import {
 } from './shared';
 
 export function MACalculator() {
+  const fs = useFontStore((s) => s.fontScale);
+  const styles = useMemo(() => makeStyles(fs), [fs]);
   const t = useTheme();
   const { t: tr } = useTranslation();
   const [movable, setMovable] = useState(3);
@@ -145,8 +148,8 @@ export function MACalculator() {
   );
 }
 
-const styles = StyleSheet.create({
-  hint: { fontSize: 12, fontWeight: '600', textAlign: 'center', marginTop: 8 },
+const makeStyles = (fs: number) => StyleSheet.create({
+  hint: { fontSize: 12 * fs, fontWeight: '600', textAlign: 'center', marginTop: 8 },
   table: {
     borderWidth: 1,
     borderRadius: 8,
@@ -158,8 +161,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 8,
   },
   tableHead: { borderBottomWidth: 1.5 },
-  cell: { flex: 1, fontSize: 12 },
-  cellHead: { flex: 1, fontSize: 12, fontWeight: '600' },
+  cell: { flex: 1, fontSize: 12 * fs },
+  cellHead: { flex: 1, fontSize: 12 * fs, fontWeight: '600' },
   buckRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -170,6 +173,6 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 6,
   },
-  buckName: { fontSize: 13, fontWeight: '500' },
-  buckMax: { fontSize: 12, fontWeight: '600' },
+  buckName: { fontSize: 13 * fs, fontWeight: '500' },
+  buckMax: { fontSize: 12 * fs, fontWeight: '600' },
 });

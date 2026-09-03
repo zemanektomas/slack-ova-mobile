@@ -77,6 +77,7 @@ export default function HomeScreen() {
   const focusOn = useMapStore((s) => s.focusOn);
   const insets = useSafeAreaInsets();
   const fontScale = useFontStore((s) => s.fontScale);
+  const styles = useMemo(() => makeStyles(fontScale), [fontScale]);
 
   // Dvojí tap v seznamu: 1. tap jen vybere a přisune mapu (peek), 2. tap otevře
   // detail. Bez toho detail zakryje okolní řádky hned a nejde procházet seznam
@@ -383,6 +384,7 @@ function SortHeader({
   align: 'left' | 'right';
   theme: any;
 }) {
+  const fs = useFontStore((s) => s.fontScale);
   const active = sortBy === sortKey;
   const arrow = active ? (sortDir === 'asc' ? ' ↑' : ' ↓') : '';
   return (
@@ -390,7 +392,7 @@ function SortHeader({
       <Text
         numberOfLines={1}
         style={[
-          { fontSize: 12, textAlign: align, color: theme.textMuted },
+          { fontSize: 12 * fs, textAlign: align, color: theme.textMuted },
           active && { color: theme.accent, fontWeight: '600' },
         ]}
       >
@@ -400,7 +402,7 @@ function SortHeader({
   );
 }
 
-const styles = StyleSheet.create({
+const makeStyles = (fs: number) => StyleSheet.create({
   container: { flex: 1 },
   rowIcon: { width: 18, alignItems: 'center' },
   // sortBar matchuje `row` padding (12 horizontal, 8 vertical) + gap 8
@@ -428,7 +430,7 @@ const styles = StyleSheet.create({
   },
   searchInput: {
     flex: 1,
-    fontSize: 14,
+    fontSize: 14 * fs,
     padding: 0,
   },
   iconBtn: {
@@ -442,10 +444,10 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     gap: 8,
   },
-  name: { flex: 1, fontSize: 14, fontWeight: '500' },
-  meta: { fontSize: 12, flexShrink: 0 },
-  colLength: { width: 56, fontSize: 12, textAlign: 'right' },
-  colHeight: { width: 48, fontSize: 12, textAlign: 'right' },
-  colDistance: { width: 60, fontSize: 12, textAlign: 'right' },
+  name: { flex: 1, fontSize: 14 * fs, fontWeight: '500' },
+  meta: { fontSize: 12 * fs, flexShrink: 0 },
+  colLength: { width: 56, fontSize: 12 * fs, textAlign: 'right' },
+  colHeight: { width: 48, fontSize: 12 * fs, textAlign: 'right' },
+  colDistance: { width: 60, fontSize: 12 * fs, textAlign: 'right' },
   empty: { padding: 24, textAlign: 'center' },
 });

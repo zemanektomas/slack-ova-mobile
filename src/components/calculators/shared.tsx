@@ -3,9 +3,10 @@
  * Slider, numeric input, table row s barevným ratingem, chip picker.
  */
 
-import { useRef, useState } from 'react';
+import { useMemo, useRef, useState } from 'react';
 import { LayoutChangeEvent, PanResponder, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { useTheme, Theme } from '../../theme';
+import { useFontStore } from '../../store/fontStore';
 
 // Barvy pro rating
 export const RATING_COLORS: Record<string, string> = {

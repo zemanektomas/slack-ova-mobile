@@ -5,10 +5,11 @@
  * Výstup: síla na jednu nohu kotvy + barevný rating
  */
 
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { useTheme } from '../../theme';
+import { useFontStore } from '../../store/fontStore';
 import {
   ANGLE_REFERENCE_TABLE,
   anchorPerLegForce,
@@ -26,6 +27,8 @@ import {
 } from './shared';
 
 export function AnchorAngleCalculator() {
+  const fs = useFontStore((s) => s.fontScale);
+  const styles = useMemo(() => makeStyles(fs), [fs]);
   const t = useTheme();
   const { t: tr } = useTranslation();
   const [loadText, setLoadText] = useState('5');
@@ -118,9 +121,9 @@ export function AnchorAngleCalculator() {
   );
 }
 
-const styles = StyleSheet.create({
+const makeStyles = (fs: number) => StyleSheet.create({
   rating: {
-    fontSize: 13,
+    fontSize: 13 * fs,
     fontWeight: '600',
     textAlign: 'center',
     marginTop: 8,
@@ -136,6 +139,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 8,
   },
   tableHead: { borderBottomWidth: 1.5 },
-  cell: { flex: 1, fontSize: 12 },
-  cellHead: { flex: 1, fontSize: 12, fontWeight: '600' },
+  cell: { flex: 1, fontSize: 12 * fs },
+  cellHead: { flex: 1, fontSize: 12 * fs, fontWeight: '600' },
 });

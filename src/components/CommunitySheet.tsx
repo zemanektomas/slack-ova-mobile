@@ -5,7 +5,7 @@
  * Otevírá se z detailu lajny (podle state → country code) nebo Settings.
  */
 
-import { useEffect, useState } from 'react';
+import { useMemo, useEffect, useState } from 'react';
 import {
   ActivityIndicator,
   Linking,
@@ -19,6 +19,7 @@ import {
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
 import { useTheme, Theme } from '../theme';
+import { useFontStore } from '../store/fontStore';
 import {
   CommunityData,
   ISAMember,
@@ -33,6 +34,8 @@ interface Props {
 }
 
 export function CommunitySheet({ visible, countryCode, onClose }: Props) {
+  const fs = useFontStore((s) => s.fontScale);
+  const styles = useMemo(() => makeStyles(fs), [fs]);
   const t = useTheme();
   const { t: tr } = useTranslation();
   const [data, setData] = useState<CommunityData | null>(null);
@@ -148,6 +151,8 @@ export function CommunitySheet({ visible, countryCode, onClose }: Props) {
 // -----------------------------------------------------------------------------
 
 function ISAMemberRow({ member, theme, tr }: { member: ISAMember; theme: Theme; tr: (k: string) => string }) {
+  const fs = useFontStore((s) => s.fontScale);
+  const styles = useMemo(() => makeStyles(fs), [fs]);
   return (
     <View style={[styles.card, { backgroundColor: theme.surfaceAlt, borderColor: theme.border }]}>
       <View style={styles.cardHeader}>
@@ -172,6 +177,8 @@ function ISAMemberRow({ member, theme, tr }: { member: ISAMember; theme: Theme; 
 }
 
 function GroupRow({ group, theme, tr }: { group: SlacklineGroup; theme: Theme; tr: (k: string) => string }) {
+  const fs = useFontStore((s) => s.fontScale);
+  const styles = useMemo(() => makeStyles(fs), [fs]);
   return (
     <View style={[styles.card, { backgroundColor: theme.surfaceAlt, borderColor: theme.border }]}>
       <View style={styles.cardHeader}>
@@ -210,6 +217,8 @@ function LinkChip({
   url: string;
   theme: Theme;
 }) {
+  const fs = useFontStore((s) => s.fontScale);
+  const styles = useMemo(() => makeStyles(fs), [fs]);
   return (
     <Pressable
       onPress={() => Linking.openURL(url).catch(() => {})}
@@ -223,7 +232,7 @@ function LinkChip({
 
 // -----------------------------------------------------------------------------
 
-const styles = StyleSheet.create({
+const makeStyles = (fs: number) => StyleSheet.create({
   backdrop: {
     flex: 1,
     backgroundColor: 'rgba(0,0,0,0.6)',
@@ -243,15 +252,15 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingVertical: 12,
   },
-  title: { fontSize: 18, fontWeight: '600' },
-  subtitle: { fontSize: 13, marginTop: 2 },
+  title: { fontSize: 18 * fs, fontWeight: '600' },
+  subtitle: { fontSize: 13 * fs, marginTop: 2 },
   scroll: { flexGrow: 0 },
   section: {
     marginHorizontal: 16,
     marginBottom: 12,
   },
   sectionLabel: {
-    fontSize: 11,
+    fontSize: 11 * fs,
     textTransform: 'uppercase',
     letterSpacing: 0.5,
     fontWeight: '600',
@@ -268,14 +277,14 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginBottom: 6,
   },
-  cardTitle: { flex: 1, fontSize: 13, fontWeight: '600' },
+  cardTitle: { flex: 1, fontSize: 13 * fs, fontWeight: '600' },
   badge: {
     paddingHorizontal: 6,
     paddingVertical: 2,
     borderRadius: 4,
     borderWidth: 1,
   },
-  badgeText: { fontSize: 10, fontWeight: '500' },
+  badgeText: { fontSize: 10 * fs, fontWeight: '500' },
   linkRow: {
     flexDirection: 'row',
     flexWrap: 'wrap',
@@ -290,10 +299,10 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     maxWidth: 200,
   },
-  chipText: { fontSize: 11, fontWeight: '500' },
-  errorText: { fontSize: 12, textAlign: 'center', padding: 24, fontStyle: 'italic' },
+  chipText: { fontSize: 11 * fs, fontWeight: '500' },
+  errorText: { fontSize: 12 * fs, textAlign: 'center', padding: 24, fontStyle: 'italic' },
   footerNote: {
-    fontSize: 10,
+    fontSize: 10 * fs,
     fontStyle: 'italic',
     textAlign: 'center',
     marginTop: 16,

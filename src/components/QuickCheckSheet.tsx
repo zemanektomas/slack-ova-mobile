@@ -22,6 +22,7 @@ import { useTheme, Theme } from '../theme';
 import { generateQuickCheckForLine, QuickCheckItem } from '../data/isa/quickCheck';
 import { saveLineSafetyCheck } from '../db/lineSafetyChecks';
 import type { SlacklineDetail } from '../types';
+import { useFontStore } from '../store/fontStore';
 
 interface Props {
   visible: boolean;
@@ -31,6 +32,8 @@ interface Props {
 }
 
 export function QuickCheckSheet({ visible, line, onClose, onSaved }: Props) {
+  const fs = useFontStore((s) => s.fontScale);
+  const styles = useMemo(() => makeStyles(fs), [fs]);
   const t = useTheme();
   const { t: tr } = useTranslation();
   const [checked, setChecked] = useState<Set<string>>(new Set());
@@ -205,6 +208,8 @@ function QuickCheckRow({
   onToggle: () => void;
   onToggleExpand: () => void;
 }) {
+  const fs = useFontStore((s) => s.fontScale);
+  const styles = useMemo(() => makeStyles(fs), [fs]);
   const reason = item.reasonKey ? tr(item.reasonKey) : null;
 
   return (
@@ -262,7 +267,7 @@ function QuickCheckRow({
 
 // -----------------------------------------------------------------------------
 
-const styles = StyleSheet.create({
+const makeStyles = (fs: number) => StyleSheet.create({
   backdrop: {
     flex: 1,
     backgroundColor: 'rgba(0,0,0,0.6)',
@@ -282,15 +287,15 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingVertical: 12,
   },
-  title: { fontSize: 18, fontWeight: '600' },
-  subtitle: { fontSize: 14, fontWeight: '500', marginTop: 2 },
-  subtitleSmall: { fontSize: 11, marginTop: 4 },
+  title: { fontSize: 18 * fs, fontWeight: '600' },
+  subtitle: { fontSize: 14 * fs, fontWeight: '500', marginTop: 2 },
+  subtitleSmall: { fontSize: 11 * fs, marginTop: 4 },
   progressRow: {
     paddingHorizontal: 16,
     paddingBottom: 8,
     alignItems: 'flex-end',
   },
-  progressText: { fontSize: 13, fontWeight: '600' },
+  progressText: { fontSize: 13 * fs, fontWeight: '600' },
   scroll: { flexGrow: 0 },
   row: {
     borderBottomWidth: StyleSheet.hairlineWidth,
@@ -301,14 +306,14 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingVertical: 12,
   },
-  rowLabel: { fontSize: 14, fontWeight: '500' },
-  rowReason: { fontSize: 11, marginTop: 2, fontStyle: 'italic' },
+  rowLabel: { fontSize: 14 * fs, fontWeight: '500' },
+  rowReason: { fontSize: 11 * fs, marginTop: 2, fontStyle: 'italic' },
   rowDetail: {
     paddingLeft: 44,
     paddingRight: 16,
     paddingBottom: 12,
   },
-  rowDetailText: { fontSize: 12, lineHeight: 17 },
+  rowDetailText: { fontSize: 12 * fs, lineHeight: 17 * fs },
   footer: {
     flexDirection: 'row',
     padding: 12,

@@ -28,6 +28,7 @@ import { useTheme, Theme } from '../theme';
 import { RIG_LOG_GATES, RigLogGate, RigLogItem, GateId, countTotalGateItems } from '../data/isa/rigLog';
 import { saveLineSafetyCheck, GateStatus, GatesStatus, LogData } from '../db/lineSafetyChecks';
 import type { SlacklineDetail } from '../types';
+import { useFontStore } from '../store/fontStore';
 
 interface Props {
   visible: boolean;
@@ -37,6 +38,8 @@ interface Props {
 }
 
 export function FullRigLogSheet({ visible, line, onClose, onSaved }: Props) {
+  const fs = useFontStore((s) => s.fontScale);
+  const styles = useMemo(() => makeStyles(fs), [fs]);
   const t = useTheme();
   const { t: tr } = useTranslation();
   // checked[gateId] = Set of itemIds
@@ -363,6 +366,8 @@ function GateView({
   theme: Theme;
   tr: (k: string, opts?: any) => string;
 }) {
+  const fs = useFontStore((s) => s.fontScale);
+  const styles = useMemo(() => makeStyles(fs), [fs]);
   const total = gate.items.length;
   const checked = checkedItems.size;
   const statusText = skipped
@@ -463,6 +468,8 @@ function GateItemRow({
   tr: (k: string) => string;
   disabled: boolean;
 }) {
+  const fs = useFontStore((s) => s.fontScale);
+  const styles = useMemo(() => makeStyles(fs), [fs]);
   return (
     <View style={gateStyles.itemBlock}>
       <Pressable
@@ -522,6 +529,8 @@ function LogField({
   multiline?: boolean;
   theme: Theme;
 }) {
+  const fs = useFontStore((s) => s.fontScale);
+  const styles = useMemo(() => makeStyles(fs), [fs]);
   return (
     <View style={{ marginBottom: 12 }}>
       <Text style={[styles.logLabel, { color: theme.text }]}>{label}</Text>
@@ -549,7 +558,7 @@ function LogField({
 
 // -----------------------------------------------------------------------------
 
-const styles = StyleSheet.create({
+const makeStyles = (fs: number) => StyleSheet.create({
   backdrop: {
     flex: 1,
     backgroundColor: 'rgba(0,0,0,0.6)',
@@ -569,9 +578,9 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingVertical: 12,
   },
-  title: { fontSize: 18, fontWeight: '600' },
-  subtitle: { fontSize: 14, fontWeight: '500', marginTop: 2 },
-  subtitleSmall: { fontSize: 11, marginTop: 4 },
+  title: { fontSize: 18 * fs, fontWeight: '600' },
+  subtitle: { fontSize: 14 * fs, fontWeight: '500', marginTop: 2 },
+  subtitleSmall: { fontSize: 11 * fs, marginTop: 4 },
   scroll: { flexGrow: 0 },
   logSection: {
     marginHorizontal: 16,
@@ -580,15 +589,15 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 12,
   },
-  logSectionTitle: { fontSize: 15, fontWeight: '600', marginBottom: 12 },
-  logLabel: { fontSize: 13, fontWeight: '500' },
-  logHint: { fontSize: 11, marginTop: 2, marginBottom: 4 },
+  logSectionTitle: { fontSize: 15 * fs, fontWeight: '600', marginBottom: 12 },
+  logLabel: { fontSize: 13 * fs, fontWeight: '500' },
+  logHint: { fontSize: 11 * fs, marginTop: 2, marginBottom: 4 },
   logInput: {
     borderWidth: 1,
     borderRadius: 6,
     paddingHorizontal: 10,
     paddingVertical: 8,
-    fontSize: 14,
+    fontSize: 14 * fs,
   },
   incidentRow: {
     flexDirection: 'row',
