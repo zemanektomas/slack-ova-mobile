@@ -492,16 +492,6 @@
       "wk3": "Na backupie węzeł jest dopuszczalny",
       "wk3Detail": "§3.13.1.1: element blokujący backupu może być szytym połączeniem wg ISA:41 albo bezpiecznym węzłem. Na mainline tego wyboru nie ma."
     },
-    "weblockTieoff": {
-      "title": "Weblock zawsze z tie-off",
-      "summary": "Ostatni krok montażu weblocka — ISA:21 wymaga mechanizmu przeciw ciągłemu poślizgowi",
-      "wt1": "Metoda: dwa owinięcia, oczko, daisy chain",
-      "wt1Detail": "Poprowadź ogon za środkowym rozdzielaczem (uwaga na skręt), na JEDNĄ stronę szekli. Owiń oczko dwa razy wokół szekli, przeciągnij kolejne oczko przez obie pętle, a gdy zostanie ~30 cm, zakończ daisy chainem.",
-      "wt2": "Sprawdzaj, czy owinięcia się nie zacisnęły",
-      "wt2Detail": "Nie wystarczy, że tie-off jest. Zaciśnięte owinięcie oznacza, że taśma w systemie się ślizga. Sprawdzaj oba weblocki przed każdą sesją.",
-      "wt3": "Bez tie-off grozi ciągły poślizg",
-      "wt3Detail": "ISA:21 §3.11.1.2 wymaga „mechanism or method to prevent continuous slippage”. Udokumentowany przypadek: Ostrov, Czechy 2011 — taśma przeszła przez oba weblocki i zatrzymała się dopiero na węzłach zabezpieczających."
-    },
     "electrostatic": {
       "title": "Electrostatic Discharge Warning",
       "summary": "Najnowsze ostrzeżenie ISA safety (12/2025) — plasma arcs podczas burz",
@@ -669,17 +659,19 @@
       },
       "hint": "Dni = ekspozycja na środowisko (UV, deszcz), NIE od daty produkcji. Przechowywanie się nie liczy."
     },
-    "softRelease": {
-      "title": "Soft release",
-      "summary": "Kontrolowane zwolnienie tension — musi być zdecydowane przy stawianiu",
-      "sr1": "Decyduje się PRZY STAWIANIU anchoru, nie w trakcie życia linii",
-      "sr1Detail": "Improwizowane zwalnianie napiętej linii jest ryzykowne — ISA:21 §3.11.1.1 wymaga aby soft release był częścią rig systemu zaplanowanego przy budowie.",
-      "sr2": "Umiejscowienie: między tie-off a mainline",
-      "sr2Detail": "Soft release siedzi po stronie anchoru (często zintegrowany z weblockiem lub jako osobna pętla dyneema/spanset). Nigdy w środku linii.",
-      "sr3": "Typy: dedykowane urządzenie vs. improwizacja",
-      "sr3Detail": "Dedykowane: Slack-Inov Zenlock soft release, Rock Empire soft release. Alternatywa: spanset lub pętla dyneema w anchor systemie (z 2-3× marginesem bezpieczeństwa).",
-      "sr4": "Kontrola: pre-rig test + visual każdą sesję",
-      "sr4Detail": "Przed rigem: zweryfikuj że mechanizm soft release działa bez obciążenia. Każda sesja: wizualna inspekcja (brak uszkodzeń, poprawne połączenie)."
+    "weblockSystem": {
+      "title": "Weblock + tie-off + soft release",
+      "summary": "Anchor connection wg ISA:21 §3.11 — jeden system, trzy funkcje",
+      "w1": "Weblock poprawnie przewleczony",
+      "w1Detail": "Popruh w weblocku w poprawnej konfiguracji wg producenta (single/double wrap zależnie od typu). Złe threading = spadek MBS. Sprawdź manual konkretnego weblocka (seaHorse, Zenlock, Aki, ...).",
+      "w2": "Tie-off ogonka (§3.11.1.2)",
+      "w2Detail": "Tail popruhu wychodzący z weblocka MUSI być zabezpieczony przed wysunięciem. Barrel knot, doubled bight, lub webbing chain. Bez tie-off = powolna katastrofa pod cykliczne obciążenie.",
+      "w3": "Soft release decyduje się PRZY STAWIANIU (§3.11.1.1)",
+      "w3Detail": "Improwizowane zwalnianie napiętej linii jest ryzykowne. Bez soft release systemu zdecydowanego przy rig time nie ma bezpiecznej drogi do szybkiego zwolnienia tension.",
+      "w4": "Umiejscowienie + typy soft release",
+      "w4Detail": "Między tie-off a mainline (strona anchoru). Dedykowany (Slack-Inov Zenlock, Rock Empire) LUB spanset/dyneema loop (2-3× margines bezpieczeństwa nad expected peak). Nigdy w środku linii.",
+      "w5": "Popruh-based soft release = zabezpiecz jak tie-off",
+      "w5Detail": "Gdy soft release jest z popruhu/spansetu (nie dedykowane urządzenie), węzły muszą być zabezpieczone tak samo jak weblock tie-off. Cykliczne obciążenie rozwiązuje luźne końce. Dedykowane urządzenie (Zenlock integrated) rozwiązuje to designem."
     }
   },
   "tabs": {

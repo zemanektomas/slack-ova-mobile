@@ -274,36 +274,24 @@ export const CARDS: CardData[] = [
     reference: { source: 'ISA:21 (2023) §3.3.2, §3.13.1.1' },
   },
 
-  // 12. Weblock tie-off (extractované z desatera bod 9) -------------------
+  // 12. Kotvitko + tie-off + povolovak (v0.7.27 sloucene per ISA:21 §3.11)
+  // Jeden anchor connection system, tri funkce (rigging + tie-off + release).
+  // Predchozi 2 samostatne karty (weblock-tieoff, soft-release) sloucene.
   {
-    id: 'weblock-tieoff',
+    id: 'weblock-system',
     category: 'rule',
     icon: 'lock-check',
-    titleKey: 'cards.weblockTieoff.title',
-    summaryKey: 'cards.weblockTieoff.summary',
+    titleKey: 'cards.weblockSystem.title',
+    summaryKey: 'cards.weblockSystem.summary',
     checklist: [
-      { id: 'wt1', labelKey: 'cards.weblockTieoff.wt1', detailKey: 'cards.weblockTieoff.wt1Detail' },
-      { id: 'wt2', labelKey: 'cards.weblockTieoff.wt2', detailKey: 'cards.weblockTieoff.wt2Detail' },
-      { id: 'wt3', labelKey: 'cards.weblockTieoff.wt3', detailKey: 'cards.weblockTieoff.wt3Detail' },
+      { id: 'w1', labelKey: 'cards.weblockSystem.w1', detailKey: 'cards.weblockSystem.w1Detail' },
+      { id: 'w2', labelKey: 'cards.weblockSystem.w2', detailKey: 'cards.weblockSystem.w2Detail' },
+      { id: 'w3', labelKey: 'cards.weblockSystem.w3', detailKey: 'cards.weblockSystem.w3Detail' },
+      { id: 'w4', labelKey: 'cards.weblockSystem.w4', detailKey: 'cards.weblockSystem.w4Detail' },
+      { id: 'w5', labelKey: 'cards.weblockSystem.w5', detailKey: 'cards.weblockSystem.w5Detail' },
     ],
-    reference: { source: 'ISA:21 (2023) §3.11.1.2' },
+    reference: { source: 'ISA:21 (2023) §3.11.1.1 (soft release) + §3.11.1.2 (weblock tie-off)' },
     relatedCalculator: 'ma',  // → MA (Buckingham s weblock jako progress capture)
-  },
-
-  // 12b. Povolovak (soft release) — ISA:21 §3.11.1.1 (v0.7.26)
-  {
-    id: 'soft-release',
-    category: 'rule',
-    icon: 'valve-open',
-    titleKey: 'cards.softRelease.title',
-    summaryKey: 'cards.softRelease.summary',
-    checklist: [
-      { id: 'sr1', labelKey: 'cards.softRelease.sr1', detailKey: 'cards.softRelease.sr1Detail' },
-      { id: 'sr2', labelKey: 'cards.softRelease.sr2', detailKey: 'cards.softRelease.sr2Detail' },
-      { id: 'sr3', labelKey: 'cards.softRelease.sr3', detailKey: 'cards.softRelease.sr3Detail' },
-      { id: 'sr4', labelKey: 'cards.softRelease.sr4', detailKey: 'cards.softRelease.sr4Detail' },
-    ],
-    reference: { source: 'ISA:21 (2023) §3.11.1.1' },
   },
 
   // 13. Kompletní rig workflow — celý strom stavby lajny (v0.7.3 + 2026 update)

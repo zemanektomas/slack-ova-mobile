@@ -2,7 +2,7 @@
   "expo": {
     "name": "Slackline.Ova",
     "slug": "slackline-ova",
-    "version": "0.7.26",
+    "version": "0.7.27",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "scheme": "slacklineova",
@@ -26,7 +26,7 @@
         "backgroundColor": "#0f172a"
       },
       "package": "cz.slackline.ova",
-      "versionCode": 45
+      "versionCode": 46
     },
     "plugins": [
       "expo-router",
