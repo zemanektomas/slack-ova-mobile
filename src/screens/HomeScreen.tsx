@@ -19,7 +19,7 @@ import { seedFromSlackcz } from '../db/seedSlackcz';
 import { seedFromSlackmap } from '../db/slackmap';
 import MapViewComponent from '../map/MapView';
 import InlineDetail from '../components/InlineDetail';
-import { SettingsSheet } from '../components/SettingsSheet';
+// v0.8.0: SettingsSheet import odstranen — Nastaveni je vlastni tab
 import { useUserLocation } from '../map/useLocation';
 import { useTheme } from '../theme';
 import type { SlacklineListItem, SortKey, SortDir } from '../types';
@@ -106,7 +106,7 @@ export default function HomeScreen() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const [settingsSheetOpen, setSettingsSheetOpen] = useState(false);
+  // v0.8.0: settingsSheetOpen state odstranen — Nastaveni je vlastni tab
 
   // Debounced search — drží SQLite klidnou při rychlém psaní
   const [debouncedSearch, setDebouncedSearch] = useState(search);
@@ -272,7 +272,7 @@ export default function HomeScreen() {
         />
       </View>
 
-      <SettingsSheet visible={settingsSheetOpen} onClose={() => setSettingsSheetOpen(false)} />
+      {/* v0.8.0: SettingsSheet popup odstranen — Nastaveni je vlastni tab */}
 
       <BottomSheet
         ref={sheetRef}
@@ -322,14 +322,7 @@ export default function HomeScreen() {
               <MaterialCommunityIcons name="close-circle" size={18} color={t.textMuted} />
             </Pressable>
           )}
-          <Pressable
-            onPress={() => setSettingsSheetOpen(true)}
-            style={styles.iconBtn}
-            hitSlop={8}
-            accessibilityLabel={tr('home.settingsLabel')}
-          >
-            <MaterialCommunityIcons name="cog-outline" size={20} color={t.textMuted} />
-          </Pressable>
+          {/* v0.8.0: Settings ozubene kolo odstraneno — Nastaveni je vlastni tab v bottom bar */}
         </View>
 
         {/* Sortbar layout zrcadlí strukturu řádků dole — name flex:1, ostatní fixní

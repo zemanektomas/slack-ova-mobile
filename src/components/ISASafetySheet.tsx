@@ -11,6 +11,7 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
 import { useTheme } from '../theme';
 import { CARDS, CardData, ChecklistItem } from '../data/isa/cards';
+import { groupCardsByCategory, CategoryDef } from '../data/isa/categories';
 import { RIG_PHASES, CROSS_CUTTING_LAYERS, RigPhase, CrossCuttingLayer } from '../data/isa/rigLog';
 import { CalculatorsSheet, CalculatorType } from './calculators/CalculatorsSheet';
 
@@ -34,63 +35,115 @@ interface ISASafetySheetProps {
 export function ISASafetySheet({ visible, onClose }: ISASafetySheetProps) {
   const t = useTheme();
   const { tr } = useTr();
-  const [expandedCard, setExpandedCard] = useState<string | null>(null);
-  const [calcType, setCalcType] = useState<CalculatorType | null>(null);
-
-  const handleClose = () => {
-    setExpandedCard(null);
-    setCalcType(null);
-    onClose();
-  };
 
   return (
     <Modal
       visible={visible}
       animationType="slide"
       transparent
-      onRequestClose={handleClose}
+      onRequestClose={onClose}
       statusBarTranslucent
     >
       <View style={styles.backdrop}>
-        <Pressable style={styles.backdropDismiss} onPress={handleClose} />
+        <Pressable style={styles.backdropDismiss} onPress={onClose} />
         <View style={[styles.sheet, { backgroundColor: t.surface }]}>
           <View style={styles.header}>
             <View style={{ flex: 1 }}>
               <Text style={[styles.title, { color: t.text }]}>{tr('isaSafety.title')}</Text>
               <Text style={[styles.subtitle, { color: t.textMuted }]}>{tr('isaSafety.subtitle')}</Text>
             </View>
-            <Pressable onPress={handleClose} hitSlop={10}>
+            <Pressable onPress={onClose} hitSlop={10}>
               <MaterialCommunityIcons name="close" size={24} color={t.textMuted} />
             </Pressable>
           </View>
 
-          <ScrollView style={styles.scroll} contentContainerStyle={{ paddingBottom: 24 }}>
-            {CARDS.map((card) => (
-              <CardView
-                key={card.id}
-                card={card}
-                expanded={expandedCard === card.id}
-                onToggleExpand={() =>
-                  setExpandedCard((prev) => (prev === card.id ? null : card.id))
-                }
-                onOpenCalculator={(type) => setCalcType(type)}
-                theme={t}
-                tr={tr}
-              />
-            ))}
-
-            <Text style={[styles.disclaimer, { color: t.textDim }]}>
-              {tr('isaSafety.disclaimer')}
-            </Text>
-          </ScrollView>
+          <ISASafetyContent />
 
           <View style={[styles.footer, { borderTopColor: t.border }]}>
-            <Pressable onPress={handleClose} style={[styles.footerBtn, { backgroundColor: t.accent }]}>
+            <Pressable onPress={onClose} style={[styles.footerBtn, { backgroundColor: t.accent }]}>
               <Text style={{ color: t.accentOn, fontWeight: '600' }}>{tr('common.done')}</Text>
             </Pressable>
           </View>
         </View>
       </View>
+    </Modal>
+  );
+}
+
+/**
+ * ISA Safety Companion content — scrollable karty grupovane do kategorii.
+ * Znovupouzitelne v Modal (ISASafetySheet) i v plne obrazovce (IsaCompanionScreen).
+ * v0.8.0: category grouping (10 kategorii top-down, prazdne skryte).
+ */
+export function ISASafetyContent() {
+  const t = useTheme();
+  const { tr } = useTr();
+  const [expandedCard, setExpandedCard] = useState<string | null>(null);
+  const [expandedCategory, setExpandedCategory] = useState<string | null>(null);
+  const [calcType, setCalcType] = useState<CalculatorType | null>(null);
+
+  const groups = useMemo(() => groupCardsByCategory(CARDS), []);
+
+  return (
+    <>
+      <ScrollView style={styles.scroll} contentContainerStyle={{ paddingBottom: 24 }}>
+        {groups.map(({ category, cards }) => {
+          const isOpen = expandedCategory === category.id;
+          return (
+            <View key={category.id} style={styles.categoryGroup}>
+              <Pressable
+                onPress={() =>
+                  setExpandedCategory((prev) => (prev === category.id ? null : category.id))
+                }
+                style={[styles.categoryHeader, { borderColor: t.border, backgroundColor: t.surface }]}
+              >
+                <MaterialCommunityIcons
+                  name={category.icon}
+                  size={20}
+                  color={t.text}
+                  style={{ marginRight: 10 }}
+                />
+                <View style={{ flex: 1 }}>
+                  <Text style={[styles.categoryLabel, { color: t.text }]}>
+                    {tr(category.labelKey)}
+                    <Text style={[styles.categoryCount, { color: t.textDim }]}> ({cards.length})</Text>
+                  </Text>
+                  <Text style={[styles.categoryHint, { color: t.textMuted }]}>
+                    {tr(category.hintKey)}
+                  </Text>
+                </View>
+                <MaterialCommunityIcons
+                  name={isOpen ? 'chevron-up' : 'chevron-down'}
+                  size={18}
+                  color={t.textMuted}
+                />
+              </Pressable>
+
+              {isOpen && (
+                <View style={styles.categoryCards}>
+                  {cards.map((card) => (
+                    <CardView
+                      key={card.id}
+                      card={card}
+                      expanded={expandedCard === card.id}
+                      onToggleExpand={() =>
+                        setExpandedCard((prev) => (prev === card.id ? null : card.id))
+                      }
+                      onOpenCalculator={(type) => setCalcType(type)}
+                      theme={t}
+                      tr={tr}
+                    />
+                  ))}
+                </View>
+              )}
+            </View>
+          );
+        })}
+
+        <Text style={[styles.disclaimer, { color: t.textDim }]}>
+          {tr('isaSafety.disclaimer')}
+        </Text>
+      </ScrollView>
 
       {/* Kontextový kalkulátor (v0.7.4) */}
       <CalculatorsSheet
@@ -98,7 +151,7 @@ export function ISASafetySheet({ visible, onClose }: ISASafetySheetProps) {
         type={calcType}
         onClose={() => setCalcType(null)}
       />
-    </Modal>
+    </>
   );
 }
 
@@ -465,6 +518,35 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
     borderRadius: 8,
     alignItems: 'center',
+  },
+  // v0.8.0 category grouping
+  categoryGroup: {
+    marginHorizontal: 16,
+    marginTop: 10,
+  },
+  categoryHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: 12,
+    paddingHorizontal: 12,
+    borderWidth: 1,
+    borderRadius: 8,
+  },
+  categoryLabel: {
+    fontSize: 15,
+    fontWeight: '600',
+  },
+  categoryCount: {
+    fontSize: 13,
+    fontWeight: '400',
+  },
+  categoryHint: {
+    fontSize: 12,
+    marginTop: 2,
+  },
+  categoryCards: {
+    marginTop: 6,
+    marginLeft: 8,
   },
 });
 

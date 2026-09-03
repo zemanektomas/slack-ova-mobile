@@ -124,7 +124,7 @@ export default function RootLayout() {
             contentStyle: { backgroundColor: t.bg },
           }}
         >
-          <Stack.Screen name="index" options={{ headerShown: false }} />
+          <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
         </Stack>
         <OnboardingSheet
           visible={showOnboarding}
