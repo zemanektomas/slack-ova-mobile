@@ -19,9 +19,8 @@ export type CardCategoryId =
   | 'rig-workflow'   // rig workflow overview
   | 'rescue'         // rescue procedures, two-attachments
   | 'environment'    // wind, electrostatic
-  | 'anchor'         // SERENE, SNARE SANE
-  | 'weblock'        // weblock tie-off
-  | 'webbing'        // main+backup, RLT, nylon rule, webbing knots
+  | 'anchor'         // SERENE, SNARE SANE, weblock-tieoff, soft-release (v0.7.26: merged weblock)
+  | 'webbing'        // main+back-up, RLT, nylon rule, webbing knots
   | 'leash-ring'     // odsedka + kroužek (empty for now)
   | 'harness-pas'    // sedák + PAS (empty for now)
   | 'walker';        // buddy check
@@ -39,8 +38,9 @@ export const CATEGORIES: CategoryDef[] = [
   { id: 'rig-workflow', icon: 'clipboard-list-outline', labelKey: 'isaSafety.category.rigWorkflow', hintKey: 'isaSafety.category.rigWorkflowHint' },
   { id: 'rescue',       icon: 'medical-bag',            labelKey: 'isaSafety.category.rescue',      hintKey: 'isaSafety.category.rescueHint' },
   { id: 'environment',  icon: 'weather-partly-cloudy',  labelKey: 'isaSafety.category.environment', hintKey: 'isaSafety.category.environmentHint' },
+  // v0.7.26: sloucene anchor + weblock + soft-release do jedne kategorie "Kotveni".
+  // Funkcne to je jeden anchor system podle ISA:21 §3.11.
   { id: 'anchor',       icon: 'anchor',                 labelKey: 'isaSafety.category.anchor',      hintKey: 'isaSafety.category.anchorHint' },
-  { id: 'weblock',      icon: 'lock-outline',           labelKey: 'isaSafety.category.weblock',     hintKey: 'isaSafety.category.weblockHint' },
   { id: 'webbing',      icon: 'link-variant',           labelKey: 'isaSafety.category.webbing',     hintKey: 'isaSafety.category.webbingHint' },
   { id: 'leash-ring',   icon: 'ring',                   labelKey: 'isaSafety.category.leashRing',   hintKey: 'isaSafety.category.leashRingHint' },
   { id: 'harness-pas',  icon: 'human-handsdown',        labelKey: 'isaSafety.category.harnessPas',  hintKey: 'isaSafety.category.harnessPasHint' },
@@ -56,9 +56,11 @@ export const CARD_CATEGORY: Record<string, CardCategoryId> = {
   'suspension-trauma':  'rescue',
   'wind':               'environment',
   'electrostatic':      'environment',
+  // v0.7.26: 'anchor' kategorie sluci kotveni + kotvitko + povolovak
   'serene':             'anchor',
   'snare-sane':         'anchor',
-  'weblock-tieoff':     'weblock',
+  'weblock-tieoff':     'anchor',   // driv 'weblock' kategorie
+  'soft-release':       'anchor',   // NEW v0.7.26
   'nylon-rule':         'webbing',
   'rlt':                'webbing',
   'webbing-knots':      'webbing',

@@ -468,7 +468,7 @@
       "environment": "Środowisko",
       "environmentHint": "Wiatr, elektrostatyka, pogoda",
       "anchor": "Kotwienie",
-      "anchorHint": "Anchor build, SERENE, SNARE SANE",
+      "anchorHint": "Anchor build, weblock, soft release, SERENE, SNARE SANE",
       "weblock": "Weblock",
       "weblockHint": "Weblock rigging, tie-off",
       "webbing": "Popruh",
@@ -668,6 +668,18 @@
         "na": "Bez rekomendacji"
       },
       "hint": "Dni = ekspozycja na środowisko (UV, deszcz), NIE od daty produkcji. Przechowywanie się nie liczy."
+    },
+    "softRelease": {
+      "title": "Soft release",
+      "summary": "Kontrolowane zwolnienie tension — musi być zdecydowane przy stawianiu",
+      "sr1": "Decyduje się PRZY STAWIANIU anchoru, nie w trakcie życia linii",
+      "sr1Detail": "Improwizowane zwalnianie napiętej linii jest ryzykowne — ISA:21 §3.11.1.1 wymaga aby soft release był częścią rig systemu zaplanowanego przy budowie.",
+      "sr2": "Umiejscowienie: między tie-off a mainline",
+      "sr2Detail": "Soft release siedzi po stronie anchoru (często zintegrowany z weblockiem lub jako osobna pętla dyneema/spanset). Nigdy w środku linii.",
+      "sr3": "Typy: dedykowane urządzenie vs. improwizacja",
+      "sr3Detail": "Dedykowane: Slack-Inov Zenlock soft release, Rock Empire soft release. Alternatywa: spanset lub pętla dyneema w anchor systemie (z 2-3× marginesem bezpieczeństwa).",
+      "sr4": "Kontrola: pre-rig test + visual każdą sesję",
+      "sr4Detail": "Przed rigem: zweryfikuj że mechanizm soft release działa bez obciążenia. Każda sesja: wizualna inspekcja (brak uszkodzeń, poprawne połączenie)."
     }
   },
   "tabs": {
