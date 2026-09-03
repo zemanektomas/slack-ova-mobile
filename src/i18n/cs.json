@@ -458,7 +458,27 @@
       "checklist": "Checklist",
       "rule": "Pravidlo",
       "thresholds": "Prahové hodnoty",
-      "lifetime": "Životnost"
+      "lifetime": "Životnost",
+      "reference": "Reference & úvod",
+      "referenceHint": "Základní informace, ISA:21 limity",
+      "rigWorkflow": "Rig workflow",
+      "rigWorkflowHint": "Celý proces stavby lajny",
+      "rescue": "Rescue",
+      "rescueHint": "Rescue plán, evakuace, redundance",
+      "environment": "Prostředí",
+      "environmentHint": "Vítr, elektrostatika, počasí",
+      "anchor": "Kotvení",
+      "anchorHint": "Anchor build, SERENE, SNARE SANE",
+      "weblock": "Kotvítko",
+      "weblockHint": "Weblock rigging, tie-off",
+      "webbing": "Popruh",
+      "webbingHint": "Main + backup, materiál, RLT",
+      "leashRing": "Odsedka + kroužek",
+      "leashRingHint": "Leash system",
+      "harnessPas": "Sedák + PAS",
+      "harnessPasHint": "Osobní ukotvení",
+      "walker": "Chodec",
+      "walkerHint": "Buddy check, pre-flight"
     }
   },
   "cards": {
@@ -649,5 +669,12 @@
       },
       "hint": "Dny = vystavení vlivům prostředí (UV, déšť), NIKOLI od data výroby. Skladování se nepočítá."
     }
+  },
+  "tabs": {
+    "lines": "Lajny",
+    "isa": "ISA",
+    "gear": "Vybavení",
+    "reports": "Reporty",
+    "settings": "Nastavení"
   }
 }

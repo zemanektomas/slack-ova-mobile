@@ -458,7 +458,27 @@
       "checklist": "Checklist",
       "rule": "Zasada",
       "thresholds": "Progi",
-      "lifetime": "Żywotność"
+      "lifetime": "Żywotność",
+      "reference": "Referencja i wstęp",
+      "referenceHint": "Podstawowe info, ISA:21 limity",
+      "rigWorkflow": "Rig workflow",
+      "rigWorkflowHint": "Cały proces stawiania lajny",
+      "rescue": "Rescue",
+      "rescueHint": "Plan rescue, ewakuacja, redundancja",
+      "environment": "Środowisko",
+      "environmentHint": "Wiatr, elektrostatyka, pogoda",
+      "anchor": "Kotwienie",
+      "anchorHint": "Anchor build, SERENE, SNARE SANE",
+      "weblock": "Weblock",
+      "weblockHint": "Weblock rigging, tie-off",
+      "webbing": "Popruh",
+      "webbingHint": "Main + backup, materiał, RLT",
+      "leashRing": "Leash + pierścień",
+      "leashRingHint": "System leash",
+      "harnessPas": "Uprząż + PAS",
+      "harnessPasHint": "Osobisty system anchor",
+      "walker": "Chodzący",
+      "walkerHint": "Buddy check, pre-flight"
     }
   },
   "cards": {
@@ -649,5 +669,12 @@
       },
       "hint": "Dni = ekspozycja na środowisko (UV, deszcz), NIE od daty produkcji. Przechowywanie się nie liczy."
     }
+  },
+  "tabs": {
+    "lines": "Lajny",
+    "isa": "ISA",
+    "gear": "Sprzęt",
+    "reports": "Raporty",
+    "settings": "Ustawienia"
   }
 }

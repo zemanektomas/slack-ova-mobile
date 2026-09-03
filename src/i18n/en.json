@@ -458,7 +458,27 @@
       "checklist": "Checklist",
       "rule": "Rule",
       "thresholds": "Thresholds",
-      "lifetime": "Lifetime"
+      "lifetime": "Lifetime",
+      "reference": "Reference & intro",
+      "referenceHint": "Basic info, ISA:21 limits",
+      "rigWorkflow": "Rig workflow",
+      "rigWorkflowHint": "Whole line-building process",
+      "rescue": "Rescue",
+      "rescueHint": "Rescue plan, evacuation, redundancy",
+      "environment": "Environment",
+      "environmentHint": "Wind, electrostatic, weather",
+      "anchor": "Anchoring",
+      "anchorHint": "Anchor build, SERENE, SNARE SANE",
+      "weblock": "Weblock",
+      "weblockHint": "Weblock rigging, tie-off",
+      "webbing": "Webbing",
+      "webbingHint": "Main + backup, material, RLT",
+      "leashRing": "Leash + ring",
+      "leashRingHint": "Leash system",
+      "harnessPas": "Harness + PAS",
+      "harnessPasHint": "Personal anchor system",
+      "walker": "Walker",
+      "walkerHint": "Buddy check, pre-flight"
     }
   },
   "cards": {
@@ -649,5 +669,12 @@
       },
       "hint": "Days = exposure to environment (UV, rain), NOT from manufacture date. Storage doesn't count."
     }
+  },
+  "tabs": {
+    "lines": "Lines",
+    "isa": "ISA",
+    "gear": "Gear",
+    "reports": "Reports",
+    "settings": "Settings"
   }
 }

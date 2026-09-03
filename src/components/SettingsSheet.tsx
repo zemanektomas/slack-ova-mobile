@@ -449,26 +449,7 @@ export function SettingsSheet({ visible, onClose }: SettingsSheetProps) {
               </View>
             </View>
 
-            <View style={styles.row}>
-              <Text style={[styles.rowLabel, { color: t.textMuted }]}>{tr('isaSafety.sectionLabel')}</Text>
-              <Text style={[styles.updateSubtext, { color: t.textDim, marginBottom: 8 }]}>
-                {tr('isaSafety.subtitle')}
-              </Text>
-              <View style={styles.updateRow}>
-                <Text style={[styles.updateLabel, { color: t.text, flex: 1 }]}>
-                  {tr('isaSafety.title')}
-                </Text>
-                <Pressable
-                  onPress={() => setIsaSheetOpen(true)}
-                  style={[styles.linkBtn, { borderColor: t.border }]}
-                >
-                  <MaterialCommunityIcons name="shield-check" size={14} color={t.accent} style={{ marginRight: 4 }} />
-                  <Text style={[styles.linkBtnText, { color: t.accent }]}>
-                    {tr('isaSafety.openBtn')}
-                  </Text>
-                </Pressable>
-              </View>
-            </View>
+            {/* v0.8.0: ISA Safety Companion link odstranen — ISA je vlastni tab v bottom bar */}
 
             <View style={styles.row}>
               <Text style={[styles.rowLabel, { color: t.textMuted }]}>{tr('settings.slackmapAccount')}</Text>
