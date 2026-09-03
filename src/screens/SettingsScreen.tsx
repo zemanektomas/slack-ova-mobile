@@ -1,24 +1,21 @@
-import { View, StyleSheet } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { useTheme } from '../theme';
 import { SettingsSheet } from '../components/SettingsSheet';
 
 /**
  * Settings — full screen tab (v0.8.0).
  *
- * MVP wrapper: renderuje SettingsSheet permanentne s visible=true.
- * SettingsSheet je Modal-based popup — v tabu se zobrazi jako full-screen
- * overlay. Zavreni X v Modal je no-op (uzivatel navigate pres tab bar).
+ * Renderuje SettingsSheet v inline mode — bez Modal wrapperu, bez backdrop,
+ * bez close X. Uzivatel navigate pres tab bar.
  *
- * v0.8.1 TODO: extract SettingsContent z SettingsSheet (podobne jako
- * ISASafetyContent) pro cistou tab implementaci bez Modal wrapperu.
+ * SettingsSheet je stale hlavni komponent pro pouzdrete i modal (backward
+ * compat pro dev). V v0.8.0.x muzeme rename na SettingsPanel + ponechat
+ * modal jako SettingsSheet thin wrapper.
  */
 export default function SettingsScreen() {
-  const t = useTheme();
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: t.surface }}>
-      {/* Modal permanentne otevreny — v tabu funguje jako plna obrazovka. */}
-      <SettingsSheet visible={true} onClose={() => { /* no-op v tabu */ }} />
-    </SafeAreaView>
+    <SettingsSheet
+      visible={true}
+      onClose={() => { /* no-op v inline mode */ }}
+      mode="inline"
+    />
   );
 }
