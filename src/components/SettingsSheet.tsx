@@ -10,6 +10,7 @@ import {
   Text,
   View,
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
 import Constants from 'expo-constants';
@@ -36,6 +37,12 @@ const APP_BUILD = Constants.expoConfig?.android?.versionCode ?? '?';
 interface SettingsSheetProps {
   visible: boolean;
   onClose: () => void;
+  /**
+   * 'modal' (default) — puvodni Modal popup ze search baru v mape (deprecated v0.8.0).
+   * 'inline' — full-screen tab rendering (v0.8.0+ SettingsScreen). Bez backdrop,
+   * bez close X (uzivatel navigate pres tab bar).
+   */
+  mode?: 'modal' | 'inline';
 }
 
 const MAP_KINDS: { key: MapKind; labelKey: string; icon: keyof typeof MaterialCommunityIcons.glyphMap }[] = [
@@ -60,7 +67,7 @@ const LANGUAGES: { key: Lang; label: string }[] = [
   { key: 'pl', label: '🇵🇱 Polski' },
 ];
 
-export function SettingsSheet({ visible, onClose }: SettingsSheetProps) {
+export function SettingsSheet({ visible, onClose, mode = 'modal' }: SettingsSheetProps) {
   const t = useTheme();
   const { t: tr } = useTranslation();
   const kind = useMapStore((s) => s.kind);
@@ -204,29 +211,21 @@ export function SettingsSheet({ visible, onClose }: SettingsSheetProps) {
     );
   };
 
-  return (
-    <Modal
-      visible={visible}
-      animationType="slide"
-      transparent
-      onRequestClose={onClose}
-      // statusBarTranslucent na Android donutí modal překryt i system status bar,
-      // jinak by horní pásek (drag handle Gorhom sheetu pod ním) prosvítal.
-      // Bez tohohle uživatel viděl polopruhledný proužek nad Settings sheetem
-      // s drag handle hlavního listu (feedback z Closed Alpha testování).
-      statusBarTranslucent
-    >
-      <View style={styles.backdrop}>
-        <Pressable style={styles.backdropDismiss} onPress={onClose} />
-        <View style={[styles.sheet, { backgroundColor: t.surface }]}>
-          <View style={styles.header}>
-            <Text style={[styles.title, { color: t.text }]}>{tr('settings.title')}</Text>
-            <Pressable onPress={onClose} hitSlop={10}>
-              <MaterialCommunityIcons name="close" size={24} color={t.textMuted} />
-            </Pressable>
-          </View>
+  // v0.8.0: obsah je stejny pro Modal (deprecated) i inline tab mode.
+  // Header ma close X jen v modal mode (v tabu se navigate pres tab bar).
+  const header = (
+    <View style={styles.header}>
+      <Text style={[styles.title, { color: t.text }]}>{tr('settings.title')}</Text>
+      {mode === 'modal' && (
+        <Pressable onPress={onClose} hitSlop={10}>
+          <MaterialCommunityIcons name="close" size={24} color={t.textMuted} />
+        </Pressable>
+      )}
+    </View>
+  );
 
-          <ScrollView style={styles.scroll} contentContainerStyle={{ paddingBottom: 16 }}>
+  const scrollBody = (
+    <ScrollView style={styles.scroll} contentContainerStyle={{ paddingBottom: 16 }}>
             <View style={styles.row}>
               <Text style={[styles.rowLabel, { color: t.textMuted }]}>{tr('settings.mapKind')}</Text>
               <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ paddingRight: 16 }}>
@@ -506,7 +505,48 @@ export function SettingsSheet({ visible, onClose }: SettingsSheetProps) {
               </View>
             </View>
           </ScrollView>
+  );
 
+  // Nested sheets — spolecne pro modal i inline mode.
+  const nestedSheets = (
+    <>
+      {/* v0.8.0: ISASafetySheet nested je dead code — ISA je vlastni tab.
+          Ponechano visible=false pro backward compat, odstranime v v0.8.0.x. */}
+      <ISASafetySheet visible={isaSheetOpen} onClose={() => setIsaSheetOpen(false)} />
+      <CommunitySheet
+        visible={communityOpen}
+        countryCode={communityCountry}
+        onClose={() => setCommunityOpen(false)}
+      />
+    </>
+  );
+
+  // v0.8.0 inline mode — plna obrazovka tab (SettingsScreen wrapper).
+  // Zadny backdrop, zadny close X, zadny footer Done tlacitko.
+  if (mode === 'inline') {
+    return (
+      <SafeAreaView style={{ flex: 1, backgroundColor: t.surface }} edges={['top']}>
+        {header}
+        {scrollBody}
+        {nestedSheets}
+      </SafeAreaView>
+    );
+  }
+
+  // Modal mode (deprecated v0.8.0, ponechano pro backward compat).
+  return (
+    <Modal
+      visible={visible}
+      animationType="slide"
+      transparent
+      onRequestClose={onClose}
+      statusBarTranslucent
+    >
+      <View style={styles.backdrop}>
+        <Pressable style={styles.backdropDismiss} onPress={onClose} />
+        <View style={[styles.sheet, { backgroundColor: t.surface }]}>
+          {header}
+          {scrollBody}
           <View style={[styles.footer, { borderTopColor: t.border }]}>
             <Pressable onPress={onClose} style={[styles.footerBtn, { backgroundColor: t.accent }]}>
               <Text style={{ color: t.accentOn, fontWeight: '600' }}>{tr('common.done')}</Text>
@@ -514,16 +554,7 @@ export function SettingsSheet({ visible, onClose }: SettingsSheetProps) {
           </View>
         </View>
       </View>
-
-      {/* Nested ISA Safety sheet — F5 */}
-      <ISASafetySheet visible={isaSheetOpen} onClose={() => setIsaSheetOpen(false)} />
-
-      {/* Nested Community sheet — v0.7.3 */}
-      <CommunitySheet
-        visible={communityOpen}
-        countryCode={communityCountry}
-        onClose={() => setCommunityOpen(false)}
-      />
+      {nestedSheets}
     </Modal>
   );
 }
