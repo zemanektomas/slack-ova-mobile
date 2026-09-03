@@ -226,7 +226,7 @@
       "i1": "Počasí + okno (vítr, bouřky, teplota)",
       "i2": "Povolení / vlastník pozemku / přístup",
       "i3": "Tým: kdo jde, kdo umí rescue",
-      "i4": "Kit list podle délky (main, backup, weblock, kladky, odsedky)",
+      "i4": "Kit list podle délky (main, back-up, weblock, kladky, odsedky)",
       "i5": "Plán B: co když nejde postavit → odjíždíme"
     },
     "p1": {
@@ -247,7 +247,7 @@
     },
     "p3": {
       "title": "3. Stavba kotev",
-      "i1": "Main a backup připojeny NEZÁVISLE (žádný společný SPOF)",
+      "i1": "Main a back-up připojeny NEZÁVISLE (žádný společný SPOF)",
       "i2": "Tie-back tam kde je pochybnost",
       "i3": "Vyrovnání zátěže, úhly < 60°",
       "i4": "Šekly dotažené a zajištěné",
@@ -266,7 +266,7 @@
       "i2": "Progress capture = weblock, line grip jen dočasně",
       "i3": "Sledování síly (odhad / load cell)",
       "i4": "Komunikace: 'táhnu' / 'stop' / 'povoluju'",
-      "i5": "Backup nechat volný, ale ne prověšený na zemi"
+      "i5": "Back-up nechat volný, ale ne prověšený na zemi"
     },
     "p6": {
       "title": "6. Kontrola před vstupem",
@@ -331,11 +331,11 @@
     "gateB": {
       "title": "Gate B — Systém před natažením",
       "description": "Po stavbě kotev, transport a rig před tension.",
-      "b1": "Main a backup připojeny nezávisle (žádný společný SPOF)",
-      "b1Detail": "Můžou sdílet redundantní kotvicí materiál — např. spanset i lano protažené dvěma šekly, na jednom masterpoint, na druhém backup. Sdílet nesmějí jediný prvek, jehož selhání shodí obojí. Podle ISA:21 §3.10 masterpoint slouží mainline i backupu společně.",
+      "b1": "Main a back-up připojeny nezávisle (žádný společný SPOF)",
+      "b1Detail": "Můžou sdílet redundantní kotvicí materiál — např. spanset i lano protažené dvěma šekly, na jednom masterpoint, na druhém back-up. Sdílet nesmějí jediný prvek, jehož selhání shodí obojí. Podle ISA:21 §3.10 masterpoint slouží mainline i back-upu společně.",
       "b2": "Weblock / progress capture zajištěn",
       "b2Detail": "Weblock je progress capture pro Buckingham systém. Tie-off zavázán, vizuálně zkontrolován. Bez tie-off = fatal.",
-      "b3": "Backup funkční (volný, ale ne prověšený na zem)",
+      "b3": "Back-up funkční (volný, ale ne prověšený na zem)",
       "b3Detail": "Back-up musí viset volně (aby chytal při selhání), ale nesmí být tak volný že leží na zemi. Vyzkoušet vahou."
     },
     "gateC": {
@@ -395,8 +395,8 @@
       "leashDetail": "Certifikovaný kruh musí obepínat hlavní lajnu i back-up. Pokud jen jednu → při selhání spadneš pod druhou.",
       "anchor": "Kotva zkontrolována",
       "anchorDetail": "Redundance (min 2 body), úhel ramen < 45°, žádné ostré hrany. Vizuálně na obou stranách.",
-      "backup": "Backup připojení funkční",
-      "backupDetail": "Backup ring nebo PAS na sedáku. Fyzicky pověs se na backup samostatně, ověř drží.",
+      "back-up": "Back-up připojení funkční",
+      "back-upDetail": "Back-up ring nebo PAS na sedáku. Fyzicky pověs se na back-up samostatně, ověř drží.",
       "rescuePlan": "Rescue plán jasný",
       "rescuePlanDetail": "Kdo záchranu provede, čím (rope, ascender, kladka), jak dlouho by trvalo dostat se k tobě. Nahlas s týmem.",
       "weblockTieoff": "Weblock tie-off zavázán",
@@ -468,11 +468,11 @@
       "environment": "Prostředí",
       "environmentHint": "Vítr, elektrostatika, počasí",
       "anchor": "Kotvení",
-      "anchorHint": "Anchor build, SERENE, SNARE SANE",
+      "anchorHint": "Anchor build, kotvítko (weblock), povolovák (soft release), SERENE, SNARE SANE",
       "weblock": "Kotvítko",
       "weblockHint": "Weblock rigging, tie-off",
       "webbing": "Popruh",
-      "webbingHint": "Main + backup, materiál, RLT",
+      "webbingHint": "Main + back-up, materiál, RLT",
       "leashRing": "Odsedka + kroužek",
       "leashRingHint": "Leash system",
       "harnessPas": "Sedák + PAS",
@@ -523,22 +523,22 @@
       "t1Detail": "Během jakékoli operace (rigging, tape, rescue, ascending) musíš mít 2 nezávislé attachment points. Selhání jednoho = druhý drží.",
       "t2": "Test before commit",
       "t2Detail": "Než odpojíš primary attachment, load-test secondary. Sedni, zatiž, ověř drží. Až pak odpojuj primary.",
-      "t3": "Leash + backup connection pro walk",
-      "t3Detail": "Highliner je připojen leashem k mainline + backup ringem k backup line. Selhání mainline = backup catches. Nikdy jen leash.",
-      "t4": "Pro rescue: primary rope + backup PAS",
-      "t4Detail": "Když se pohybuješ po lajně (rescue, self-rescue), tvoje primary connection (Tibloc, Micro Traxion) plus backup PAS (personal anchor system) na harness."
+      "t3": "Leash + back-up connection pro walk",
+      "t3Detail": "Highliner je připojen odsedkou k mainline + kroužkem odsedky k back-up line. Selhání mainline = back-up catch.",
+      "t4": "Pro rescue: primary rope + back-up PAS",
+      "t4Detail": "Když se pohybuješ po lajně (rescue, self-rescue), tvoje primary connection (Tibloc, Micro Traxion) potřebuje back-up PAS v sedáku. Nikdy jen 1 attachment k systému."
     },
     "buddyCheck": {
       "title": "Buddy Check",
       "summary": "Checklist před každým nástupem na highline",
-      "b1": "Harness — správně nasazený, buckles doubled back",
+      "b1": "Sedák — správné nasazení, buckles doubled back",
       "b1Detail": "Kontrola: gear loops v pořádku, leg loops utažené, waist belt nad kyčlemi. Buckle musí být doubled back (procvakni pásem zpět).",
-      "b2": "Leash — správně provlečen, uzel checkeded",
-      "b2Detail": "Provlékaná osmička v harness belay loop. Tail min 10 cm. Barrel knot backup není povinný ale doporučený pro Bowline / Flemish bend.",
-      "b3": "Leash ring — obě lajny provlečené",
-      "b3Detail": "Ring musí obepínat mainline i backup line. Pokud jen jednu → při selhání té ostatní highliner spadne pod backup line = smrt.",
-      "b4": "Backup connection k harness — funkční",
-      "b4Detail": "Backup ring nebo backup PAS. Fyzicky pověs se na backup samostatně, ověř drží.",
+      "b2": "Odsedka — správně provlečena, uzel checkeded",
+      "b2Detail": "Provlékaná osmička v oku sedáku (belay loop). Tail min 10 cm. Barrel knot back-up není povinný ale doporučen.",
+      "b3": "Kroužek odsedky — obě lajny provlečené",
+      "b3Detail": "Kroužek musí obepínat mainline i back-up. Bez tohohle je jednou lajnou = single point failure.",
+      "b4": "Back-up connection k harness — funkční",
+      "b4Detail": "Back-up ring nebo back-up PAS. Fyzicky pověs se na back-up samostatně, ověř drží.",
       "b5": "Helmet — pokud nad 5 m nebo hard anchor",
       "b5Detail": "Osobní volba pod 5 m nad soft ground. Nad 5 m nebo nad tvrdý terén = povinné. Krev z hlavy neochráníš stretchem.",
       "b6": "Buddy říká GO nahlas",
@@ -562,9 +562,9 @@
       "title": "Kompletní rig workflow",
       "summary": "Celý strom stavby lajny od plánu doma po odchod",
       "rw1": "9 fází chronologicky",
-      "rw1Detail": "Od kotev (0-2) přes main (3-4), backup (5), tension (6), checks (7) po walk-ready (8). Každá fáze má checkpoints.",
+      "rw1Detail": "Od kotev (0-2) přes main (3-4), back-up (5), tension (6), checks (7) po walk-ready (8). Každá fáze má checkpoints.",
       "rw2": "3 gates A/B/C",
-      "rw2Detail": "A: kotvy schváleny (SNARE SANE). B: systém před tenzí (main + backup + weblock). C: lajna schválena k chůzi (rescue plán + buddy check).",
+      "rw2Detail": "A: kotvy schváleny (SNARE SANE). B: systém před tenzí (main + back-up + weblock). C: lajna schválena k chůzi (rescue plán + buddy check).",
       "rw3": "Průřezové vrstvy",
       "rw3Detail": "Materiál (ISA cert, RLT stav) / Bezpečnost (rescue plán, komunikace) / Lidé (kompetence, buddy check). Aplikuje se napříč všemi fázemi."
     },
@@ -591,9 +591,9 @@
       },
       "row": {
         "workingLoad": "Working load u kotev",
-        "backupfall": "Backupfall force",
+        "backupfall": "Back-upfall force",
         "primaryAnchor": "Primary anchoring material",
-        "secondaryAnchor": "Secondary / backup material",
+        "secondaryAnchor": "Secondary / back-up material",
         "weblock": "Weblock (kotvítko)",
         "leashRing": "Leash ring"
       }
@@ -610,7 +610,7 @@
       "efficient": "Efficient — efektivní",
       "efficientDetail": "Úhly mezi legs < 60° ideální, < 90° maximum. Nad 120° = catastrophic.",
       "noExtension": "No Extension — bez prodloužení",
-      "noExtensionDetail": "Pokud 1 leg selže, masterpoint se neposune → žádný shock load. Backup / limiting knots."
+      "noExtensionDetail": "Pokud 1 leg selže, masterpoint se neposune → žádný shock load. Back-up / limiting knots."
     },
     "snareSane": {
       "title": "SNARE SANE",
@@ -626,7 +626,7 @@
       "smallAngles": "Small Angles — malé úhly",
       "smallAnglesDetail": "Úhel mezi anchor legs < 60° ideální. 90° = per-leg 71%, 120° = 100%, > 120° = catastrophic.",
       "noExtension": "No Extension — bez prodloužení",
-      "noExtensionDetail": "Failure jednoho legu nesmí způsobit shock load. Backup / limiting knots."
+      "noExtensionDetail": "Failure jednoho legu nesmí způsobit shock load. Back-up / limiting knots."
     },
     "nylonRule": {
       "title": "Sub-40m Nylon Rule",
@@ -637,7 +637,7 @@
         "pes": "PES polyester",
         "hmpe": "UHMWPE"
       },
-      "hint": "Sub-40m highline = mainline + backup + leash všechno PA (nylon). Statický materiál (PES, UHMWPE) generuje 2-3× vyšší peak forces = risk překročení ISA:21 limitu 12 kN."
+      "hint": "Sub-40m highline = mainline + back-up + leash všechno PA (nylon). Statický materiál (PES, UHMWPE) generuje 2-3× vyšší peak forces = risk překročení ISA:21 limitu 12 kN."
     },
     "wind": {
       "title": "Wind Advisory",
@@ -668,6 +668,18 @@
         "na": "Bez doporučení"
       },
       "hint": "Dny = vystavení vlivům prostředí (UV, déšť), NIKOLI od data výroby. Skladování se nepočítá."
+    },
+    "softRelease": {
+      "title": "Povolovák (soft release)",
+      "summary": "Řízené povolení tenze — musí být rozhodnuto při stavbě",
+      "sr1": "Rozhoduje se PŘI STAVBĚ anchoru, ne za života lajny",
+      "sr1Detail": "Improvizované povolování napnuté lajny je risky — ISA:21 §3.11.1.1 vyžaduje aby povolovák byl součást rig systému rozhodnutého při stavbě.",
+      "sr2": "Umístění: mezi tie-off a mainline",
+      "sr2Detail": "Povolovák sedí na anchor straně (často integrovaný s weblockem nebo jako samostatný dyneema/spanset loop). Nikdy ne uprostřed lajny.",
+      "sr3": "Typy: dedicated device vs. improvizace",
+      "sr3Detail": "Dedicated: Slack-Inov Zenlock soft release, Rock Empire soft release. Alternativa: spanset nebo dyneema loop v anchor systému (2-3× jistota).",
+      "sr4": "Kontrola: pre-rig test + visual každou session",
+      "sr4Detail": "Před rigem: ověřit funkci soft release mechanismu bez zátěže. Každá session: vizuální inspekce (žádné poškození, správné napojení)."
     }
   },
   "tabs": {

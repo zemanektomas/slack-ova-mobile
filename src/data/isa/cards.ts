@@ -290,6 +290,22 @@ export const CARDS: CardData[] = [
     relatedCalculator: 'ma',  // → MA (Buckingham s weblock jako progress capture)
   },
 
+  // 12b. Povolovak (soft release) — ISA:21 §3.11.1.1 (v0.7.26)
+  {
+    id: 'soft-release',
+    category: 'rule',
+    icon: 'valve-open',
+    titleKey: 'cards.softRelease.title',
+    summaryKey: 'cards.softRelease.summary',
+    checklist: [
+      { id: 'sr1', labelKey: 'cards.softRelease.sr1', detailKey: 'cards.softRelease.sr1Detail' },
+      { id: 'sr2', labelKey: 'cards.softRelease.sr2', detailKey: 'cards.softRelease.sr2Detail' },
+      { id: 'sr3', labelKey: 'cards.softRelease.sr3', detailKey: 'cards.softRelease.sr3Detail' },
+      { id: 'sr4', labelKey: 'cards.softRelease.sr4', detailKey: 'cards.softRelease.sr4Detail' },
+    ],
+    reference: { source: 'ISA:21 (2023) §3.11.1.1' },
+  },
+
   // 13. Kompletní rig workflow — celý strom stavby lajny (v0.7.3 + 2026 update)
   {
     id: 'rig-workflow',
