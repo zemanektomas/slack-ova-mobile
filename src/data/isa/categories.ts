@@ -57,10 +57,10 @@ export const CARD_CATEGORY: Record<string, CardCategoryId> = {
   'wind':               'environment',
   'electrostatic':      'environment',
   // v0.7.26: 'anchor' kategorie sluci kotveni + kotvitko + povolovak
+  // v0.7.27: weblock-tieoff + soft-release sloucene do 'weblock-system'
   'serene':             'anchor',
   'snare-sane':         'anchor',
-  'weblock-tieoff':     'anchor',   // driv 'weblock' kategorie
-  'soft-release':       'anchor',   // NEW v0.7.26
+  'weblock-system':     'anchor',   // v0.7.27 merged weblock-tieoff + soft-release
   'nylon-rule':         'webbing',
   'rlt':                'webbing',
   'webbing-knots':      'webbing',

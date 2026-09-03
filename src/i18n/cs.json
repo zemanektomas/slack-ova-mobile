@@ -492,16 +492,6 @@
       "wk3": "Na back-upu je uzel legitimní",
       "wk3Detail": "§3.13.1.1: blokovací prvek back-upu smí být šitý spoj podle ISA:41 nebo bezpečný uzel. Na mainline tahle volba není."
     },
-    "weblockTieoff": {
-      "title": "Kotvítko vždy s tie-off",
-      "summary": "Závěr montáže kotvítka — ISA:21 chce mechanismus proti průběžnému prokluzu",
-      "wt1": "Postup: dva oviny, očko, řetízek",
-      "wt1Detail": "Ocas veď za středovým rozvaděčem (pozor na zkrut), na JEDNU stranu šeklu. Očko oviň dvakrát kolem šeklu, protáhni další očko skrz obě smyčky, a když zbývá ~30 cm, ukonči řetízkem (daisy chain).",
-      "wt2": "Kontroluj, jestli se neutáhly oviny",
-      "wt2Detail": "Nekontroluje se jen „je tam tie-off“. Utažený ovin je příznak, že popruh v systému prokluzuje. Kontrolovat na obou kotvítkách před každou session.",
-      "wt3": "Bez tie-off hrozí průběžný prokluz",
-      "wt3Detail": "ISA:21 §3.11.1.2 žádá „mechanism or method to prevent continuous slippage“. Doložený případ: Ostrov u Děčína 2011 — popruh projel oběma kotvítky a zastavil se až na pojišťovacích uzlech."
-    },
     "electrostatic": {
       "title": "Electrostatic Discharge Warning",
       "summary": "Nejnovější ISA safety varování (12/2025) — plasma arcs při bouřích",
@@ -669,17 +659,19 @@
       },
       "hint": "Dny = vystavení vlivům prostředí (UV, déšť), NIKOLI od data výroby. Skladování se nepočítá."
     },
-    "softRelease": {
-      "title": "Povolovák (soft release)",
-      "summary": "Řízené povolení tenze — musí být rozhodnuto při stavbě",
-      "sr1": "Rozhoduje se PŘI STAVBĚ anchoru, ne za života lajny",
-      "sr1Detail": "Improvizované povolování napnuté lajny je risky — ISA:21 §3.11.1.1 vyžaduje aby povolovák byl součást rig systému rozhodnutého při stavbě.",
-      "sr2": "Umístění: mezi tie-off a mainline",
-      "sr2Detail": "Povolovák sedí na anchor straně (často integrovaný s weblockem nebo jako samostatný dyneema/spanset loop). Nikdy ne uprostřed lajny.",
-      "sr3": "Typy: dedicated device vs. improvizace",
-      "sr3Detail": "Dedicated: Slack-Inov Zenlock soft release, Rock Empire soft release. Alternativa: spanset nebo dyneema loop v anchor systému (2-3× jistota).",
-      "sr4": "Kontrola: pre-rig test + visual každou session",
-      "sr4Detail": "Před rigem: ověřit funkci soft release mechanismu bez zátěže. Každá session: vizuální inspekce (žádné poškození, správné napojení)."
+    "weblockSystem": {
+      "title": "Kotvítko + tie-off + povolovák",
+      "summary": "Anchor connection podle ISA:21 §3.11 — jeden systém, tři funkce",
+      "w1": "Kotvítko správně provlečeno",
+      "w1Detail": "Popruh v kotvítku ve správné konfiguraci per výrobce (single/double wrap podle typu). Špatné threading = MBS pokles. Zkontrolovat podle manuálu konkrétního kotvítka (seaHorse, Zenlock, Aki, ...).",
+      "w2": "Tie-off ocásku (§3.11.1.2)",
+      "w2Detail": "Tail popruhu vycházející z kotvítka MUSÍ být zajištěn proti vysmeknutí. Barrel knot, doubled bight, nebo webbing chain. Bez tie-off = pomalá katastrofa pod cyklickou zátěží.",
+      "w3": "Povolovák rozhoduje se PŘI STAVBĚ (§3.11.1.1)",
+      "w3Detail": "Improvizované povolování napnuté lajny je risky. Bez soft release systému rozhodnutého při rig time neexistuje bezpečná cesta k rychlému povolení tenze.",
+      "w4": "Umístění + typy povolováku",
+      "w4Detail": "Mezi tie-off a mainline (anchor strana). Dedicated (Slack-Inov Zenlock, Rock Empire) NEBO spanset/dyneema loop (2-3× safety margin nad expected peak). Nikdy ne uprostřed lajny.",
+      "w5": "Popruh-based povolovák = zajistit stejně jako tie-off",
+      "w5Detail": "Když je povolovák z popruhu/spansetu (ne dedicated device), uzly musí být securovány stejně jako weblock tie-off. Cyklická zátěž rozvazuje volné konce. Dedicated device (Zenlock integrated) toto řeší designem."
     }
   },
   "tabs": {

@@ -492,16 +492,6 @@
       "wk3": "On the backup a knot is legitimate",
       "wk3Detail": "§3.13.1.1: the backup blocking element may be a sewn connection per ISA:41 or a safe knot. On the mainline that choice does not exist."
     },
-    "weblockTieoff": {
-      "title": "Weblock always with a tie-off",
-      "summary": "Closing step of weblock rigging — ISA:21 wants a mechanism against continuous slippage",
-      "wt1": "Method: two wraps, a bight, a daisy chain",
-      "wt1Detail": "Run the tail behind the centre diverter (watch for twists), to ONE side of the shackle. Wrap a bight twice around the shackle, pass another bight through both loops, and with ~30 cm left finish with a daisy chain.",
-      "wt2": "Check whether any wrap has tightened",
-      "wt2Detail": "It is not enough that a tie-off is present. A tightened wrap means the webbing is slipping in the system. Check both weblocks before every session.",
-      "wt3": "Without a tie-off, continuous slippage",
-      "wt3Detail": "ISA:21 §3.11.1.2 requires a “mechanism or method to prevent continuous slippage”. Documented case: Ostrov, Czechia 2011 — the webbing ran through both weblocks and was stopped only by the safety knots."
-    },
     "electrostatic": {
       "title": "Electrostatic Discharge Warning",
       "summary": "Newest ISA safety warning (12/2025) — plasma arcs during storms",
@@ -669,17 +659,19 @@
       },
       "hint": "Days = exposure to environment (UV, rain), NOT from manufacture date. Storage doesn't count."
     },
-    "softRelease": {
-      "title": "Soft release",
-      "summary": "Controlled tension release — must be decided at rig time",
-      "sr1": "Decided AT RIG TIME, not during line life",
-      "sr1Detail": "Improvised de-tensioning of a tensioned line is risky — ISA:21 §3.11.1.1 requires soft release to be part of the rig system planned at build time.",
-      "sr2": "Position: between tie-off and mainline",
-      "sr2Detail": "Soft release sits on the anchor side (often integrated with weblock or as a separate dyneema/spanset loop). Never in the middle of the line.",
-      "sr3": "Types: dedicated device vs. improvised",
-      "sr3Detail": "Dedicated: Slack-Inov Zenlock soft release, Rock Empire soft release. Alternative: spanset or dyneema loop in anchor system (with 2-3× safety margin).",
-      "sr4": "Check: pre-rig test + visual each session",
-      "sr4Detail": "Before rig: verify soft release mechanism works unloaded. Each session: visual inspection (no damage, correct connection)."
+    "weblockSystem": {
+      "title": "Weblock + tie-off + soft release",
+      "summary": "Anchor connection per ISA:21 §3.11 — one system, three functions",
+      "w1": "Weblock correctly threaded",
+      "w1Detail": "Webbing in weblock in correct configuration per manufacturer (single/double wrap depending on type). Wrong threading = MBS reduction. Check the manual of specific weblock (seaHorse, Zenlock, Aki, ...).",
+      "w2": "Tie-off (§3.11.1.2)",
+      "w2Detail": "The tail of webbing exiting the weblock MUST be secured against slipping out. Barrel knot, doubled bight, or webbing chain. Without tie-off = slow catastrophe under cyclic loading.",
+      "w3": "Soft release decided AT RIG TIME (§3.11.1.1)",
+      "w3Detail": "Improvised de-tensioning of a tensioned line is risky. Without a soft release system decided at rig time, there is no safe way to quickly release tension.",
+      "w4": "Position + types of soft release",
+      "w4Detail": "Between tie-off and mainline (anchor side). Dedicated (Slack-Inov Zenlock, Rock Empire) OR spanset/dyneema loop (2-3× safety margin over expected peak). Never in the middle of the line.",
+      "w5": "Webbing-based soft release = secure like tie-off",
+      "w5Detail": "When soft release is webbing/spanset-based (not a dedicated device), knots must be secured the same as weblock tie-off. Cyclic loading unties loose ends. Dedicated device (Zenlock integrated) handles this by design."
     }
   },
   "tabs": {
