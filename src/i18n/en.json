@@ -71,7 +71,18 @@
     "fontSize": "Text size",
     "fontNormal": "Normal",
     "fontLarge": "Large",
-    "fontXlarge": "Largest"
+    "fontXlarge": "Largest",
+    "searchPlaceholder": "Search settings...",
+    "sectionMapAppearance": "Map appearance",
+    "sectionPersonal": "Personal",
+    "sectionAccount": "Account and community",
+    "sectionData": "Data and map",
+    "sectionAbout": "About the app",
+    "sectionAdvanced": "Advanced",
+    "devMode": "Dev Mode",
+    "devModeHint": "Unlocks WIP features (Gear, Reports, Slackmap sign-in) + diagnostics. Off by default.",
+    "dbSchemaVersion": "DB schema version",
+    "bundledMaterials": "Bundled materials"
   },
   "detail": {
     "length": "Length",
@@ -195,7 +206,8 @@
     "slacklineGroups": "Slackline groups",
     "empty": "No groups in the catalog for this country.",
     "loadFailed": "Failed to load community (needs internet).",
-    "footerNote": "Source: Slackmap.com — Slackline groups & ISA members."
+    "footerNote": "Source: Slackmap.com — Slackline groups & ISA members.",
+    "sectionHint": "Slackline groups and ISA members in your country"
   },
   "onboarding": {
     "title": "Welcome to Slackline.Ova",
