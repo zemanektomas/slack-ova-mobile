@@ -71,7 +71,18 @@
     "fontSize": "Velikost písma",
     "fontNormal": "Normální",
     "fontLarge": "Větší",
-    "fontXlarge": "Největší"
+    "fontXlarge": "Největší",
+    "searchPlaceholder": "Hledat nastavení...",
+    "sectionMapAppearance": "Vzhled mapy",
+    "sectionPersonal": "Osobní",
+    "sectionAccount": "Účet a komunita",
+    "sectionData": "Data a mapa",
+    "sectionAbout": "O aplikaci",
+    "sectionAdvanced": "Rozšířené",
+    "devMode": "Dev Mode",
+    "devModeHint": "Odemkne WIP featury (Vybavení, Reporty, Slackmap přihlášení) + diagnostiku. Default vypnuto.",
+    "dbSchemaVersion": "Verze DB schema",
+    "bundledMaterials": "Bundled materials"
   },
   "detail": {
     "length": "Délka",
@@ -195,7 +206,8 @@
     "slacklineGroups": "Slackline skupiny",
     "empty": "Pro tuto zemi nejsou v katalogu žádné skupiny.",
     "loadFailed": "Nepodařilo se načíst komunitu (potřeba internet).",
-    "footerNote": "Zdroj: Slackmap.com — Slackline groups & ISA members."
+    "footerNote": "Zdroj: Slackmap.com — Slackline groups & ISA members.",
+    "sectionHint": "Slackline groups a ISA members ve tvé zemi"
   },
   "onboarding": {
     "title": "Vítej ve Slackline.Ova",

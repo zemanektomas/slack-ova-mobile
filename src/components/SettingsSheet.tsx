@@ -7,7 +7,9 @@ import {
   Pressable,
   ScrollView,
   StyleSheet,
+  Switch,
   Text,
+  TextInput,
   View,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -27,7 +29,10 @@ import { useSlackmapAuth } from '../api/useSlackmapAuth';
 import { ISASafetySheet } from './ISASafetySheet';
 import { useLevelStore, UserLevel } from '../store/levelStore';
 import { useFontStore, FontSize } from '../store/fontStore';
+import { useDevModeStore } from '../store/devModeStore';
 import { CommunitySheet } from './CommunitySheet';
+import { SettingsCard } from './settings/SettingsCard';
+import { SettingsRow } from './settings/SettingsRow';
 
 // Verze z app.json — během dev mode `Constants.expoConfig`, v release přes
 // `Application` API. Pro náš účel ukázat uživateli stačí Constants (funguje vždy).
@@ -110,6 +115,15 @@ export function SettingsSheet({ visible, onClose, mode = 'modal' }: SettingsShee
   // Community sheet (v0.7.3) — pro default country "CZ"
   const [communityOpen, setCommunityOpen] = useState(false);
   const [communityCountry, setCommunityCountry] = useState<string>('CZ');
+
+  // v0.7.29 — Dev Mode toggle (gate WIP features + advanced info)
+  const devMode = useDevModeStore((s) => s.devMode);
+  const setDevMode = useDevModeStore((s) => s.setDevMode);
+
+  // v0.7.29 — Search filter (match card title, case-insensitive)
+  const [searchQuery, setSearchQuery] = useState('');
+  const matchesSearch = (title: string) =>
+    !searchQuery.trim() || title.toLowerCase().includes(searchQuery.trim().toLowerCase());
 
   useEffect(() => {
     if (!visible) return;
@@ -227,287 +241,222 @@ export function SettingsSheet({ visible, onClose, mode = 'modal' }: SettingsShee
     </View>
   );
 
+  // v0.7.29 — nazvy sekci pro search filter (i18n)
+  const secMap = tr('settings.sectionMapAppearance');
+  const secPersonal = tr('settings.sectionPersonal');
+  const secAccount = tr('settings.sectionAccount');
+  const secData = tr('settings.sectionData');
+  const secAbout = tr('settings.sectionAbout');
+  const secAdvanced = tr('settings.sectionAdvanced');
+
   const scrollBody = (
-    <ScrollView style={styles.scroll} contentContainerStyle={{ paddingBottom: 16 }}>
-            <View style={styles.row}>
-              <Text style={[styles.rowLabel, { color: t.textMuted }]}>{tr('settings.mapKind')}</Text>
-              <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ paddingRight: 16 }}>
-                {MAP_KINDS.map((k) => (
-                  <Chip
-                    key={k.key}
-                    label={tr(k.labelKey)}
-                    icon={k.icon}
-                    active={kind === k.key}
-                    onPress={() => setKind(k.key)}
-                    theme={t}
-                  />
-                ))}
-              </ScrollView>
-            </View>
+    <ScrollView style={styles.scroll} contentContainerStyle={{ paddingBottom: 24, paddingTop: 8 }}>
+      {/* Search bar */}
+      <View style={[styles.searchWrap, { backgroundColor: t.surface, borderColor: t.border }]}>
+        <MaterialCommunityIcons name="magnify" size={18} color={t.textDim} />
+        <TextInput
+          style={[styles.searchInput, { color: t.text }]}
+          placeholder={tr('settings.searchPlaceholder')}
+          placeholderTextColor={t.textDim}
+          value={searchQuery}
+          onChangeText={setSearchQuery}
+        />
+        {searchQuery.length > 0 && (
+          <Pressable onPress={() => setSearchQuery('')} hitSlop={8}>
+            <MaterialCommunityIcons name="close-circle" size={18} color={t.textMuted} />
+          </Pressable>
+        )}
+      </View>
 
-            <View style={styles.row}>
-              <Text style={[styles.rowLabel, { color: t.textMuted }]}>{tr('settings.source')}</Text>
-              <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ paddingRight: 16 }}>
-                {SOURCES.map((s) => (
-                  <Chip
-                    key={s.key}
-                    label={s.useTranslation ? tr(s.label) : s.label}
-                    active={sourceFilter === s.key}
-                    onPress={() => setSourceFilter(s.key)}
-                    theme={t}
-                  />
-                ))}
-              </ScrollView>
-              <View style={styles.legend}>
-                <View style={styles.legendItem}>
-                  <View style={[styles.legendDot, { backgroundColor: t.markerHighline }]} />
-                  <Text style={[styles.legendText, { color: t.textMuted }]}>{tr('settings.legendHighline')}</Text>
-                </View>
-                <View style={styles.legendItem}>
-                  <View style={[styles.legendDot, { backgroundColor: t.markerOther }]} />
-                  <Text style={[styles.legendText, { color: t.textMuted }]}>{tr('settings.legendOther')}</Text>
-                </View>
-                <View style={styles.legendItem}>
-                  <View style={[styles.legendDot, { backgroundColor: t.markerSelected, borderWidth: 1, borderColor: t.markerSelectedStroke }]} />
-                  <Text style={[styles.legendText, { color: t.textMuted }]}>{tr('settings.selected')}</Text>
-                </View>
+      {/* Vzhled mapy */}
+      {matchesSearch(secMap) && (
+        <SettingsCard icon="map" title={secMap}>
+          <SettingsRow label={tr('settings.mapKind')} layout="stacked">
+            <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ paddingRight: 16 }}>
+              {MAP_KINDS.map((k) => (
+                <Chip key={k.key} label={tr(k.labelKey)} icon={k.icon} active={kind === k.key} onPress={() => setKind(k.key)} theme={t} />
+              ))}
+            </ScrollView>
+          </SettingsRow>
+          <SettingsRow label={tr('settings.source')} layout="stacked">
+            <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ paddingRight: 16 }}>
+              {SOURCES.map((s) => (
+                <Chip key={s.key} label={s.useTranslation ? tr(s.label) : s.label} active={sourceFilter === s.key} onPress={() => setSourceFilter(s.key)} theme={t} />
+              ))}
+            </ScrollView>
+            <View style={styles.legend}>
+              <View style={styles.legendItem}>
+                <View style={[styles.legendDot, { backgroundColor: t.markerHighline }]} />
+                <Text style={[styles.legendText, { color: t.textMuted }]}>{tr('settings.legendHighline')}</Text>
+              </View>
+              <View style={styles.legendItem}>
+                <View style={[styles.legendDot, { backgroundColor: t.markerOther }]} />
+                <Text style={[styles.legendText, { color: t.textMuted }]}>{tr('settings.legendOther')}</Text>
+              </View>
+              <View style={styles.legendItem}>
+                <View style={[styles.legendDot, { backgroundColor: t.markerSelected, borderWidth: 1, borderColor: t.markerSelectedStroke }]} />
+                <Text style={[styles.legendText, { color: t.textMuted }]}>{tr('settings.selected')}</Text>
               </View>
             </View>
-
-            <View style={styles.row}>
-              <Text style={[styles.rowLabel, { color: t.textMuted }]}>{tr('settings.display')}</Text>
-              <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
-                <Chip
-                  label={tr('settings.showLogo')}
-                  icon={hideLogo ? 'checkbox-blank-outline' : 'checkbox-marked'}
-                  active={!hideLogo}
-                  onPress={() => setHideLogo(!hideLogo)}
-                  theme={t}
-                />
-                <Chip
-                  label={tr('settings.showControls')}
-                  icon={hideControls ? 'checkbox-blank-outline' : 'checkbox-marked'}
-                  active={!hideControls}
-                  onPress={() => setHideControls(!hideControls)}
-                  theme={t}
-                />
-              </View>
+          </SettingsRow>
+          <SettingsRow label={tr('settings.display')} layout="stacked" last>
+            <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
+              <Chip label={tr('settings.showLogo')} icon={hideLogo ? 'checkbox-blank-outline' : 'checkbox-marked'} active={!hideLogo} onPress={() => setHideLogo(!hideLogo)} theme={t} />
+              <Chip label={tr('settings.showControls')} icon={hideControls ? 'checkbox-blank-outline' : 'checkbox-marked'} active={!hideControls} onPress={() => setHideControls(!hideControls)} theme={t} />
             </View>
+          </SettingsRow>
+        </SettingsCard>
+      )}
 
-            <View style={styles.row}>
-              <Text style={[styles.rowLabel, { color: t.textMuted }]}>{tr('settings.language')}</Text>
-              <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ paddingRight: 16 }}>
-                {LANGUAGES.map((l) => (
-                  <Chip
-                    key={l.key}
-                    label={l.label}
-                    active={lang === l.key}
-                    onPress={() => setLang(l.key)}
-                    theme={t}
-                  />
-                ))}
-              </ScrollView>
+      {/* Osobní */}
+      {matchesSearch(secPersonal) && (
+        <SettingsCard icon="account" title={secPersonal}>
+          <SettingsRow label={tr('settings.language')} layout="stacked">
+            <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ paddingRight: 16 }}>
+              {LANGUAGES.map((l) => (
+                <Chip key={l.key} label={l.label} active={lang === l.key} onPress={() => setLang(l.key)} theme={t} />
+              ))}
+            </ScrollView>
+          </SettingsRow>
+          <SettingsRow label={tr('level.sectionTitle')} hint={tr(`level.${level}Hint`)} layout="stacked">
+            <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
+              {(['beginner', 'walker', 'rigger'] as UserLevel[]).map((l) => (
+                <Chip key={l} label={tr(`level.${l}`)} active={level === l} onPress={() => setLevel(l)} theme={t} />
+              ))}
             </View>
-            <View style={styles.row}>
-              <Text style={[styles.rowLabel, { color: t.textMuted }]}>{tr('settings.updates')}</Text>
-
-              {/* Verze aplikace + tlačítko Play Store */}
-              <View style={styles.updateRow}>
-                <Text style={[styles.updateLabel, { color: t.text }]}>
-                  {tr('settings.appVersion', { version: APP_VERSION, build: APP_BUILD })}
-                </Text>
-                <Pressable onPress={handleOpenPlayStore} style={[styles.linkBtn, { borderColor: t.border }]}>
-                  <MaterialCommunityIcons name="google-play" size={14} color={t.accent} style={{ marginRight: 4 }} />
-                  <Text style={[styles.linkBtnText, { color: t.accent }]}>{tr('settings.openPlayStore')}</Text>
-                </Pressable>
-              </View>
-
-              {/* Data lajn + tlačítko Aktualizovat */}
-              <View style={styles.updateRow}>
-                <View style={{ flex: 1 }}>
-                  <Text style={[styles.updateLabel, { color: t.text }]}>
-                    {tr('settings.dataLines')}
-                  </Text>
-                  <Text style={[styles.updateSubtext, { color: t.textDim }]}>
-                    {lastRefresh
-                      ? tr('settings.lastRefresh', { date: formatRefreshDate(lastRefresh, lang) })
-                      : tr('settings.dataBundled')}
-                  </Text>
-                </View>
-                <Pressable
-                  onPress={handleRefreshSlackmap}
-                  disabled={!isOnline || refreshing}
-                  style={[
-                    styles.linkBtn,
-                    { borderColor: t.border, opacity: (!isOnline || refreshing) ? 0.4 : 1 },
-                  ]}
-                >
-                  {refreshing ? (
-                    <ActivityIndicator size="small" color={t.accent} />
-                  ) : (
-                    <>
-                      <MaterialCommunityIcons name="refresh" size={14} color={t.accent} style={{ marginRight: 4 }} />
-                      <Text style={[styles.linkBtnText, { color: t.accent }]}>
-                        {tr('settings.refreshSlackmap')}
-                      </Text>
-                    </>
-                  )}
-                </Pressable>
-              </View>
-
-              {!isOnline && (
-                <Text style={[styles.offlineHint, { color: t.textMuted }]}>
-                  ⚠ {tr('settings.offlineHint')}
-                </Text>
-              )}
+          </SettingsRow>
+          <SettingsRow label={tr('settings.fontSize')} layout="stacked" last>
+            <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
+              {([['normal', 'settings.fontNormal'], ['large', 'settings.fontLarge'], ['xlarge', 'settings.fontXlarge']] as [FontSize, string][]).map(([size, key]) => (
+                <Chip key={size} label={tr(key)} active={fontSize === size} onPress={() => setFontSize(size)} theme={t} />
+              ))}
             </View>
+          </SettingsRow>
+        </SettingsCard>
+      )}
 
-            <View style={styles.row}>
-              <Text style={[styles.rowLabel, { color: t.textMuted }]}>{tr('settings.offlineMap')}</Text>
-              <Text style={[styles.updateSubtext, { color: t.textDim, marginBottom: 8 }]}>
-                {tr('settings.offlineMapHint')}
-              </Text>
-              <View style={styles.updateRow}>
-                <Text style={[styles.updateLabel, { color: t.text, flex: 1 }]}>
-                  {tr('settings.clearCache')}
-                </Text>
-                <Pressable
-                  onPress={handleClearMapCache}
-                  disabled={clearingCache}
-                  style={[styles.linkBtn, { borderColor: t.border, opacity: clearingCache ? 0.4 : 1 }]}
-                >
-                  {clearingCache ? (
-                    <ActivityIndicator size="small" color={t.accent} />
-                  ) : (
-                    <>
-                      <MaterialCommunityIcons name="trash-can-outline" size={14} color={t.accent} style={{ marginRight: 4 }} />
-                      <Text style={[styles.linkBtnText, { color: t.accent }]}>
-                        {tr('settings.clearCacheBtn')}
-                      </Text>
-                    </>
-                  )}
-                </Pressable>
-              </View>
-            </View>
-
-            {/* Level switcher (v0.7.3) */}
-            <View style={styles.row}>
-              <Text style={[styles.rowLabel, { color: t.textMuted }]}>{tr('level.sectionTitle')}</Text>
-              <Text style={[styles.updateSubtext, { color: t.textDim, marginBottom: 8 }]}>
-                {tr('level.hint')}
-              </Text>
-              <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
-                {(['beginner', 'walker', 'rigger'] as UserLevel[]).map((l) => (
-                  <Chip
-                    key={l}
-                    label={tr(`level.${l}`)}
-                    active={level === l}
-                    onPress={() => setLevel(l)}
-                    theme={t}
-                  />
-                ))}
-              </View>
-              <Text style={[styles.updateSubtext, { color: t.textDim, marginTop: 6 }]}>
-                {tr(`level.${level}Hint`)}
-              </Text>
-            </View>
-
-            {/* Velikost písma (v0.7.16) */}
-            <View style={styles.row}>
-              <Text style={[styles.rowLabel, { color: t.textMuted }]}>{tr('settings.fontSize')}</Text>
-              <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
-                {([
-                  ['normal', 'settings.fontNormal'],
-                  ['large', 'settings.fontLarge'],
-                  ['xlarge', 'settings.fontXlarge'],
-                ] as [FontSize, string][]).map(([size, key]) => (
-                  <Chip
-                    key={size}
-                    label={tr(key)}
-                    active={fontSize === size}
-                    onPress={() => setFontSize(size)}
-                    theme={t}
-                  />
-                ))}
-              </View>
-            </View>
-
-            {/* Community (v0.7.3) */}
-            <View style={styles.row}>
-              <Text style={[styles.rowLabel, { color: t.textMuted }]}>{tr('community.sectionLabel')}</Text>
-              <View style={styles.updateRow}>
-                <Text style={[styles.updateLabel, { color: t.text, flex: 1 }]}>
-                  {tr('community.title')}
-                </Text>
-                <Pressable
-                  onPress={() => { setCommunityCountry('CZ'); setCommunityOpen(true); }}
-                  style={[styles.linkBtn, { borderColor: t.border }]}
-                >
-                  <MaterialCommunityIcons name="account-group-outline" size={14} color={t.accent} style={{ marginRight: 4 }} />
-                  <Text style={[styles.linkBtnText, { color: t.accent }]}>
-                    {tr('community.openBtn')}
-                  </Text>
-                </Pressable>
-              </View>
-            </View>
-
-            {/* v0.8.0: ISA Safety Companion link odstranen — ISA je vlastni tab v bottom bar */}
-
-            <View style={styles.row}>
-              <Text style={[styles.rowLabel, { color: t.textMuted }]}>{tr('settings.slackmapAccount')}</Text>
-              <Text style={[styles.updateSubtext, { color: t.textDim, marginBottom: 8 }]}>
-                {tr('settings.slackmapAccountHint')}
-              </Text>
+      {/* Účet & komunita */}
+      {matchesSearch(secAccount) && (
+        <SettingsCard icon="account-key" title={secAccount}>
+          <SettingsRow label={tr('community.title')} hint={tr('community.sectionHint')} last={!devMode}>
+            <Pressable
+              onPress={() => { setCommunityCountry('CZ'); setCommunityOpen(true); }}
+              style={[styles.linkBtn, { borderColor: t.border }]}
+            >
+              <MaterialCommunityIcons name="account-group-outline" size={14} color={t.accent} style={{ marginRight: 4 }} />
+              <Text style={[styles.linkBtnText, { color: t.accent }]}>{tr('community.openBtn')}</Text>
+            </Pressable>
+          </SettingsRow>
+          {devMode && (
+            <SettingsRow label={tr('settings.slackmapAccount')} hint={tr('settings.slackmapAccountHint')} layout="stacked" last>
               <View style={styles.updateRow}>
                 {isAuthenticated && authUser ? (
                   <>
                     <View style={{ flex: 1 }}>
-                      <Text style={[styles.updateLabel, { color: t.text }]} numberOfLines={1}>
-                        {authUser.email}
-                      </Text>
-                      <Text style={[styles.updateSubtext, { color: t.textDim }]}>
-                        {tr('settings.signedIn')}
-                      </Text>
+                      <Text style={[styles.updateLabel, { color: t.text }]} numberOfLines={1}>{authUser.email}</Text>
+                      <Text style={[styles.updateSubtext, { color: t.textDim }]}>{tr('settings.signedIn')}</Text>
                     </View>
-                    <Pressable
-                      onPress={handleSignOut}
-                      style={[styles.linkBtn, { borderColor: t.border }]}
-                    >
+                    <Pressable onPress={handleSignOut} style={[styles.linkBtn, { borderColor: t.border }]}>
                       <MaterialCommunityIcons name="logout" size={14} color={t.accent} style={{ marginRight: 4 }} />
-                      <Text style={[styles.linkBtnText, { color: t.accent }]}>
-                        {tr('settings.signOut')}
-                      </Text>
+                      <Text style={[styles.linkBtnText, { color: t.accent }]}>{tr('settings.signOut')}</Text>
                     </Pressable>
                   </>
                 ) : (
                   <>
-                    <Text style={[styles.updateLabel, { color: t.text, flex: 1 }]}>
-                      {tr('settings.notSignedIn')}
-                    </Text>
-                    <Pressable
-                      onPress={handleSignIn}
-                      disabled={!authReady || signingIn}
-                      style={[
-                        styles.linkBtn,
-                        { borderColor: t.border, opacity: (!authReady || signingIn) ? 0.4 : 1 },
-                      ]}
-                    >
+                    <Text style={[styles.updateLabel, { color: t.text, flex: 1 }]}>{tr('settings.notSignedIn')}</Text>
+                    <Pressable onPress={handleSignIn} disabled={!authReady || signingIn} style={[styles.linkBtn, { borderColor: t.border, opacity: (!authReady || signingIn) ? 0.4 : 1 }]}>
                       {signingIn ? (
                         <ActivityIndicator size="small" color={t.accent} />
                       ) : (
                         <>
                           <MaterialCommunityIcons name="login" size={14} color={t.accent} style={{ marginRight: 4 }} />
-                          <Text style={[styles.linkBtnText, { color: t.accent }]}>
-                            {tr('settings.signIn')}
-                          </Text>
+                          <Text style={[styles.linkBtnText, { color: t.accent }]}>{tr('settings.signIn')}</Text>
                         </>
                       )}
                     </Pressable>
                   </>
                 )}
               </View>
-            </View>
-          </ScrollView>
+            </SettingsRow>
+          )}
+        </SettingsCard>
+      )}
+
+      {/* Data & mapa */}
+      {matchesSearch(secData) && (
+        <SettingsCard icon="database" title={secData}>
+          <SettingsRow
+            label={tr('settings.dataLines')}
+            hint={lastRefresh ? tr('settings.lastRefresh', { date: formatRefreshDate(lastRefresh, lang) }) : tr('settings.dataBundled')}
+            layout="stacked"
+          >
+            <Pressable
+              onPress={handleRefreshSlackmap}
+              disabled={!isOnline || refreshing}
+              style={[styles.linkBtn, { borderColor: t.border, opacity: (!isOnline || refreshing) ? 0.4 : 1, alignSelf: 'flex-start' }]}
+            >
+              {refreshing ? (
+                <ActivityIndicator size="small" color={t.accent} />
+              ) : (
+                <>
+                  <MaterialCommunityIcons name="refresh" size={14} color={t.accent} style={{ marginRight: 4 }} />
+                  <Text style={[styles.linkBtnText, { color: t.accent }]}>{tr('settings.refreshSlackmap')}</Text>
+                </>
+              )}
+            </Pressable>
+            {!isOnline && <Text style={[styles.offlineHint, { color: t.textMuted, marginTop: 6 }]}>⚠ {tr('settings.offlineHint')}</Text>}
+          </SettingsRow>
+          <SettingsRow label={tr('settings.clearCache')} hint={tr('settings.offlineMapHint')} layout="stacked" last>
+            <Pressable
+              onPress={handleClearMapCache}
+              disabled={clearingCache}
+              style={[styles.linkBtn, { borderColor: t.border, opacity: clearingCache ? 0.4 : 1, alignSelf: 'flex-start' }]}
+            >
+              {clearingCache ? (
+                <ActivityIndicator size="small" color={t.accent} />
+              ) : (
+                <>
+                  <MaterialCommunityIcons name="trash-can-outline" size={14} color={t.accent} style={{ marginRight: 4 }} />
+                  <Text style={[styles.linkBtnText, { color: t.accent }]}>{tr('settings.clearCacheBtn')}</Text>
+                </>
+              )}
+            </Pressable>
+          </SettingsRow>
+        </SettingsCard>
+      )}
+
+      {/* O aplikaci */}
+      {matchesSearch(secAbout) && (
+        <SettingsCard icon="information" title={secAbout}>
+          <SettingsRow label={tr('settings.appVersion', { version: APP_VERSION, build: APP_BUILD })} last>
+            <Pressable onPress={handleOpenPlayStore} style={[styles.linkBtn, { borderColor: t.border }]}>
+              <MaterialCommunityIcons name="google-play" size={14} color={t.accent} style={{ marginRight: 4 }} />
+              <Text style={[styles.linkBtnText, { color: t.accent }]}>{tr('settings.openPlayStore')}</Text>
+            </Pressable>
+          </SettingsRow>
+        </SettingsCard>
+      )}
+
+      {/* Rozšířené (collapsible, default closed) */}
+      {matchesSearch(secAdvanced) && (
+        <SettingsCard icon="cog" title={secAdvanced} collapsible defaultOpen={false}>
+          <SettingsRow label={tr('settings.devMode')} hint={tr('settings.devModeHint')} last={!devMode}>
+            <Switch
+              value={devMode}
+              onValueChange={setDevMode}
+              trackColor={{ false: t.border, true: t.accent }}
+              thumbColor={devMode ? t.accentOn : t.surface}
+            />
+          </SettingsRow>
+          {devMode && (
+            <>
+              <SettingsRow label={tr('settings.dbSchemaVersion')} hint="v7 (gear + reports tables)" />
+              <SettingsRow label={tr('settings.bundledMaterials')} hint="96 typů (materials.json)" last />
+            </>
+          )}
+        </SettingsCard>
+      )}
+    </ScrollView>
   );
 
   // Nested sheets — spolecne pro modal i inline mode.
@@ -637,6 +586,19 @@ const makeStyles = (fs: number) => StyleSheet.create({
   },
   title: { fontSize: 18 * fs, fontWeight: '600' },
   scroll: { flexGrow: 0 },
+  // v0.7.29 — search bar nahore
+  searchWrap: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginHorizontal: 16,
+    marginBottom: 12,
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+    borderRadius: 8,
+    borderWidth: StyleSheet.hairlineWidth,
+    gap: 8,
+  },
+  searchInput: { flex: 1, fontSize: 15 * fs, paddingVertical: 4 },
   row: { paddingVertical: 10, paddingHorizontal: 16 },
   rowLabel: { fontSize: 12 * fs, textTransform: 'uppercase', marginBottom: 8, letterSpacing: 0.5 },
   chip: {
