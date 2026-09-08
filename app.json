@@ -2,7 +2,7 @@
   "expo": {
     "name": "Slackline.Ova",
     "slug": "slackline-ova",
-    "version": "0.7.29",
+    "version": "0.7.30",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "scheme": "slacklineova",
@@ -26,7 +26,7 @@
         "backgroundColor": "#0f172a"
       },
       "package": "cz.slackline.ova",
-      "versionCode": 48
+      "versionCode": 49
     },
     "plugins": [
       "expo-router",
@@ -44,7 +44,10 @@
           "android": {
             "compileSdkVersion": 36,
             "targetSdkVersion": 36,
-            "buildToolsVersion": "36.0.0"
+            "buildToolsVersion": "36.0.0",
+            "enableProguardInReleaseBuilds": true,
+            "enableShrinkResourcesInReleaseBuilds": true,
+            "extraProguardRules": "# v0.7.30 R8 rules — chrani reflection-based kod pri minifikaci\n\n# React Native core\n-keep class com.facebook.react.** { *; }\n-keep class com.facebook.hermes.** { *; }\n-keep class com.facebook.jni.** { *; }\n-dontwarn com.facebook.react.**\n-dontwarn com.facebook.hermes.**\n\n# Expo modules\n-keep class expo.modules.** { *; }\n-keep class expo.**Module { *; }\n-dontwarn expo.modules.**\n\n# Reanimated (nadstavba puvodni proguard-rules.pro)\n-keep class com.swmansion.reanimated.** { *; }\n-keep class com.facebook.react.turbomodule.** { *; }\n\n# MapLibre RN\n-keep class org.maplibre.** { *; }\n-keep class com.mapbox.** { *; }\n-dontwarn org.maplibre.**\n\n# expo-sqlite native module\n-keep class expo.modules.sqlite.** { *; }\n\n# ML Kit (expo-translate-text)\n-keep class com.google.mlkit.** { *; }\n-dontwarn com.google.mlkit.**\n\n# Gorhom BottomSheet\n-keep class com.gorhom.** { *; }\n\n# Zachovat anotace pro reflection\n-keepattributes *Annotation*\n-keepattributes Signature\n-keepattributes InnerClasses,EnclosingMethod\n\n# Zachovat R.string, R.drawable atd. pouzivane v mainfestu\n-keepclassmembers class **.R$* {\n    public static <fields>;\n}\n"
           }
         }
       ],
