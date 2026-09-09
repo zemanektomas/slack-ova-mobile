@@ -1,7 +1,7 @@
 // SQLite schema pro lokální mirror serverové DB + lokální stav (outbox, cache).
 // Spouští se při startu, idempotentně (CREATE IF NOT EXISTS).
 
-export const SCHEMA_VERSION = 7;
+export const SCHEMA_VERSION = 8;
 
 export const SCHEMA_SQL = `
 CREATE TABLE IF NOT EXISTS slacklines (
@@ -149,6 +149,9 @@ CREATE TABLE IF NOT EXISTS gear (
   rlt_days_estimate INTEGER,              -- default z materials.json.rlt_days_default, user override
   isa_cert TEXT,                          -- 'ISA:41 Type B' | 'ISA:51' | 'ISA:37' | ...
   material_id TEXT,                       -- FK do assets/materials.json (napr. 'slacktivity-y2k-25mm'), nebo NULL = user overlay
+  -- v8: napojeni na SlackData API (ADR-057). NULL = "vlastni" (jen user data), jinak "napojene" (enriched z API).
+  slackdata_ref INTEGER,                  -- external ID v SlackData (napr. Webbing.id 42)
+  slackdata_type TEXT,                    -- 'webbing' | 'weblock' | 'roller' | 'leashring' | 'grip' | 'treepro'
   created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
   updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
@@ -181,6 +184,16 @@ CREATE TABLE IF NOT EXISTS report_gear (
   hours_used REAL                         -- doba expozice na lajne (pro RLT tracking)
 );
 
+-- v8: SlackData API cache (ADR-057).
+-- HTTP odpovedi ze slackdata.org drzime 30 dni; pri offline / API down fallback na bundled materials.json.
+-- endpoint = plne URL bez query stringu (napr. 'https://slackdata.org/api/webbing/42')
+CREATE TABLE IF NOT EXISTS slackdata_cache (
+  endpoint TEXT PRIMARY KEY,
+  payload TEXT NOT NULL,                  -- JSON body odpovedi
+  status INTEGER NOT NULL,                -- HTTP status (typicky 200 nebo 404)
+  fetched_at TEXT NOT NULL                -- ISO 8601 timestamp posledniho uspesneho fetch
+);
+
 CREATE INDEX IF NOT EXISTS ix_points_bbox ON points(latitude, longitude);
 CREATE INDEX IF NOT EXISTS ix_components_type ON components(component_type, slackline_id);
 CREATE INDEX IF NOT EXISTS ix_components_slackline ON components(slackline_id);
@@ -196,4 +209,7 @@ CREATE INDEX IF NOT EXISTS ix_reports_slackline ON reports(slackline_id);
 CREATE INDEX IF NOT EXISTS ix_reports_gear ON reports(linked_gear_id);
 CREATE INDEX IF NOT EXISTS ix_report_gear_report ON report_gear(report_id);
 CREATE INDEX IF NOT EXISTS ix_report_gear_gear ON report_gear(gear_id);
+-- v8 indexy
+CREATE INDEX IF NOT EXISTS ix_gear_slackdata ON gear(slackdata_type, slackdata_ref);
+CREATE INDEX IF NOT EXISTS ix_slackdata_cache_fetched ON slackdata_cache(fetched_at);
 `;

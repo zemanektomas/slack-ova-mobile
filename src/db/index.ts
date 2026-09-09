@@ -49,6 +49,13 @@ async function migrate(db: SQLite.SQLiteDatabase): Promise<void> {
     // Tabulky gear + reports + report_gear + indexy vytvoreny v SCHEMA_SQL (CREATE IF NOT EXISTS).
     // Jen bumpujeme verzi.
   }
+  if (current < 8) {
+    // v8: SlackData API napojeni (ADR-057).
+    // Tabulka slackdata_cache vznika pres SCHEMA_SQL. Do gear pridavame 2 nullable sloupce
+    // (existujici radky prezijou — dostanou NULL, coz odpovida "vlastni" polozce).
+    try { await db.execAsync(`ALTER TABLE gear ADD COLUMN slackdata_ref INTEGER`); } catch {}
+    try { await db.execAsync(`ALTER TABLE gear ADD COLUMN slackdata_type TEXT`); } catch {}
+  }
   // Index na source — vytvoříme až po migraci (sloupec teď určitě existuje)
   try {
     await db.execAsync(`CREATE INDEX IF NOT EXISTS ix_slacklines_source ON slacklines(source)`);
