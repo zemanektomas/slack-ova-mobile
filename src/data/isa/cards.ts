@@ -321,52 +321,9 @@ export const CARDS: CardData[] = [
     relatedCalculator: 'deviation',  // → deviation (fáze 5 Tensioning)
   },
 
-  // v0.8.0 Q3 — Kalkulátory hub -----------------------------------------------
-  {
-    id: 'calculators-hub',
-    category: 'calculators-hub',
-    icon: 'calculator-variant',
-    titleKey: 'cards.calculatorsHub.title',
-    summaryKey: 'cards.calculatorsHub.summary',
-    calculatorsHub: [
-      {
-        type: 'angle',
-        icon: 'angle-acute',
-        titleKey: 'cards.calculatorsHub.angleTitle',
-        hintKey: 'cards.calculatorsHub.angleHint',
-      },
-      {
-        type: 'force',
-        icon: 'lightning-bolt',
-        titleKey: 'cards.calculatorsHub.forceTitle',
-        hintKey: 'cards.calculatorsHub.forceHint',
-      },
-      {
-        type: 'sagTension',
-        icon: 'chart-bell-curve',
-        titleKey: 'cards.calculatorsHub.sagTitle',
-        hintKey: 'cards.calculatorsHub.sagHint',
-      },
-      {
-        type: 'tapeSpacing',
-        icon: 'tape-measure',
-        titleKey: 'cards.calculatorsHub.tapeTitle',
-        hintKey: 'cards.calculatorsHub.tapeHint',
-      },
-      {
-        type: 'ma',
-        icon: 'cog-outline',
-        titleKey: 'cards.calculatorsHub.maTitle',
-        hintKey: 'cards.calculatorsHub.maHint',
-      },
-      {
-        type: 'deviation',
-        icon: 'call-split',
-        titleKey: 'cards.calculatorsHub.deviationTitle',
-        hintKey: 'cards.calculatorsHub.deviationHint',
-      },
-    ],
-  },
+  // v0.8.0 Q3: Kalkulátory hub odstraněna — kalkulátory mají vlastní top-level tab.
+  // Kontextové odkazy v ISA kartách (relatedCalculator) zůstávají — otevírají kalkulátor
+  // přímo z relevantního safety materiálu (SNARE SANE / Nylon Rule / Weblock / Rig workflow).
 
 ];
 // ============================================================================
