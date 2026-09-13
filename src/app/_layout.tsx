@@ -107,6 +107,15 @@ export default function RootLayout() {
         console.warn('[seed-slackmap] failed', String(e));
       }
 
+      // v9: ISA warnings — auto-fetch pri startu, cache 7 dni (non-blocking).
+      try {
+        const { refreshIfStale } = await import('../api/isaWarnings');
+        const r = await refreshIfStale();
+        console.log('[init] ISA warnings refresh:', r);
+      } catch (e) {
+        console.warn('[isa-warnings] refresh failed', String(e));
+      }
+
     })();
   }, [hydrate]);
 

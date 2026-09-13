@@ -1,7 +1,7 @@
 // SQLite schema pro lokální mirror serverové DB + lokální stav (outbox, cache).
 // Spouští se při startu, idempotentně (CREATE IF NOT EXISTS).
 
-export const SCHEMA_VERSION = 8;
+export const SCHEMA_VERSION = 9;
 
 export const SCHEMA_SQL = `
 CREATE TABLE IF NOT EXISTS slacklines (
@@ -193,6 +193,28 @@ CREATE TABLE IF NOT EXISTS slackdata_cache (
   status INTEGER NOT NULL,                -- HTTP status (typicky 200 nebo 404)
   fetched_at TEXT NOT NULL                -- ISO 8601 timestamp posledniho uspesneho fetch
 );
+
+-- v9: ISA warnings (auto-fetch pri startu, cache 7 dni).
+-- Kazdy warning je gear-focused: navazany na konkretni SlackData gear (webbing/weblock/roller/...)
+-- pres gear_type + gear_id. manufacturer + model jsou standalone stringy pro fuzzy match
+-- s materials.json items co nemaji slackdata_ref.
+CREATE TABLE IF NOT EXISTS isa_warnings (
+  source_id TEXT PRIMARY KEY,             -- ID z ISA warnings DB (napr. "81")
+  status TEXT NOT NULL,                   -- 'Warning' | 'Recall' | 'Notice'
+  gear_type TEXT,                         -- 'webbing' | 'weblock' | 'roller' | 'leashring' | 'grip' | 'treepro'
+  gear_id INTEGER,                        -- SlackData gear ID
+  date_iso TEXT,                          -- 'YYYY-MM-DD'
+  product_type TEXT,                      -- 'Webbing' | 'Weblock' | ...
+  manufacturer TEXT,                      -- brand (pro fuzzy match s materials.json)
+  model TEXT,                             -- model (pro fuzzy match)
+  in_production INTEGER,                  -- 0/1/NULL
+  description TEXT NOT NULL,
+  solution TEXT,
+  product_image TEXT,                     -- URL
+  links TEXT                              -- JSON array URL
+);
+CREATE INDEX IF NOT EXISTS ix_isa_warnings_gear ON isa_warnings(gear_type, gear_id);
+CREATE INDEX IF NOT EXISTS ix_isa_warnings_brand ON isa_warnings(manufacturer);
 
 CREATE INDEX IF NOT EXISTS ix_points_bbox ON points(latitude, longitude);
 CREATE INDEX IF NOT EXISTS ix_components_type ON components(component_type, slackline_id);

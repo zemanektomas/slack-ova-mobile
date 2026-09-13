@@ -56,6 +56,11 @@ async function migrate(db: SQLite.SQLiteDatabase): Promise<void> {
     try { await db.execAsync(`ALTER TABLE gear ADD COLUMN slackdata_ref INTEGER`); } catch {}
     try { await db.execAsync(`ALTER TABLE gear ADD COLUMN slackdata_type TEXT`); } catch {}
   }
+  if (current < 9) {
+    // v9: ISA warnings cache (auto-fetch pri startu, cache 7 dni).
+    // Tabulka isa_warnings + indexy vytvoreny v SCHEMA_SQL (CREATE IF NOT EXISTS).
+    // Jen bumpujeme verzi.
+  }
   // Index na source — vytvoříme až po migraci (sloupec teď určitě existuje)
   try {
     await db.execAsync(`CREATE INDEX IF NOT EXISTS ix_slacklines_source ON slacklines(source)`);
