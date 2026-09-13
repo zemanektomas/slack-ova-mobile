@@ -222,10 +222,8 @@
         "longline": "Longline",
         "rodeo": "Rodeo"
       },
-      "summaryTitle": "Recommendation",
       "summaryRange": "Spacing range: {{min}}-{{max}} m randomized, first 10 m at anchors tight at 1-1.5 m.",
       "summaryPoints": "{{points}} tape points, tape ~{{tapeM}} m (22 cm/point)",
-      "sequenceLabel": "Spacings (anchor to anchor)",
       "regenerate": "Regenerate",
       "share": "Share",
       "exportHeader": "Tape spacing plan - {{length}} m - {{type}}",
@@ -234,7 +232,13 @@
       "invalidLength": "Enter length between 5 and 500 m.",
       "principle": "Anti-harmonic: spacings within Balance Community range, no adjacent duplicates, avoid L/2, L/3, L/4 fractions.",
       "spoNote": "Join = natural node damper (concentrated mass dampens oscillation). Trick zone denser only for tricking - for walking no cluster around join.",
-      "source": "Source: Balance Community - All About Highline Tape Spacing + ISA:21 3.3.1.4 (backup line support points)."
+      "source": "Source: Balance Community - All About Highline Tape Spacing + ISA:21 3.3.1.4 (backup line support points).",
+      "tableLabel": "Reference table",
+      "col": {
+        "length": "Line length",
+        "spacing": "Tape spacing"
+      },
+      "sequenceLabel": "Spacings (anchor to anchor)"
     }
   },
   "level": {
