@@ -9,6 +9,8 @@ import {
   ActivityIndicator,
   Linking,
   BackHandler,
+  Pressable,
+  Modal,
 } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -27,6 +29,13 @@ import {
   type SlackDataISAWarning,
   type StretchPoint,
 } from '../api/slackdata';
+import {
+  findWarningsForItem,
+  getAllWarnings,
+  getUnmatchedWarnings,
+  worstSeverity,
+  type ISAWarning,
+} from '../api/isaWarnings';
 
 /**
  * Vybaveni tab — prohlížeč katalogu materiálů + SlackData enrichment (v0.8.0 rozjezd).
@@ -147,8 +156,54 @@ export default function GearScreen() {
   const fs = useFontStore((s) => s.fontScale);
   const [nav, setNav] = useState<NavState>({ level: 'L1' });
   const [search, setSearch] = useState('');
+  const [allWarnings, setAllWarnings] = useState<ISAWarning[]>([]);
+  const [unmatched, setUnmatched] = useState<ISAWarning[]>([]);
+  const [showGenericWarnings, setShowGenericWarnings] = useState(false);
 
   const s = useMemo(() => styles(theme, fs), [theme, fs]);
+
+  // Nacist ISA warnings z SQLite cache pri mount (auto-fetch je v _layout.tsx pri startu).
+  useEffect(() => {
+    (async () => {
+      try {
+        const [all, un] = await Promise.all([getAllWarnings(), getUnmatchedWarnings()]);
+        setAllWarnings(all);
+        setUnmatched(un);
+      } catch {}
+    })();
+  }, []);
+
+  // Fuzzy match: brand+model matching pro warnings s manufacturer+model naplneny.
+  // Vraci Map<materialItem.id, ISAWarning[]> pro rychly lookup.
+  const warningsByItemId = useMemo(() => {
+    const map = new Map<string, ISAWarning[]>();
+    if (allWarnings.length === 0) return map;
+    for (const cat of Object.values(catalog.categories)) {
+      for (const item of cat) {
+        const b = item.brand.toLowerCase();
+        const m = item.model.toLowerCase();
+        const matches = allWarnings.filter(
+          (w) =>
+            w.manufacturer && w.model
+            && w.manufacturer.toLowerCase().includes(b)
+            && w.model.toLowerCase().includes(m),
+        );
+        if (matches.length > 0) map.set(item.id, matches);
+      }
+    }
+    return map;
+  }, [allWarnings]);
+
+  /** Kolik warnings na items dané kategorie group (webbing / anchor_system / ...). */
+  const warningCountForGroup = (subcategories: MaterialCategory[]): number => {
+    let count = 0;
+    for (const sub of subcategories) {
+      for (const item of catalog.categories[sub] ?? []) {
+        if (warningsByItemId.has(item.id)) count += warningsByItemId.get(item.id)!.length;
+      }
+    }
+    return count;
+  };
 
   // Hardware / gesture back button — vrací na předchozí úroveň state machiny.
   // Bez toho by system back zavíral app nebo přepínal na jiný tab (a user by
@@ -203,6 +258,7 @@ export default function GearScreen() {
       <L3Detail
         item={nav.item}
         subcategory={nav.subcategory}
+        itemWarnings={warningsByItemId.get(nav.item.id) ?? []}
         onBack={() => setNav({ level: 'L2', groupId: nav.groupId })}
       />
     );
@@ -249,45 +305,87 @@ export default function GearScreen() {
 
       <ScrollView contentContainerStyle={s.scroll}>
         {nav.level === 'L1' &&
-          categoryCounts.map((cat) => (
-            <TouchableOpacity
-              key={cat.id}
-              style={s.categoryRow}
-              activeOpacity={0.7}
-              onPress={() => setNav({ level: 'L2', groupId: cat.id })}
-            >
-              <MaterialCommunityIcons name={cat.icon} size={28} color={theme.text} style={s.categoryIcon} />
-              <View style={s.categoryTextWrap}>
-                <View style={s.categoryTitleRow}>
-                  <Text style={s.categoryLabel}>{cat.label}</Text>
-                  <Text style={s.categoryCount}>{cat.count}</Text>
+          categoryCounts.map((cat) => {
+            const wCount = warningCountForGroup(cat.subcategories);
+            return (
+              <TouchableOpacity
+                key={cat.id}
+                style={s.categoryRow}
+                activeOpacity={0.7}
+                onPress={() => setNav({ level: 'L2', groupId: cat.id })}
+              >
+                <MaterialCommunityIcons name={cat.icon} size={28} color={theme.text} style={s.categoryIcon} />
+                <View style={s.categoryTextWrap}>
+                  <View style={s.categoryTitleRow}>
+                    <Text style={s.categoryLabel}>{cat.label}</Text>
+                    <Text style={s.categoryCount}>{cat.count}</Text>
+                    {wCount > 0 && (
+                      <View style={s.warningBadge}>
+                        <MaterialCommunityIcons name="alert" size={11} color="#fff" />
+                        <Text style={s.warningBadgeText}>{wCount}</Text>
+                      </View>
+                    )}
+                  </View>
+                  <Text style={s.categoryHint}>{cat.hint}</Text>
                 </View>
-                <Text style={s.categoryHint}>{cat.hint}</Text>
+                <MaterialCommunityIcons name="chevron-right" size={20} color={theme.textDim} />
+              </TouchableOpacity>
+            );
+          })}
+
+        {/* Obecné ISA warnings (unmatched) — pod kategoriemi v L1 */}
+        {nav.level === 'L1' && unmatched.length > 0 && (
+          <TouchableOpacity
+            style={s.categoryRow}
+            activeOpacity={0.7}
+            onPress={() => setShowGenericWarnings(true)}
+          >
+            <MaterialCommunityIcons name="alert-outline" size={28} color="#f59e0b" style={s.categoryIcon} />
+            <View style={s.categoryTextWrap}>
+              <View style={s.categoryTitleRow}>
+                <Text style={s.categoryLabel}>Obecné ISA warnings</Text>
+                <Text style={s.categoryCount}>{unmatched.length}</Text>
               </View>
-              <MaterialCommunityIcons name="chevron-right" size={20} color={theme.textDim} />
-            </TouchableOpacity>
-          ))}
+              <Text style={s.categoryHint}>Varování bez konkrétního materiálu (obecná, systémová)</Text>
+            </View>
+            <MaterialCommunityIcons name="chevron-right" size={20} color={theme.textDim} />
+          </TouchableOpacity>
+        )}
 
         {nav.level === 'L2' &&
-          l2Items.map(({ item, subcategory }) => (
-            <TouchableOpacity
-              key={item.id}
-              style={s.itemRow}
-              activeOpacity={0.7}
-              onPress={() => setNav({ level: 'L3', groupId: nav.groupId, item, subcategory })}
-            >
-              <View style={s.itemMain}>
-                <Text style={s.itemBrand}>{item.brand}</Text>
-                <Text style={s.itemModel}>{item.model}</Text>
-              </View>
-              <View style={s.itemSpecs}>
-                {item.mbs_kn && <Text style={s.itemSpec}>{item.mbs_kn} kN</Text>}
-                {item.width_mm && <Text style={s.itemSpec}>{item.width_mm} mm</Text>}
-                {item.isa_cert && <Text style={s.itemIsa}>{item.isa_cert}</Text>}
-              </View>
-              <MaterialCommunityIcons name="chevron-right" size={18} color={theme.textDim} />
-            </TouchableOpacity>
-          ))}
+          l2Items.map(({ item, subcategory }) => {
+            const itemWarnings = warningsByItemId.get(item.id) ?? [];
+            const severity = worstSeverity(itemWarnings);
+            return (
+              <TouchableOpacity
+                key={item.id}
+                style={s.itemRow}
+                activeOpacity={0.7}
+                onPress={() => setNav({ level: 'L3', groupId: nav.groupId, item, subcategory })}
+              >
+                <View style={s.itemMain}>
+                  <Text style={s.itemBrand}>{item.brand}</Text>
+                  <View style={s.itemModelRow}>
+                    <Text style={s.itemModel}>{item.model}</Text>
+                    {severity && (
+                      <MaterialCommunityIcons
+                        name={severity === 'Recall' ? 'close-octagon' : 'alert'}
+                        size={14}
+                        color={severity === 'Recall' ? '#dc2626' : severity === 'Warning' ? '#f59e0b' : '#eab308'}
+                        style={{ marginLeft: 6 }}
+                      />
+                    )}
+                  </View>
+                </View>
+                <View style={s.itemSpecs}>
+                  {item.mbs_kn && <Text style={s.itemSpec}>{item.mbs_kn} kN</Text>}
+                  {item.width_mm && <Text style={s.itemSpec}>{item.width_mm} mm</Text>}
+                  {item.isa_cert && <Text style={s.itemIsa}>{item.isa_cert}</Text>}
+                </View>
+                <MaterialCommunityIcons name="chevron-right" size={18} color={theme.textDim} />
+              </TouchableOpacity>
+            );
+          })}
 
         {nav.level === 'L2' && l2Items.length === 0 && (
           <View style={s.placeholderNote}>
@@ -304,6 +402,53 @@ export default function GearScreen() {
           </View>
         )}
       </ScrollView>
+
+      {/* v9: Obecné ISA warnings modal — pro warnings bez manufacturer+model */}
+      <Modal
+        visible={showGenericWarnings}
+        animationType="slide"
+        transparent
+        onRequestClose={() => setShowGenericWarnings(false)}
+        statusBarTranslucent
+      >
+        <View style={s.modalBackdrop}>
+          <Pressable style={{ flex: 1 }} onPress={() => setShowGenericWarnings(false)} />
+          <View style={[s.modalSheet, { backgroundColor: theme.surface }]}>
+            <View style={s.modalHeader}>
+              <Text style={s.modalTitle}>Obecné ISA warnings</Text>
+              <Pressable onPress={() => setShowGenericWarnings(false)} hitSlop={10}>
+                <MaterialCommunityIcons name="close" size={24} color={theme.textMuted} />
+              </Pressable>
+            </View>
+            <ScrollView contentContainerStyle={{ padding: 16, gap: 12 }}>
+              {unmatched.map((w) => {
+                const bg =
+                  w.status === 'Recall' ? '#7f1d1d' : w.status === 'Warning' ? '#b45309' : '#a16207';
+                return (
+                  <View key={w.source_id} style={[s.isaWarningCard, { backgroundColor: bg }]}>
+                    <View style={s.isaWarningHeader}>
+                      <MaterialCommunityIcons
+                        name={w.status === 'Recall' ? 'close-octagon' : 'alert'}
+                        size={16}
+                        color="#fff"
+                      />
+                      <Text style={s.isaWarningStatus}>ISA {w.status.toUpperCase()}</Text>
+                      {w.date_iso && <Text style={s.isaWarningDate}>{w.date_iso}</Text>}
+                    </View>
+                    <Text style={s.isaWarningDesc}>{w.description}</Text>
+                    {w.solution && <Text style={s.isaWarningSolution}>Řešení: {w.solution}</Text>}
+                    {w.links && w.links.length > 0 && (
+                      <Pressable onPress={() => Linking.openURL(w.links![0])}>
+                        <Text style={s.isaWarningLink}>Zdroj →</Text>
+                      </Pressable>
+                    )}
+                  </View>
+                );
+              })}
+            </ScrollView>
+          </View>
+        </View>
+      </Modal>
     </SafeAreaView>
   );
 }
@@ -313,10 +458,11 @@ export default function GearScreen() {
 interface L3Props {
   item: MaterialItem;
   subcategory: MaterialCategory;
+  itemWarnings: ISAWarning[];
   onBack: () => void;
 }
 
-function L3Detail({ item, subcategory, onBack }: L3Props) {
+function L3Detail({ item, subcategory, itemWarnings, onBack }: L3Props) {
   const theme = useTheme();
   const fs = useFontStore((s) => s.fontScale);
   const s = useMemo(() => styles(theme, fs), [theme, fs]);
@@ -387,6 +533,38 @@ function L3Detail({ item, subcategory, onBack }: L3Props) {
       </View>
 
       <ScrollView contentContainerStyle={s.scroll}>
+        {/* v9: ISA warnings banner nahore (nejvyssi priorita) */}
+        {itemWarnings.length > 0 && (
+          <View style={s.isaWarningBanner}>
+            {itemWarnings.map((w) => {
+              const bg =
+                w.status === 'Recall' ? '#7f1d1d' : w.status === 'Warning' ? '#b45309' : '#a16207';
+              return (
+                <View key={w.source_id} style={[s.isaWarningCard, { backgroundColor: bg }]}>
+                  <View style={s.isaWarningHeader}>
+                    <MaterialCommunityIcons
+                      name={w.status === 'Recall' ? 'close-octagon' : 'alert'}
+                      size={18}
+                      color="#fff"
+                    />
+                    <Text style={s.isaWarningStatus}>ISA {w.status.toUpperCase()}</Text>
+                    {w.date_iso && <Text style={s.isaWarningDate}>{w.date_iso}</Text>}
+                  </View>
+                  <Text style={s.isaWarningDesc}>{w.description}</Text>
+                  {w.solution && (
+                    <Text style={s.isaWarningSolution}>Řešení: {w.solution}</Text>
+                  )}
+                  {w.links && w.links.length > 0 && (
+                    <Pressable onPress={() => Linking.openURL(w.links![0])}>
+                      <Text style={s.isaWarningLink}>Zdroj →</Text>
+                    </Pressable>
+                  )}
+                </View>
+              );
+            })}
+          </View>
+        )}
+
         {/* Základní karta z materials.json */}
         <View style={s.detailCard}>
           <Text style={s.detailBrand}>{item.brand}</Text>
@@ -666,9 +844,41 @@ const styles = (t: ReturnType<typeof useTheme>, fs: number) =>
     itemMain: { flex: 1 },
     itemBrand: { fontSize: 12 * fs, color: t.textDim },
     itemModel: { fontSize: 15 * fs, color: t.text, fontWeight: '500' },
+    itemModelRow: { flexDirection: 'row', alignItems: 'center' },
     itemSpecs: { alignItems: 'flex-end', gap: 2 },
     itemSpec: { fontSize: 12 * fs, color: t.textDim },
     itemIsa: { fontSize: 11 * fs, color: t.accent, fontWeight: '500' },
+    // v9: ISA warnings styling (isaWarning* prefix pro rozliseni od slackdata enrichment warnings)
+    warningBadge: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      backgroundColor: '#dc2626',
+      paddingHorizontal: 6,
+      paddingVertical: 2,
+      borderRadius: 8,
+      marginLeft: 8,
+      gap: 3,
+    },
+    warningBadgeText: { color: '#fff', fontSize: 10 * fs, fontWeight: '700' },
+    isaWarningBanner: { marginHorizontal: 16, marginTop: 12, gap: 8 },
+    isaWarningCard: { padding: 12, borderRadius: 10, gap: 6 },
+    isaWarningHeader: { flexDirection: 'row', alignItems: 'center', gap: 6 },
+    isaWarningStatus: { color: '#fff', fontSize: 12 * fs, fontWeight: '700', letterSpacing: 0.5 },
+    isaWarningDate: { color: '#fff', fontSize: 11 * fs, marginLeft: 'auto', opacity: 0.8 },
+    isaWarningDesc: { color: '#fff', fontSize: 13 * fs, lineHeight: 18 * fs },
+    isaWarningSolution: { color: '#fff', fontSize: 12 * fs, fontStyle: 'italic', opacity: 0.9 },
+    isaWarningLink: { color: '#fff', fontSize: 12 * fs, fontWeight: '600', textDecorationLine: 'underline', marginTop: 4 },
+    // v9: obecne warnings modal
+    modalBackdrop: { flex: 1, backgroundColor: 'rgba(0,0,0,0.6)', justifyContent: 'flex-end' },
+    modalSheet: { maxHeight: '85%', borderTopLeftRadius: 16, borderTopRightRadius: 16 },
+    modalHeader: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      padding: 16,
+      borderBottomWidth: StyleSheet.hairlineWidth,
+      borderBottomColor: t.border,
+    },
+    modalTitle: { flex: 1, fontSize: 18 * fs, fontWeight: '600', color: t.text },
     detailCard: {
       marginHorizontal: 16,
       marginTop: 12,
