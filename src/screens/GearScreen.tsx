@@ -36,6 +36,7 @@ import {
   worstSeverity,
   type ISAWarning,
 } from '../api/isaWarnings';
+import { TranslatableText } from '../components/TranslatableText';
 
 /**
  * Vybaveni tab — prohlížeč katalogu materiálů + SlackData enrichment (v0.8.0 rozjezd).
@@ -435,8 +436,15 @@ export default function GearScreen() {
                       <Text style={s.isaWarningStatus}>ISA {w.status.toUpperCase()}</Text>
                       {w.date_iso && <Text style={s.isaWarningDate}>{w.date_iso}</Text>}
                     </View>
-                    <Text style={s.isaWarningDesc}>{w.description}</Text>
-                    {w.solution && <Text style={s.isaWarningSolution}>Řešení: {w.solution}</Text>}
+                    <TranslatableText text={w.description} color="#fff" hintColor="rgba(255,255,255,0.85)" />
+                    {w.solution && (
+                      <TranslatableText
+                        text={`Solution: ${w.solution}`}
+                        color="#fff"
+                        hintColor="rgba(255,255,255,0.85)"
+                        style={{ fontStyle: 'italic' }}
+                      />
+                    )}
                     {w.links && w.links.length > 0 && (
                       <Pressable onPress={() => Linking.openURL(w.links![0])}>
                         <Text style={s.isaWarningLink}>Zdroj →</Text>
@@ -550,9 +558,14 @@ function L3Detail({ item, subcategory, itemWarnings, onBack }: L3Props) {
                     <Text style={s.isaWarningStatus}>ISA {w.status.toUpperCase()}</Text>
                     {w.date_iso && <Text style={s.isaWarningDate}>{w.date_iso}</Text>}
                   </View>
-                  <Text style={s.isaWarningDesc}>{w.description}</Text>
+                  <TranslatableText text={w.description} color="#fff" hintColor="rgba(255,255,255,0.85)" />
                   {w.solution && (
-                    <Text style={s.isaWarningSolution}>Řešení: {w.solution}</Text>
+                    <TranslatableText
+                      text={`Solution: ${w.solution}`}
+                      color="#fff"
+                      hintColor="rgba(255,255,255,0.85)"
+                      style={{ fontStyle: 'italic' }}
+                    />
                   )}
                   {w.links && w.links.length > 0 && (
                     <Pressable onPress={() => Linking.openURL(w.links![0])}>
