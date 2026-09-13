@@ -209,7 +209,8 @@ CREATE INDEX IF NOT EXISTS ix_reports_slackline ON reports(slackline_id);
 CREATE INDEX IF NOT EXISTS ix_reports_gear ON reports(linked_gear_id);
 CREATE INDEX IF NOT EXISTS ix_report_gear_report ON report_gear(report_id);
 CREATE INDEX IF NOT EXISTS ix_report_gear_gear ON report_gear(gear_id);
--- v8 indexy
-CREATE INDEX IF NOT EXISTS ix_gear_slackdata ON gear(slackdata_type, slackdata_ref);
+-- v8 index nad slackdata_cache (bezpecny — tabulka je nova v v8)
 CREATE INDEX IF NOT EXISTS ix_slackdata_cache_fetched ON slackdata_cache(fetched_at);
+-- POZOR: ix_gear_slackdata je vytvoreny AZ po migraci v db/index.ts, protoze
+-- v v7 (existing gear table) tyto sloupce jeste neexistuji.
 `;
