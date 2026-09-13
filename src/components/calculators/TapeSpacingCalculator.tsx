@@ -13,7 +13,7 @@
  */
 
 import { useMemo, useState } from 'react';
-import { Alert, Share, StyleSheet, Switch, Text, View } from 'react-native';
+import { Alert, Share, StyleSheet, Text, View } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { useTheme } from '../../theme';
 import { useFontStore } from '../../store/fontStore';
@@ -51,14 +51,15 @@ export function TapeSpacingCalculator({
   const { t: tr } = useTranslation();
   const [lengthText, setLengthText] = useState(String(initialLengthM ?? 100));
   const [type, setType] = useState<LineType>(initialType ?? 'walking');
-  const [hasJoin, setHasJoin] = useState(false);
   const [seed, setSeed] = useState<number>(() => Date.now());
 
   const lengthM = parseFloat(lengthText.replace(',', '.')) || 0;
   const plan = useMemo<TapePlan | null>(() => {
     if (lengthM < 5 || lengthM > 500) return null;
-    return generateTapePlan(lengthM, type, hasJoin, seed);
-  }, [lengthM, type, hasJoin, seed]);
+    // Spoj se do sekvence nevkládá — jeden z tape pointů uprostřed sám plní roli
+    // natural node dampera. Uživatel si spoj zarovná fyzicky na nejbližší tape.
+    return generateTapePlan(lengthM, type, false, seed);
+  }, [lengthM, type, seed]);
 
   const handleRegenerate = () => setSeed(Date.now());
 
@@ -67,7 +68,6 @@ export function TapeSpacingCalculator({
     const header = tr('calc.tapeSpacing.exportHeader', {
       length: lengthM,
       type: tr(`calc.tapeSpacing.chip.${type}`),
-      join: hasJoin ? tr('calc.tapeSpacing.withJoin') : tr('calc.tapeSpacing.withoutJoin'),
     });
     const body = formatTapePlan(plan);
     const stats = tr('calc.tapeSpacing.exportStats', {
@@ -85,11 +85,11 @@ export function TapeSpacingCalculator({
     }
   };
 
+  // Longline + rodeo se netejpuje (single line bez backupu) — nejsou v chip.
+  // Zobrazuje se pouze u lajn kde main + backup jsou fyzicky drženy tejpy.
   const typeChips: { key: LineType; label: string }[] = [
     { key: 'walking', label: tr('calc.tapeSpacing.chip.walking') },
     { key: 'trick', label: tr('calc.tapeSpacing.chip.trick') },
-    { key: 'longline', label: tr('calc.tapeSpacing.chip.longline') },
-    { key: 'rodeo', label: tr('calc.tapeSpacing.chip.rodeo') },
   ];
 
   return (
@@ -115,21 +115,6 @@ export function TapeSpacingCalculator({
           onSelect={setType}
           theme={t}
         />
-      </CalcSection>
-
-      {/* Spoj uprostřed */}
-      <CalcSection>
-        <View style={styles.switchRow}>
-          <View style={{ flex: 1 }}>
-            <Text style={[styles.switchLabel, { color: t.text }]}>
-              {tr('calc.tapeSpacing.joinLabel')}
-            </Text>
-            <Text style={[styles.switchHint, { color: t.textMuted }]}>
-              {tr('calc.tapeSpacing.joinHint')}
-            </Text>
-          </View>
-          <Switch value={hasJoin} onValueChange={setHasJoin} />
-        </View>
       </CalcSection>
 
       {/* Rozsah + statistika */}
