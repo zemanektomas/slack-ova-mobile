@@ -19,6 +19,8 @@ import type { SlacklineDetail, PointResponse } from '../types';
 import { QuickCheckSheet } from './QuickCheckSheet';
 import { FullRigLogSheet } from './FullRigLogSheet';
 import { CommunitySheet } from './CommunitySheet';
+import { CalculatorsSheet, CalculatorType } from './calculators/CalculatorsSheet';
+import { LineType } from '../data/isa/calculators';
 import { generateQuickCheckForLine } from '../data/isa/quickCheck';
 import { getLastLineSafetyCheck, countLineSafetyChecks, LineSafetyCheck } from '../db/lineSafetyChecks';
 import { useLevelStore } from '../store/levelStore';
@@ -64,6 +66,9 @@ export default function InlineDetail({ slacklineId }: { slacklineId: number }) {
   // Level + Community (v0.7.3)
   const level = useLevelStore((s) => s.level);
   const [communitySheetOpen, setCommunitySheetOpen] = useState(false);
+
+  // v0.8.0 Q3: Tape spacing calculator button (context-aware prefill)
+  const [calcType, setCalcType] = useState<CalculatorType | null>(null);
 
   const loadSafetyStats = async () => {
     try {
@@ -201,6 +206,19 @@ export default function InlineDetail({ slacklineId }: { slacklineId: number }) {
           </Pressable>
         );
       })()}
+
+      {/* 4b) Plán tejpování — context-aware kalkulátor (v0.8.0 Q3) */}
+      {detail.length && detail.length >= 5 && detail.length <= 500 && (
+        <Pressable
+          onPress={() => setCalcType('tapeSpacing')}
+          style={[styles.navigateBtn, { borderColor: t.border, backgroundColor: t.surface }]}
+        >
+          <MaterialCommunityIcons name="tape-measure" size={16} color={t.text} style={{ marginRight: 6 }} />
+          <Text style={[styles.navigateText, { color: t.text }]}>
+            {tr('detail.tapeSpacingBtn')}
+          </Text>
+        </Pressable>
+      )}
 
       {/* 5) Description — translatable on-device */}
       {detail.description && (
@@ -390,8 +408,26 @@ export default function InlineDetail({ slacklineId }: { slacklineId: number }) {
         countryCode={extractCountryCode(detail.state)}
         onClose={() => setCommunitySheetOpen(false)}
       />
+      {/* v0.8.0 Q3: context-aware kalkulátor (tape spacing, prefill z line) */}
+      <CalculatorsSheet
+        visible={calcType !== null}
+        type={calcType}
+        onClose={() => setCalcType(null)}
+        prefillLengthM={detail.length ?? undefined}
+        prefillLineType={mapLineTypeToLineType(detail.type)}
+      />
     </View>
   );
+}
+
+/** Mapuje slackline.type (highline/longline/waterline/midline/trickline) na LineType kalkulátoru. */
+function mapLineTypeToLineType(type: string | null | undefined): LineType | undefined {
+  if (!type) return undefined;
+  const t = type.toLowerCase();
+  if (t.includes('trick')) return 'trick';
+  if (t.includes('long')) return 'longline';
+  if (t.includes('rodeo')) return 'rodeo';
+  return 'walking'; // highline / waterline / midline → walking default
 }
 
 // -----------------------------------------------------------------------------

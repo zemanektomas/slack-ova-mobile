@@ -109,7 +109,8 @@
     "translateError": "Tłumaczenie nie powiodło się",
     "translateErrorHint": "Sprawdź połączenie internetowe (model tłumacza trzeba raz pobrać, ~30 MB przez WiFi).",
     "translateUnsupported": "Język nie obsługiwany",
-    "translateUnsupportedHint": "Tłumaczenie na urządzeniu obsługuje tylko ograniczony zestaw języków. Oryginał pozostaje widoczny."
+    "translateUnsupportedHint": "Tłumaczenie na urządzeniu obsługuje tylko ograniczony zestaw języków. Oryginał pozostaje widoczny.",
+    "tapeSpacingBtn": "Plan tasmowania"
   },
   "calc": {
     "openBtn": "Otwórz kalkulator",
@@ -185,6 +186,59 @@
       },
       "warning": "⚠ Deviacja niesie więcej niż sama lajna. Kotwa dla deviacji musi być silniejsza niż dla kotwienia highline.",
       "formula": "Wzór: F = 2 × T × sin(θ/2)"
+    },
+    "sagTension": {
+      "title": "Naciag z ugiecia",
+      "spanLabel": "Rozpietosc liny",
+      "walkerLabel": "Waga chodzacego",
+      "sagLabel": "Ugiecie",
+      "tensionLabel": "Naciag mainline",
+      "tableLabel": "Tabela referencyjna",
+      "col": {
+        "sag": "Ugiecie",
+        "tension": "Naciag",
+        "rating": "Ocena"
+      },
+      "rating": {
+        "ideal": "luzno",
+        "ok": "komfort",
+        "max": "napiete",
+        "caution": "uwaga",
+        "stop": "STOP"
+      },
+      "ratioOK": "w limicie L/sag 50",
+      "ratioBad": "powyzej L/sag 50 (zasada CAS)",
+      "formula": "Wzor: T = m x L x 10 / (4 x sag) - jedyny eksperymentalnie zweryfikowany wzor.",
+      "warning": "Najgorsza pozycja to srodek. Material ani napiecie wstepne nie wplywaja na naciag statyczny.",
+      "source": "Zrodlo: Kvas 2013 (CAS) - walidacja tensometryczna, odchylka 0,21%. Delaney RopeLab 2022 potwierdza niezaleznie."
+    },
+    "tapeSpacing": {
+      "title": "Plan tasmowania",
+      "lengthLabel": "Dlugosc liny",
+      "typeLabel": "Typ uzycia",
+      "chip": {
+        "walking": "Chodzenie",
+        "trick": "Trickline",
+        "longline": "Longline",
+        "rodeo": "Rodeo"
+      },
+      "joinLabel": "Laczenie na srodku",
+      "joinHint": "Mechaniczne zlacze (weblock/DLV/soft shackle). Dziala jak naturalny tlumik wezla.",
+      "summaryTitle": "Zalecenie",
+      "summaryRange": "Zakres odstepow: {{min}}-{{max}} m nieregularnie, pierwsze 10 m przy zakotwiczeniach ciasno co 1-1,5 m.",
+      "summaryPoints": "{{points}} punktow tasmy, tasma ~{{tapeM}} m (22 cm/punkt)",
+      "sequenceLabel": "Odstepy (od kotwy do kotwy)",
+      "regenerate": "Wygeneruj ponownie",
+      "share": "Udostepnij",
+      "exportHeader": "Plan tasmowania - {{length}} m - {{type}} - {{join}}",
+      "withJoin": "zlacze na srodku",
+      "withoutJoin": "bez zlacza",
+      "exportStats": "{{points}} punktow tasmy, tasma ~{{tapeM}} m, zakres {{min}}-{{max}} m",
+      "exportFailed": "Udostepnianie nie powiodlo sie",
+      "invalidLength": "Podaj dlugosc od 5 do 500 m.",
+      "principle": "Anti-harmonic: odstepy w zakresie Balance Community, bez sasiadujacych duplikatow, unikaj L/2, L/3, L/4.",
+      "spoNote": "Zlacze = naturalny tlumik wezla. Strefa trickow gestsza tylko dla trickow.",
+      "source": "Zrodlo: Balance Community - All About Highline Tape Spacing + ISA:21 3.3.1.4 (backup line support points)."
     }
   },
   "level": {
@@ -490,7 +544,9 @@
       "harnessPas": "Uprząż + PAS",
       "harnessPasHint": "Osobisty system anchor",
       "walker": "Chodzący",
-      "walkerHint": "Buddy check, pre-flight"
+      "walkerHint": "Buddy check, pre-flight",
+      "tools": "Kalkulatory",
+      "toolsHint": "Narzedzia do sil, katow, naciagu, planowania tasm"
     }
   },
   "cards": {
@@ -684,6 +740,22 @@
       "w4Detail": "Między tie-off a mainline (strona anchoru). Dedykowany (Slack-Inov Zenlock, Rock Empire) LUB spanset/dyneema loop (2-3× margines bezpieczeństwa nad expected peak). Nigdy w środku linii.",
       "w5": "Popruh-based soft release = zabezpiecz jak tie-off",
       "w5Detail": "Gdy soft release jest z popruhu/spansetu (nie dedykowane urządzenie), węzły muszą być zabezpieczone tak samo jak weblock tie-off. Cykliczne obciążenie rozwiązuje luźne końce. Dedykowane urządzenie (Zenlock integrated) rozwiązuje to designem."
+    },
+    "calculatorsHub": {
+      "title": "Kalkulatory",
+      "summary": "Narzedzia do sil, katow, naciagu, planowania tasm",
+      "angleTitle": "Kat kotwy",
+      "angleHint": "Sila na ramie wg kata (SNARE SANE)",
+      "forceTitle": "Peak force podczas upadku",
+      "forceHint": "Joerren 2015 - wg materialu i dlugosci",
+      "sagTitle": "Naciag z ugiecia",
+      "sagHint": "Kvas 2013 - jedyny eksperymentalnie zweryfikowany",
+      "tapeTitle": "Plan tasmowania",
+      "tapeHint": "Generator odstepow wg dlugosci i typu liny",
+      "maTitle": "Mechanical advantage",
+      "maHint": "Bloczki zlozone - teoria vs. rzeczywiste MA",
+      "deviationTitle": "Sila na deviaci",
+      "deviationHint": "Redirect pulley - F = 2 x T x sin(theta/2)"
     }
   },
   "tabs": {

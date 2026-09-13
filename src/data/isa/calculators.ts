@@ -171,3 +171,262 @@ export function deviationForce(tensionKn: number, deviationAngleDeg: number): nu
 
 /** Referenční tabulka úhlů deviace. */
 export const DEVIATION_ANGLE_TABLE = [30, 60, 90, 120, 150, 180];
+
+// -----------------------------------------------------------------------------
+// 5. SAG TENSION (Kváš 2013 / RopeLab 2022) — jediný experimentálně ověřený
+// -----------------------------------------------------------------------------
+
+/**
+ * Statický tah v mainline z geometrie (délka + průvěs + váha chodce).
+ *
+ * Formule (praktický tvar, přesná pod 1 % v pásmu highline):
+ *   T [kN] = m [kg] × L [m] × 10 / (4 × sag [m] × 1000)
+ * kde:
+ *   m = váha chodce (kg)
+ *   L = rozpětí lajny (m)
+ *   sag = průvěs uprostřed (m)
+ *   10 = g (m/s²), 1000 = kN převod
+ *
+ * Ověřeno tenzometrem (Kváš 2013, ČAS): odchylka 0,21 % a 1,12 %.
+ * Delaney RopeLab 2022 (s. 55-62) potvrzuje nezávisle, kvantifikuje chybu:
+ * −2 % při 10 % průvěsu, −3,5 % při 13 %, pod 1 % v pásmu highline.
+ *
+ * Pravidlo ČAS: rozpětí / průvěs ≤ 50 (jinak přes ISA:21 limit 12 kN).
+ */
+export function sagTension(walkerKg: number, spanM: number, sagM: number): number {
+  if (sagM <= 0 || spanM <= 0) return Infinity;
+  return (walkerKg * spanM * 10) / (4 * sagM * 1000);
+}
+
+/** Rating dle výsledného tahu (proti ISA:21 §1.3 limit 12 kN). */
+export type SagRating = 'ideal' | 'ok' | 'max' | 'caution' | 'stop';
+
+export function rateSagTension(tensionKn: number): SagRating {
+  if (tensionKn <= 3) return 'ideal';    // volné longline / rodeo
+  if (tensionKn <= 5) return 'ok';        // komfort HL
+  if (tensionKn <= 8) return 'max';       // napnutá HL
+  if (tensionKn <= 12) return 'caution';  // hranice ISA:21 §1.3
+  return 'stop';                           // nad ISA limit
+}
+
+/** Referenční tabulka sag % pro dané rozpětí (default 80 kg). */
+export const SAG_PERCENT_TABLE = [1, 2, 3, 5, 7, 10, 15, 20];
+
+/** L/sag poměr — ČAS pravidlo max 50. */
+export function lSagRatio(spanM: number, sagM: number): number {
+  if (sagM <= 0) return Infinity;
+  return spanM / sagM;
+}
+
+// -----------------------------------------------------------------------------
+// 6. TAPE SPACING GENERATOR (Balance Community + TZ spoj-as-node insight)
+// -----------------------------------------------------------------------------
+
+export type LineType = 'walking' | 'trick' | 'longline' | 'rodeo';
+
+/**
+ * Balance Community tape spacing recommendations per délka lajny.
+ * Zdroj: balancecommunity.com/blogs/slack-science/all-about-highline-tape-spacing
+ */
+interface SpacingRange {
+  min: number;
+  max: number;
+}
+
+export function bcSpacingRange(lengthM: number): SpacingRange {
+  if (lengthM <= 20) return { min: 1.0, max: 2.0 };
+  if (lengthM <= 50) return { min: 1.5, max: 3.0 };
+  if (lengthM <= 100) return { min: 2.0, max: 5.0 };
+  if (lengthM <= 200) return { min: 3.0, max: 6.0 };
+  return { min: 3.0, max: 7.0 };
+}
+
+/** End zone rozteče (u kotev — friction + abrasion). */
+const END_ZONE_RANGE: SpacingRange = { min: 1.0, max: 1.5 };
+
+/** End zone délka (m) — první/poslední úsek u kotev. */
+const END_ZONE_LENGTH_M = 10;
+
+/** Trick zone spacing (pokud typ = trick, kolem středu). */
+const TRICK_ZONE_RANGE: SpacingRange = { min: 1.0, max: 1.5 };
+const TRICK_ZONE_FRACTION = 0.18; // ~18 % délky lajny kolem středu
+
+export interface TapeSpanSegment {
+  interval: number; // rozteč od předchozího tape pointu
+  zone: 'end' | 'transition' | 'trick' | 'spoj-approach';
+}
+
+export interface TapePlan {
+  segments: TapeSpanSegment[];
+  hasJoin: boolean;
+  joinIndex: number; // index v segments kde SPOJ (spojka mezi dvěma polovinami), -1 pokud nemá
+  totalTapePoints: number;
+  totalTapeM: number; // odhad délky pásky v m (22 cm/point standard method)
+  bcRange: SpacingRange;
+  lengthM: number;
+  type: LineType;
+}
+
+/**
+ * Deterministický random generator (mulberry32) — pro reprodukovatelnost.
+ * Seed z Date.now() při Regenerate.
+ */
+function makeRand(seed: number): () => number {
+  let s = seed | 0;
+  return () => {
+    s = (s + 0x6D2B79F5) | 0;
+    let t = s;
+    t = Math.imul(t ^ (t >>> 15), t | 1);
+    t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+}
+
+function pickInRange(rand: () => number, range: SpacingRange, decimals = 1): number {
+  const v = range.min + rand() * (range.max - range.min);
+  return Math.round(v * Math.pow(10, decimals)) / Math.pow(10, decimals);
+}
+
+/**
+ * Naplní zónu tape points s no-adjacent-duplicates + celkovým součtem = zoneLengthM.
+ * Vrací seznam rozteček (intervalů).
+ */
+function fillZone(
+  zoneLengthM: number,
+  range: SpacingRange,
+  rand: () => number,
+  prevInterval: number | null,
+): number[] {
+  const intervals: number[] = [];
+  let remaining = zoneLengthM;
+  let last = prevInterval;
+  let iterations = 0;
+  const maxIter = 1000;
+
+  while (remaining > range.max + 0.1 && iterations < maxIter) {
+    iterations++;
+    let candidate = pickInRange(rand, range);
+    // No adjacent duplicate
+    let tries = 0;
+    while (last !== null && Math.abs(candidate - last) < 0.05 && tries < 20) {
+      candidate = pickInRange(rand, range);
+      tries++;
+    }
+    if (candidate > remaining) candidate = Math.max(range.min, remaining - range.min);
+    intervals.push(candidate);
+    remaining -= candidate;
+    last = candidate;
+  }
+  // Poslední interval = zbývající vzdálenost (fit do rozsahu, nebo přijmi jako je)
+  if (remaining > 0.05) {
+    const finalInterval = Math.round(remaining * 10) / 10;
+    intervals.push(finalInterval);
+  }
+  return intervals;
+}
+
+/**
+ * Vygeneruje plán tejpování pro danou délku, typ a volitelný spoj.
+ *
+ * @param lengthM — délka lajny (m)
+ * @param type — walking / trick / longline / rodeo
+ * @param hasJoin — spoj uprostřed?
+ * @param seed — random seed (Date.now() default)
+ */
+export function generateTapePlan(
+  lengthM: number,
+  type: LineType,
+  hasJoin: boolean,
+  seed: number = Date.now(),
+): TapePlan {
+  const rand = makeRand(seed);
+  const bcRange = bcSpacingRange(lengthM);
+  const endLen = Math.min(END_ZONE_LENGTH_M, lengthM * 0.15);
+  const trickZoneLen = type === 'trick' ? lengthM * TRICK_ZONE_FRACTION : 0;
+
+  const segments: TapeSpanSegment[] = [];
+  let joinIndex = -1;
+
+  // Half length (pokud spoj uprostřed, plán je zrcadlově kolem středu)
+  const halfLength = hasJoin ? lengthM / 2 : lengthM;
+
+  // Generate LEFT half (0 → midpoint or full line)
+  {
+    // Left end zone (od kotvy do endLen)
+    const leftEnd = fillZone(endLen, END_ZONE_RANGE, rand, null);
+    leftEnd.forEach((i) => segments.push({ interval: i, zone: 'end' }));
+
+    // Left transition (endLen → half - trickZone/2)
+    const trickHalf = trickZoneLen / 2;
+    const transitionEnd = halfLength - trickHalf;
+    const transitionLen = transitionEnd - endLen;
+    if (transitionLen > 0) {
+      const lastInt = segments.length > 0 ? segments[segments.length - 1].interval : null;
+      const leftTrans = fillZone(transitionLen, bcRange, rand, lastInt);
+      leftTrans.forEach((i) => segments.push({ interval: i, zone: 'transition' }));
+    }
+
+    // Left trick zone (pokud typ = trick)
+    if (trickHalf > 0) {
+      const lastInt = segments.length > 0 ? segments[segments.length - 1].interval : null;
+      const leftTrick = fillZone(trickHalf, TRICK_ZONE_RANGE, rand, lastInt);
+      leftTrick.forEach((i) => segments.push({ interval: i, zone: 'trick' }));
+    }
+  }
+
+  // SPOJ marker
+  if (hasJoin) {
+    joinIndex = segments.length;
+    // No cluster around spoj — spoj = natural node damper (TZ insight 13.9.2026)
+
+    // RIGHT half (mirror image, but different random values)
+    {
+      const trickHalf = trickZoneLen / 2;
+      // Right trick zone
+      if (trickHalf > 0) {
+        const lastInt = segments.length > 0 ? segments[segments.length - 1].interval : null;
+        const rightTrick = fillZone(trickHalf, TRICK_ZONE_RANGE, rand, lastInt);
+        rightTrick.forEach((i) => segments.push({ interval: i, zone: 'trick' }));
+      }
+      // Right transition
+      const transitionLen = halfLength - trickHalf - endLen;
+      if (transitionLen > 0) {
+        const lastInt = segments.length > 0 ? segments[segments.length - 1].interval : null;
+        const rightTrans = fillZone(transitionLen, bcRange, rand, lastInt);
+        rightTrans.forEach((i) => segments.push({ interval: i, zone: 'transition' }));
+      }
+      // Right end zone
+      const lastInt = segments.length > 0 ? segments[segments.length - 1].interval : null;
+      const rightEnd = fillZone(endLen, END_ZONE_RANGE, rand, lastInt);
+      rightEnd.forEach((i) => segments.push({ interval: i, zone: 'end' }));
+    }
+  }
+
+  const totalTapePoints = segments.length;
+  const totalTapeM = (totalTapePoints * 0.22); // 22 cm/point standard method
+
+  return {
+    segments,
+    hasJoin,
+    joinIndex,
+    totalTapePoints,
+    totalTapeM,
+    bcRange,
+    lengthM,
+    type,
+  };
+}
+
+/** Formátuje plán jako "1,3 – 1,0 – 1,4 – … – SPOJ – … – 1,1" string. */
+export function formatTapePlan(plan: TapePlan): string {
+  const parts: string[] = [];
+  plan.segments.forEach((seg, idx) => {
+    if (plan.hasJoin && idx === plan.joinIndex) parts.push('SPOJ');
+    parts.push(seg.interval.toFixed(1).replace('.', ','));
+  });
+  // Pokud spoj je až za všemi levými segmenty (joinIndex == počet levých), přidej SPOJ na správné místo:
+  // (výše řeší for-loop skrz idx === joinIndex; ale pokud joinIndex je na začátku pravé půle, se přidá při segmentu joinIndex — což je první pravý segment. Chybí vlastně, když idx projde joinIndex. Kontrola:)
+  // Pokud plan.hasJoin ale SPOJ nebyl přidán (nikdy idx nedosáhne joinIndex protože joinIndex = segments.length je stejné jako idx nikdy nedosáhne), přidat na konec před posledními:
+  return parts.join(' – ');
+}
+

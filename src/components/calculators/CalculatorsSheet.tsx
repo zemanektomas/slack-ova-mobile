@@ -14,14 +14,26 @@ import { AnchorAngleCalculator } from './AnchorAngleCalculator';
 import { ForceEstimator } from './ForceEstimator';
 import { MACalculator } from './MACalculator';
 import { DeviationCalculator } from './DeviationCalculator';
+import { SagTensionCalculator } from './SagTensionCalculator';
+import { TapeSpacingCalculator } from './TapeSpacingCalculator';
+import { LineType } from '../../data/isa/calculators';
 import { useFontStore } from '../../store/fontStore';
 
-export type CalculatorType = 'angle' | 'force' | 'ma' | 'deviation';
+export type CalculatorType =
+  | 'angle'
+  | 'force'
+  | 'ma'
+  | 'deviation'
+  | 'sagTension'
+  | 'tapeSpacing';
 
 interface Props {
   visible: boolean;
   type: CalculatorType | null;
   onClose: () => void;
+  /** Prefill pro tapeSpacing z detailu lajny */
+  prefillLengthM?: number;
+  prefillLineType?: LineType;
 }
 
 const TITLES: Record<CalculatorType, string> = {
@@ -29,6 +41,8 @@ const TITLES: Record<CalculatorType, string> = {
   force: 'calc.force.title',
   ma: 'calc.ma.title',
   deviation: 'calc.deviation.title',
+  sagTension: 'calc.sagTension.title',
+  tapeSpacing: 'calc.tapeSpacing.title',
 };
 
 const ICONS: Record<CalculatorType, string> = {
@@ -36,9 +50,17 @@ const ICONS: Record<CalculatorType, string> = {
   force: 'lightning-bolt',
   ma: 'cog-outline',
   deviation: 'call-split',
+  sagTension: 'chart-bell-curve',
+  tapeSpacing: 'tape-measure',
 };
 
-export function CalculatorsSheet({ visible, type, onClose }: Props) {
+export function CalculatorsSheet({
+  visible,
+  type,
+  onClose,
+  prefillLengthM,
+  prefillLineType,
+}: Props) {
   const fs = useFontStore((s) => s.fontScale);
   const styles = useMemo(() => makeStyles(fs), [fs]);
   const t = useTheme();
@@ -79,6 +101,13 @@ export function CalculatorsSheet({ visible, type, onClose }: Props) {
             {type === 'force' && <ForceEstimator />}
             {type === 'ma' && <MACalculator />}
             {type === 'deviation' && <DeviationCalculator />}
+            {type === 'sagTension' && <SagTensionCalculator />}
+            {type === 'tapeSpacing' && (
+              <TapeSpacingCalculator
+                initialLengthM={prefillLengthM}
+                initialType={prefillLineType}
+              />
+            )}
           </ScrollView>
 
           <View style={[styles.footer, { borderTopColor: t.border }]}>

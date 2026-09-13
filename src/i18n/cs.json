@@ -101,6 +101,7 @@
     "accessInfo": "Přístup",
     "notMeasured": "Délka/výška nebyla ověřena",
     "navigate": "Navigovat",
+    "tapeSpacingBtn": "Plán tejpování",
     "focusOnMap": "Vystředit na mapě",
     "translate": "Přeložit",
     "translating": "Překládám…",
@@ -185,6 +186,59 @@
       },
       "warning": "⚠ Deviace nese víc než sama lajna. Anchor pro deviaci musí být silnější než pro kotvení highline.",
       "formula": "Formule: F = 2 × T × sin(θ/2)"
+    },
+    "sagTension": {
+      "title": "Tah z průvěsu",
+      "spanLabel": "Rozpětí lajny",
+      "walkerLabel": "Váha chodce",
+      "sagLabel": "Průvěs",
+      "tensionLabel": "Tah v mainline",
+      "tableLabel": "Referenční tabulka",
+      "col": {
+        "sag": "Průvěs",
+        "tension": "Tah",
+        "rating": "Hodnocení"
+      },
+      "rating": {
+        "ideal": "🟢 volné",
+        "ok": "🟢 komfort",
+        "max": "🟡 napnutá",
+        "caution": "🟡 pozor",
+        "stop": "🔴 STOP"
+      },
+      "ratioOK": "✓ do L/sag 50",
+      "ratioBad": "⚠ nad L/sag 50 (ČAS pravidlo)",
+      "formula": "Formule: T = m × L × 10 / (4 × sag) — jediný experimentálně ověřený vzorec.",
+      "warning": "⚠ Nejhorší poloha je uprostřed. Materiál ani předpětí do statického tahu nevstupují — rigger nastavuje průvěs, tah je důsledek.",
+      "source": "Zdroj: Kváš 2013 (ČAS) — tenzometrická validace, odchylka 0,21 %. Delaney RopeLab 2022 potvrzuje nezávisle."
+    },
+    "tapeSpacing": {
+      "title": "Plán tejpování",
+      "lengthLabel": "Délka lajny",
+      "typeLabel": "Typ použití",
+      "chip": {
+        "walking": "Chození",
+        "trick": "Trickline",
+        "longline": "Longline",
+        "rodeo": "Rodeo"
+      },
+      "joinLabel": "Spoj uprostřed",
+      "joinHint": "Mechanický konektor (weblock/DLV/soft shackle). Působí jako natural node damper — kolem spoje bez hustšího tapingu.",
+      "summaryTitle": "Doporučení",
+      "summaryRange": "Rozsah rozteček: {{min}}–{{max}} m nepravidelně, u kotev prvních 10 m po 1–1,5 m tightě.",
+      "summaryPoints": "{{points}} tape points · pásky ~{{tapeM}} m (22 cm/point)",
+      "sequenceLabel": "Rozteče (od kotvy k druhé)",
+      "regenerate": "Přegenerovat",
+      "share": "Sdílet",
+      "exportHeader": "Plán tejpování · {{length}} m · {{type}} · {{join}}",
+      "withJoin": "spoj uprostřed",
+      "withoutJoin": "bez spoje",
+      "exportStats": "{{points}} tape points · pásky ~{{tapeM}} m · rozsah rozteček {{min}}–{{max}} m",
+      "exportFailed": "Sdílení selhalo",
+      "invalidLength": "Zadej délku 5–500 m.",
+      "principle": "Anti-harmonic: rozteče v pásmu Balance Community, žádné sousední duplicity, nesedí na L/2 / L/3 / L/4.",
+      "spoNote": "Spoj = natural node damper (soustředěná hmota tlumí oscilaci). Trick zone hustší jen pro trickování — pro chození bez clusteru.",
+      "source": "Zdroj: Balance Community — All About Highline Tape Spacing + ISA:21 §3.3.1.4 (backup line support points)."
     }
   },
   "level": {
@@ -473,6 +527,8 @@
       "lifetime": "Životnost",
       "reference": "Reference & úvod",
       "referenceHint": "Základní informace, ISA:21 limity",
+      "tools": "Kalkulátory",
+      "toolsHint": "Nástroje pro sílu, úhel, tah, plán tejpování",
       "rigWorkflow": "Rig workflow",
       "rigWorkflowHint": "Celý proces stavby lajny",
       "rescue": "Rescue",
@@ -569,6 +625,22 @@
       "rw2Detail": "A: kotvy schváleny (SNARE SANE). B: systém před tenzí (main + back-up + weblock). C: lajna schválena k chůzi (rescue plán + buddy check).",
       "rw3": "Průřezové vrstvy",
       "rw3Detail": "Materiál (ISA cert, RLT stav) / Bezpečnost (rescue plán, komunikace) / Lidé (kompetence, buddy check). Aplikuje se napříč všemi fázemi."
+    },
+    "calculatorsHub": {
+      "title": "Kalkulátory",
+      "summary": "Nástroje pro sílu, úhel, tah, plán tejpování",
+      "angleTitle": "Úhel kotvy",
+      "angleHint": "Síla na jedno rameno dle úhlu (SNARE SANE)",
+      "forceTitle": "Peak force při pádu",
+      "forceHint": "Jörren 2015 — dle materiálu a délky",
+      "sagTitle": "Tah z průvěsu",
+      "sagHint": "Kváš 2013 — jediný experimentálně ověřený",
+      "tapeTitle": "Plán tejpování",
+      "tapeHint": "Generátor rozteček dle délky a typu lajny",
+      "maTitle": "Mechanical advantage",
+      "maHint": "Compound kladky — teorie vs. reálné MA",
+      "deviationTitle": "Síla na deviaci",
+      "deviationHint": "Redirect pulley — F = 2 × T × sin(θ/2)"
     },
     "novice": {
       "title": "Začínáš? Přečti si nejdřív",
