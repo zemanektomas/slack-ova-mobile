@@ -255,23 +255,38 @@ export async function fetchISAWarningsForGear(
 /**
  * Vyhledá kusy dle brand + name substringu — používá se při seed order drift
  * (ID uložené v `gear.slackdata_ref` už neukazuje na stejný kus).
- * Backend nemá full-text search, takže táhneme první stránku a filtrujeme JS-em.
- * Pro MVP acceptable — 246 webbings / 127 weblocks.
+ * Backend nemá full-text search a max `limit=100` per stránka, takže paginujeme
+ * a filtrujeme JS-em. Katalog má ~246 webbings / 127 weblocks, takže 3 stránky
+ * pokryjí vše (max 5 jako safety limit).
  */
 export async function searchByBrandModel(
   type: SlackDataGearType,
   brand: string,
   model: string,
 ): Promise<SlackDataBase[]> {
-  const list = await apiGet<SlackDataBase[]>(`/api/${type}/?limit=500`);
-  if (!Array.isArray(list)) return [];
   const b = brand.trim().toLowerCase();
   const m = model.trim().toLowerCase();
-  return list.filter(
-    (item) =>
-      (item.brand_name?.toLowerCase() ?? '').includes(b)
-      && item.name.toLowerCase().includes(m),
-  );
+  const results: SlackDataBase[] = [];
+  const pageSize = 100;
+  const maxPages = 5;
+
+  for (let page = 0; page < maxPages; page++) {
+    const offset = page * pageSize;
+    const list = await apiGet<SlackDataBase[]>(
+      `/api/${type}/?limit=${pageSize}&offset=${offset}`,
+    );
+    if (!Array.isArray(list) || list.length === 0) break;
+    for (const item of list) {
+      if (
+        (item.brand_name?.toLowerCase() ?? '').includes(b)
+        && item.name.toLowerCase().includes(m)
+      ) {
+        results.push(item);
+      }
+    }
+    if (list.length < pageSize) break; // poslední stránka
+  }
+  return results;
 }
 
 /**
