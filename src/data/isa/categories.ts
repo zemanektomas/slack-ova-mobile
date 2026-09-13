@@ -16,7 +16,6 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 
 export type CardCategoryId =
   | 'reference'      // uvod, ISA:21 limits
-  | 'tools'          // v0.8.0 Q3: kalkulátory hub
   | 'rig-workflow'   // rig workflow overview
   | 'rescue'         // rescue procedures, two-attachments
   | 'environment'    // wind, electrostatic
@@ -36,7 +35,6 @@ export interface CategoryDef {
 /** Poradi top-down (jak se zobrazuje). */
 export const CATEGORIES: CategoryDef[] = [
   { id: 'reference',    icon: 'book-open-outline',      labelKey: 'isaSafety.category.reference',   hintKey: 'isaSafety.category.referenceHint' },
-  { id: 'tools',        icon: 'calculator-variant',     labelKey: 'isaSafety.category.tools',       hintKey: 'isaSafety.category.toolsHint' },
   { id: 'rig-workflow', icon: 'clipboard-list-outline', labelKey: 'isaSafety.category.rigWorkflow', hintKey: 'isaSafety.category.rigWorkflowHint' },
   { id: 'rescue',       icon: 'medical-bag',            labelKey: 'isaSafety.category.rescue',      hintKey: 'isaSafety.category.rescueHint' },
   { id: 'environment',  icon: 'weather-partly-cloudy',  labelKey: 'isaSafety.category.environment', hintKey: 'isaSafety.category.environmentHint' },
@@ -53,7 +51,6 @@ export const CATEGORIES: CategoryDef[] = [
 export const CARD_CATEGORY: Record<string, CardCategoryId> = {
   'novice':             'reference',
   'isa21-limits':       'reference',
-  'calculators-hub':    'tools',   // v0.8.0 Q3: index vsech kalkulatoru
   'rig-workflow':       'rig-workflow',
   'two-attachments':    'rescue',
   'suspension-trauma':  'rescue',
