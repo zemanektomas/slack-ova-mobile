@@ -107,11 +107,33 @@ const CATEGORY_GROUPS: Array<{
   { id: 'rescue', icon: 'alert-octagon', label: 'Rescue kit', hint: 'Kladky, ascendery, descendery', subcategories: ['rescue'] },
 ];
 
-/** Které subkategorie mají SlackData API endpoint (webbing / weblock zatím). */
-const SLACKDATA_TYPES: Partial<Record<MaterialCategory, SlackDataGearType>> = {
-  webbing: 'webbing',
-  weblock: 'weblock',
-};
+/**
+ * Určí SlackData endpoint pro daný item.
+ * SlackData má endpointy: webbing / weblock / roller / leashring / grip / treepro.
+ * Pro rescue kategorii je to smíšené — kladky/pulleys mapujeme na `roller`,
+ * ascendery/descendery SlackData nemá, takže vrátíme undefined a button se skryje.
+ */
+function slackdataTypeForItem(
+  subcategory: MaterialCategory,
+  item: MaterialItem,
+): SlackDataGearType | undefined {
+  switch (subcategory) {
+    case 'webbing':
+      return 'webbing';
+    case 'weblock':
+      return 'weblock';
+    case 'ring':
+      return 'leashring';
+    case 'rescue': {
+      // Rescue má kladky, ascendery, descendery. SlackData má jen `roller`.
+      const s = `${item.model} ${item.notes ?? ''}`.toLowerCase();
+      if (/pulley|traxion|rollex|kootenay|omni block|swivel/.test(s)) return 'roller';
+      return undefined; // ascender / descender / grip / rope grab → nenapojeno
+    }
+    default:
+      return undefined;
+  }
+}
 
 // --- Screen state (L1 → L2 → L3). ---
 
@@ -298,7 +320,7 @@ function L3Detail({ item, subcategory, onBack }: L3Props) {
   const theme = useTheme();
   const fs = useFontStore((s) => s.fontScale);
   const s = useMemo(() => styles(theme, fs), [theme, fs]);
-  const slackdataType = SLACKDATA_TYPES[subcategory];
+  const slackdataType = slackdataTypeForItem(subcategory, item);
 
   const [enrichLoading, setEnrichLoading] = useState(false);
   const [enrichData, setEnrichData] = useState<SlackDataWebbing | SlackDataWeblock | null>(null);
@@ -333,8 +355,14 @@ function L3Detail({ item, subcategory, onBack }: L3Props) {
     setEnrichLoading(true);
     setSearchResults(null);
     try {
+      // fetchGear pokrývá všechny endpointy — webbing / weblock / roller / leashring / …
+      // (webbing má parsed stretch, ostatní typy jdou přes generický fetch — MBS/name/warnings.)
       const [detail, warns] = await Promise.all([
-        slackdataType === 'webbing' ? fetchWebbing(id) : fetchWeblock(id),
+        slackdataType === 'webbing'
+          ? fetchWebbing(id)
+          : slackdataType === 'weblock'
+            ? fetchWeblock(id)
+            : null, // roller / leashring / grip / treepro — enrichment ISA warnings + brand match stačí
         fetchISAWarningsForGear(slackdataType, id),
       ]);
       setEnrichData(detail);
@@ -447,7 +475,9 @@ function L3Detail({ item, subcategory, onBack }: L3Props) {
 
         {!slackdataType && (
           <View style={s.placeholderNote}>
-            <Text style={s.placeholderText}>SlackData napojení zatím jen pro webbing a kotvítka.</Text>
+            <Text style={s.placeholderText}>
+              Pro tento typ vybavení nemá SlackData endpoint (např. ascendery, descendery, šekly, karabiny, spansety, sedáky). Enrichment funguje pro webbing, kotvítka, kroužky a kladky.
+            </Text>
           </View>
         )}
       </ScrollView>
