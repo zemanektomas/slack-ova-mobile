@@ -60,6 +60,14 @@ async function migrate(db: SQLite.SQLiteDatabase): Promise<void> {
   try {
     await db.execAsync(`CREATE INDEX IF NOT EXISTS ix_slacklines_source ON slacklines(source)`);
   } catch {}
+  // v8 (ADR-057): Index na gear.slackdata_* AŽ tady, protože v předchozích verzích
+  // gear tabulka existovala bez těchto sloupců. Vytvoření indexu v SCHEMA_SQL by
+  // selhalo "no such column" a rozbilo celou inicializaci DB.
+  try {
+    await db.execAsync(
+      `CREATE INDEX IF NOT EXISTS ix_gear_slackdata ON gear(slackdata_type, slackdata_ref)`,
+    );
+  } catch {}
 }
 
 export async function getDb(): Promise<SQLite.SQLiteDatabase> {
