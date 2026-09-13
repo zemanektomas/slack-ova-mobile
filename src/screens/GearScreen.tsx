@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import {
   View,
   Text,
@@ -8,6 +8,7 @@ import {
   StyleSheet,
   ActivityIndicator,
   Linking,
+  BackHandler,
 } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -126,6 +127,25 @@ export default function GearScreen() {
   const [search, setSearch] = useState('');
 
   const s = useMemo(() => styles(theme, fs), [theme, fs]);
+
+  // Hardware / gesture back button — vrací na předchozí úroveň state machiny.
+  // Bez toho by system back zavíral app nebo přepínal na jiný tab (a user by
+  // ztratil nav state uvnitř GearScreenu).
+  useEffect(() => {
+    const sub = BackHandler.addEventListener('hardwareBackPress', () => {
+      if (nav.level === 'L3') {
+        setNav({ level: 'L2', groupId: nav.groupId });
+        return true;
+      }
+      if (nav.level === 'L2') {
+        setNav({ level: 'L1' });
+        setSearch('');
+        return true;
+      }
+      return false; // L1 → default (systém zavře tab / app)
+    });
+    return () => sub.remove();
+  }, [nav]);
 
   // --- L1: kategorie s count ---
   const categoryCounts = useMemo(() => {
