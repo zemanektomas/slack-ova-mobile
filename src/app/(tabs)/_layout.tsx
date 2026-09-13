@@ -86,8 +86,7 @@ export default function TabsLayout() {
             <MaterialCommunityIcons name="clipboard-text" size={size} color={color} />
           ),
           headerShown: false,
-          // v0.7.29 — schovat pokud Dev Mode OFF (WIP placeholder, ceka na v0.8.2)
-          href: devMode ? undefined : null,
+          // v0.8.0: odgateovano - IncidentReportSheet je stable, FAB otevre novy incident.
         }}
       />
       <Tabs.Screen
