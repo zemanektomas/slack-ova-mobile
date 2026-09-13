@@ -222,10 +222,8 @@
         "longline": "Longline",
         "rodeo": "Rodeo"
       },
-      "summaryTitle": "Doporučení",
       "summaryRange": "Rozsah rozteček: {{min}}–{{max}} m nepravidelně, u kotev prvních 10 m po 1–1,5 m tightě.",
       "summaryPoints": "{{points}} tape points · pásky ~{{tapeM}} m (22 cm/point)",
-      "sequenceLabel": "Rozteče (od kotvy k druhé)",
       "regenerate": "Přegenerovat",
       "share": "Sdílet",
       "exportHeader": "Plán tejpování · {{length}} m · {{type}}",
@@ -234,7 +232,13 @@
       "invalidLength": "Zadej délku 5–500 m.",
       "principle": "Anti-harmonic: rozteče v pásmu Balance Community, žádné sousední duplicity, nesedí na L/2 / L/3 / L/4.",
       "spoNote": "Spoj = natural node damper (soustředěná hmota tlumí oscilaci). Trick zone hustší jen pro trickování — pro chození bez clusteru.",
-      "source": "Zdroj: Balance Community — All About Highline Tape Spacing + ISA:21 §3.3.1.4 (backup line support points)."
+      "source": "Zdroj: Balance Community — All About Highline Tape Spacing + ISA:21 §3.3.1.4 (backup line support points).",
+      "tableLabel": "Referenční tabulka",
+      "col": {
+        "length": "Délka lajny",
+        "spacing": "Rozteče tejpů"
+      },
+      "sequenceLabel": "Rozteče (od kotvy k druhé)"
     }
   },
   "level": {

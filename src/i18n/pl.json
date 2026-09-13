@@ -222,10 +222,8 @@
         "longline": "Longline",
         "rodeo": "Rodeo"
       },
-      "summaryTitle": "Zalecenie",
       "summaryRange": "Zakres odstepow: {{min}}-{{max}} m nieregularnie, pierwsze 10 m przy zakotwiczeniach ciasno co 1-1,5 m.",
       "summaryPoints": "{{points}} punktow tasmy, tasma ~{{tapeM}} m (22 cm/punkt)",
-      "sequenceLabel": "Odstepy (od kotwy do kotwy)",
       "regenerate": "Wygeneruj ponownie",
       "share": "Udostepnij",
       "exportHeader": "Plan tasmowania - {{length}} m - {{type}}",
@@ -234,7 +232,13 @@
       "invalidLength": "Podaj dlugosc od 5 do 500 m.",
       "principle": "Anti-harmonic: odstepy w zakresie Balance Community, bez sasiadujacych duplikatow, unikaj L/2, L/3, L/4.",
       "spoNote": "Zlacze = naturalny tlumik wezla. Strefa trickow gestsza tylko dla trickow.",
-      "source": "Zrodlo: Balance Community - All About Highline Tape Spacing + ISA:21 3.3.1.4 (backup line support points)."
+      "source": "Zrodlo: Balance Community - All About Highline Tape Spacing + ISA:21 3.3.1.4 (backup line support points).",
+      "tableLabel": "Tabela referencyjna",
+      "col": {
+        "length": "Dlugosc liny",
+        "spacing": "Odstepy tasm"
+      },
+      "sequenceLabel": "Odstepy (od kotwy do kotwy)"
     }
   },
   "level": {
