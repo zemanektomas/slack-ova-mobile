@@ -207,8 +207,9 @@ export default function InlineDetail({ slacklineId }: { slacklineId: number }) {
         );
       })()}
 
-      {/* 4b) Plán tejpování — context-aware kalkulátor (v0.8.0 Q3) */}
-      {detail.length && detail.length >= 5 && detail.length <= 500 && (
+      {/* 4b) Plán tejpování — context-aware kalkulátor (v0.8.0 Q3).
+             Skrytý pro longline / rodeo (single line, netejpuje se) — viz mapLineTypeToLineType. */}
+      {detail.length && detail.length >= 5 && detail.length <= 500 && mapLineTypeToLineType(detail.type) && (
         <Pressable
           onPress={() => setCalcType('tapeSpacing')}
           style={[styles.navigateBtn, { borderColor: t.border, backgroundColor: t.surface }]}
@@ -420,14 +421,17 @@ export default function InlineDetail({ slacklineId }: { slacklineId: number }) {
   );
 }
 
-/** Mapuje slackline.type (highline/longline/waterline/midline/trickline) na LineType kalkulátoru. */
+/**
+ * Mapuje slackline.type na LineType kalkulátoru pro plán tejpování.
+ * Longline (single line, žádný backup) a rodeo se NETEJPUJÍ — vrací undefined,
+ * button „Plán tejpování" se pak vůbec nezobrazí.
+ */
 function mapLineTypeToLineType(type: string | null | undefined): LineType | undefined {
-  if (!type) return undefined;
+  if (!type) return 'walking'; // neznámý typ → assume walking (button zobrazit)
   const t = type.toLowerCase();
+  if (t.includes('long') || t.includes('rodeo')) return undefined; // netejpuje se
   if (t.includes('trick')) return 'trick';
-  if (t.includes('long')) return 'longline';
-  if (t.includes('rodeo')) return 'rodeo';
-  return 'walking'; // highline / waterline / midline → walking default
+  return 'walking'; // highline / waterline / midline → walking
 }
 
 // -----------------------------------------------------------------------------
