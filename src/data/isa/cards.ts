@@ -19,7 +19,8 @@ export type CardCategory =
   | 'thresholds'
   | 'lifetime'
   | 'warning'
-  | 'workflow';
+  | 'workflow'
+  | 'calculators-hub';
 
 export interface ChecklistItem {
   id: string;
@@ -51,7 +52,17 @@ export interface CardData {
 
   // Kontextový kalkulátor v kartě (v0.7.4) — tlačítko pod obsahem karty
   // otevře relevantní kalkulátor v modalu.
-  relatedCalculator?: 'angle' | 'force' | 'ma' | 'deviation';
+  // v0.8.0: rozšíření o sagTension (Kváš 2013) + tapeSpacing (BC generator).
+  relatedCalculator?: 'angle' | 'force' | 'ma' | 'deviation' | 'sagTension' | 'tapeSpacing';
+
+  // v0.8.0 Q3: karta typu 'calculators-hub' obsahuje list všech dostupných kalkulátorů.
+  // Render v CardView: seznam tlačítek co otevírají různé kalkulátory.
+  calculatorsHub?: Array<{
+    type: 'angle' | 'force' | 'ma' | 'deviation' | 'sagTension' | 'tapeSpacing';
+    icon: string;
+    titleKey: string;
+    hintKey: string;
+  }>;
 }
 
 export const CARDS: CardData[] = [
@@ -308,6 +319,53 @@ export const CARDS: CardData[] = [
     ],
     reference: { source: 'pm/idea_rig_log.md — 9 fází + 3 gates + průřezové vrstvy' },
     relatedCalculator: 'deviation',  // → deviation (fáze 5 Tensioning)
+  },
+
+  // v0.8.0 Q3 — Kalkulátory hub -----------------------------------------------
+  {
+    id: 'calculators-hub',
+    category: 'calculators-hub',
+    icon: 'calculator-variant',
+    titleKey: 'cards.calculatorsHub.title',
+    summaryKey: 'cards.calculatorsHub.summary',
+    calculatorsHub: [
+      {
+        type: 'angle',
+        icon: 'angle-acute',
+        titleKey: 'cards.calculatorsHub.angleTitle',
+        hintKey: 'cards.calculatorsHub.angleHint',
+      },
+      {
+        type: 'force',
+        icon: 'lightning-bolt',
+        titleKey: 'cards.calculatorsHub.forceTitle',
+        hintKey: 'cards.calculatorsHub.forceHint',
+      },
+      {
+        type: 'sagTension',
+        icon: 'chart-bell-curve',
+        titleKey: 'cards.calculatorsHub.sagTitle',
+        hintKey: 'cards.calculatorsHub.sagHint',
+      },
+      {
+        type: 'tapeSpacing',
+        icon: 'tape-measure',
+        titleKey: 'cards.calculatorsHub.tapeTitle',
+        hintKey: 'cards.calculatorsHub.tapeHint',
+      },
+      {
+        type: 'ma',
+        icon: 'cog-outline',
+        titleKey: 'cards.calculatorsHub.maTitle',
+        hintKey: 'cards.calculatorsHub.maHint',
+      },
+      {
+        type: 'deviation',
+        icon: 'call-split',
+        titleKey: 'cards.calculatorsHub.deviationTitle',
+        hintKey: 'cards.calculatorsHub.deviationHint',
+      },
+    ],
   },
 
 ];

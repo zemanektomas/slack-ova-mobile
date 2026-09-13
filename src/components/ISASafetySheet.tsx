@@ -252,8 +252,44 @@ function CardView({
             <WorkflowContent theme={theme} tr={tr} />
           )}
 
+          {/* v0.8.0 Q3: calculators-hub rendering — list 6 kalkulátorů */}
+          {card.category === 'calculators-hub' && card.calculatorsHub && (
+            <View style={styles.calcHubList}>
+              {card.calculatorsHub.map((c) => (
+                <Pressable
+                  key={c.type}
+                  onPress={() => onOpenCalculator(c.type)}
+                  style={[
+                    styles.calcHubRow,
+                    { borderColor: theme.border, backgroundColor: theme.surface },
+                  ]}
+                >
+                  <MaterialCommunityIcons
+                    name={c.icon as any}
+                    size={22}
+                    color={theme.accent}
+                    style={{ marginRight: 12 }}
+                  />
+                  <View style={{ flex: 1 }}>
+                    <Text style={[styles.calcHubTitle, { color: theme.text }]}>
+                      {tr(c.titleKey)}
+                    </Text>
+                    <Text style={[styles.calcHubHint, { color: theme.textMuted }]}>
+                      {tr(c.hintKey)}
+                    </Text>
+                  </View>
+                  <MaterialCommunityIcons
+                    name="chevron-right"
+                    size={18}
+                    color={theme.textMuted}
+                  />
+                </Pressable>
+              ))}
+            </View>
+          )}
+
           {/* Hint text (for rule / thresholds / lifetime cards) */}
-          {card.category !== 'checklist' && card.category !== 'limits' && card.category !== 'workflow' && (
+          {card.category !== 'checklist' && card.category !== 'limits' && card.category !== 'workflow' && card.category !== 'calculators-hub' && (
             <Text style={[styles.hint, { color: theme.textMuted }]}>
               {tr(`cards.${card.id.replace(/-/g, '')}.hint`)}
             </Text>
@@ -513,6 +549,17 @@ const makeStyles = (fs: number) => StyleSheet.create({
     borderRadius: 8,
   },
   calcBtnText: { fontSize: 13 * fs, fontWeight: '600' },
+  // v0.8.0 Q3: calculators-hub styles
+  calcHubList: { gap: 8 },
+  calcHubRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: 12,
+    borderRadius: 10,
+    borderWidth: 1,
+  },
+  calcHubTitle: { fontSize: 14 * fs, fontWeight: '600' },
+  calcHubHint: { fontSize: 12 * fs, marginTop: 2, lineHeight: 15 * fs },
   disclaimer: {
     fontSize: 11 * fs,
     marginTop: 16,

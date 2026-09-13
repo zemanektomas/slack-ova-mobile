@@ -109,7 +109,8 @@
     "translateError": "Translation failed",
     "translateErrorHint": "Check your internet connection (the translator model needs to download once, ~30 MB on WiFi).",
     "translateUnsupported": "Language not supported",
-    "translateUnsupportedHint": "On-device translation only supports a limited set of languages. The original text stays visible."
+    "translateUnsupportedHint": "On-device translation only supports a limited set of languages. The original text stays visible.",
+    "tapeSpacingBtn": "Tape spacing plan"
   },
   "calc": {
     "openBtn": "Open calculator",
@@ -185,6 +186,59 @@
       },
       "warning": "⚠ Deviation carries more than the line itself. Anchor for deviation must be stronger than for highline anchoring.",
       "formula": "Formula: F = 2 × T × sin(θ/2)"
+    },
+    "sagTension": {
+      "title": "Sag tension",
+      "spanLabel": "Line length",
+      "walkerLabel": "Walker weight",
+      "sagLabel": "Sag",
+      "tensionLabel": "Mainline tension",
+      "tableLabel": "Reference table",
+      "col": {
+        "sag": "Sag",
+        "tension": "Tension",
+        "rating": "Rating"
+      },
+      "rating": {
+        "ideal": "loose",
+        "ok": "comfort",
+        "max": "tight",
+        "caution": "caution",
+        "stop": "STOP"
+      },
+      "ratioOK": "within L/sag 50",
+      "ratioBad": "above L/sag 50 (CAS rule)",
+      "formula": "Formula: T = m x L x 10 / (4 x sag) - the only experimentally validated formula.",
+      "warning": "Worst position is the middle. Material and pretension do not enter the static tension - rigger sets the sag, tension is the consequence.",
+      "source": "Source: Kvas 2013 (CAS) - tensometer validated, 0.21% error. Delaney RopeLab 2022 confirms independently."
+    },
+    "tapeSpacing": {
+      "title": "Tape spacing plan",
+      "lengthLabel": "Line length",
+      "typeLabel": "Line usage type",
+      "chip": {
+        "walking": "Walking",
+        "trick": "Trick line",
+        "longline": "Longline",
+        "rodeo": "Rodeo"
+      },
+      "joinLabel": "Join in the middle",
+      "joinHint": "Mechanical connector (weblock/DLV/soft shackle). Acts as natural node damper - no denser taping around the join.",
+      "summaryTitle": "Recommendation",
+      "summaryRange": "Spacing range: {{min}}-{{max}} m randomized, first 10 m at anchors tight at 1-1.5 m.",
+      "summaryPoints": "{{points}} tape points, tape ~{{tapeM}} m (22 cm/point)",
+      "sequenceLabel": "Spacings (anchor to anchor)",
+      "regenerate": "Regenerate",
+      "share": "Share",
+      "exportHeader": "Tape spacing plan - {{length}} m - {{type}} - {{join}}",
+      "withJoin": "join in middle",
+      "withoutJoin": "no join",
+      "exportStats": "{{points}} tape points, tape ~{{tapeM}} m, spacing range {{min}}-{{max}} m",
+      "exportFailed": "Share failed",
+      "invalidLength": "Enter length between 5 and 500 m.",
+      "principle": "Anti-harmonic: spacings within Balance Community range, no adjacent duplicates, avoid L/2, L/3, L/4 fractions.",
+      "spoNote": "Join = natural node damper (concentrated mass dampens oscillation). Trick zone denser only for tricking - for walking no cluster around join.",
+      "source": "Source: Balance Community - All About Highline Tape Spacing + ISA:21 3.3.1.4 (backup line support points)."
     }
   },
   "level": {
@@ -490,7 +544,9 @@
       "harnessPas": "Harness + PAS",
       "harnessPasHint": "Personal anchor system",
       "walker": "Walker",
-      "walkerHint": "Buddy check, pre-flight"
+      "walkerHint": "Buddy check, pre-flight",
+      "tools": "Calculators",
+      "toolsHint": "Tools for forces, angles, tension, tape spacing"
     }
   },
   "cards": {
@@ -684,6 +740,22 @@
       "w4Detail": "Between tie-off and mainline (anchor side). Dedicated (Slack-Inov Zenlock, Rock Empire) OR spanset/dyneema loop (2-3× safety margin over expected peak). Never in the middle of the line.",
       "w5": "Webbing-based soft release = secure like tie-off",
       "w5Detail": "When soft release is webbing/spanset-based (not a dedicated device), knots must be secured the same as weblock tie-off. Cyclic loading unties loose ends. Dedicated device (Zenlock integrated) handles this by design."
+    },
+    "calculatorsHub": {
+      "title": "Calculators",
+      "summary": "Tools for forces, angles, tension, tape spacing",
+      "angleTitle": "Anchor angle",
+      "angleHint": "Force per leg by angle (SNARE SANE)",
+      "forceTitle": "Peak fall force",
+      "forceHint": "Joerren 2015 - by material and length",
+      "sagTitle": "Sag tension",
+      "sagHint": "Kvas 2013 - the only experimentally validated",
+      "tapeTitle": "Tape spacing plan",
+      "tapeHint": "Spacing generator by length and line type",
+      "maTitle": "Mechanical advantage",
+      "maHint": "Compound pulleys - theory vs. real MA",
+      "deviationTitle": "Deviation force",
+      "deviationHint": "Redirect pulley - F = 2 x T x sin(theta/2)"
     }
   },
   "tabs": {
