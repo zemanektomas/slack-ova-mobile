@@ -5,9 +5,11 @@ import { useTheme } from '../../theme';
 import { useDevModeStore } from '../../store/devModeStore';
 
 /**
- * v0.8.0 bottom tab bar — 5 tabu (sekce 13.1).
- * Layout: Lajny / ISA / Vybaveni / Reporty / Nastaveni.
+ * v0.8.0 bottom tab bar — 6 tabu.
+ * Layout: Lajny / ISA / Kalkulatory / Vybaveni / Reporty / Nastaveni.
  *
+ * Kalkulatory (v0.8.0 Q3): full-screen index 6 kalkulatoru (Anchor angle,
+ * Peak force, Sag tension, Tape spacing, MA, Deviation).
  * Vybaveni + Reporty jsou placeholder screens v v0.8.0 (SQLite schema v7
  * pripraveno, CRUD prijde v v0.8.0.x). ISA a Nastaveni jsou plnohodnotne
  * s obsahem prevzatym z drivejsich popup Sheetu.
@@ -50,6 +52,16 @@ export default function TabsLayout() {
           title: tr('tabs.isa'),
           tabBarIcon: ({ color, size }) => (
             <MaterialCommunityIcons name="shield-check" size={size} color={color} />
+          ),
+          headerShown: false,
+        }}
+      />
+      <Tabs.Screen
+        name="calculators"
+        options={{
+          title: tr('tabs.calculators'),
+          tabBarIcon: ({ color, size }) => (
+            <MaterialCommunityIcons name="calculator-variant" size={size} color={color} />
           ),
           headerShown: false,
         }}

@@ -763,6 +763,7 @@
     "isa": "ISA",
     "gear": "Gear",
     "reports": "Reports",
-    "settings": "Settings"
+    "settings": "Settings",
+    "calculators": "Calculators"
   }
 }
