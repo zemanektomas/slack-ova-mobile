@@ -104,7 +104,9 @@ export function IncidentReportSheet({ visible, onClose, onSaved }: Props) {
 
   const [saving, setSaving] = useState(false);
 
-  const canSubmit = category !== null && description.trim().length >= 20;
+  // v0.8.0-alpha3: uvolneno — staci vybrat kategorii. Popis je doporuceny, ne povinny.
+  // Radeji ulozit strucny report nez zadny.
+  const canSubmit = category !== null;
 
   const reset = () => {
     setCategory(null);
@@ -185,6 +187,20 @@ export function IncidentReportSheet({ visible, onClose, onSaved }: Props) {
       Alert.alert('Uložení selhalo', String(err));
       return null;
     }
+  };
+
+  const handleSaveOnly = async () => {
+    if (!canSubmit) return;
+    setSaving(true);
+    const id = await saveToDb();
+    setSaving(false);
+    if (id === null) return;
+    onSaved?.();
+    Alert.alert(
+      'Uloženo lokálně',
+      'Report je uložený v Reports tabu. Můžeš ho později otevřít a poslat nebo sdílet.',
+      [{ text: 'OK', onPress: () => { reset(); onClose(); } }],
+    );
   };
 
   const handleSubmit = async (mode: 'email' | 'share' | 'sair') => {
@@ -422,17 +438,35 @@ export function IncidentReportSheet({ visible, onClose, onSaved }: Props) {
             {/* Actions */}
             <Text style={[styles.sectionLabel, { marginTop: 20 }]}>Uložit + poslat</Text>
 
+            {!canSubmit && (
+              <Text style={styles.footerNote}>Vyber kategorii, ať můžeš pokračovat.</Text>
+            )}
+
             <Pressable
               disabled={!canSubmit || saving}
-              onPress={() => handleSubmit('email')}
+              onPress={handleSaveOnly}
               style={[
                 styles.actionBtn,
                 { backgroundColor: canSubmit ? t.accent : t.border },
               ]}
             >
-              <MaterialCommunityIcons name="email-outline" size={18} color={canSubmit ? t.accentOn : t.textMuted} />
+              <MaterialCommunityIcons name="content-save-outline" size={18} color={canSubmit ? t.accentOn : t.textMuted} />
               <Text style={[styles.actionBtnText, { color: canSubmit ? t.accentOn : t.textMuted }]}>
-                Email na ISA SafeCom
+                Uložit lokálně (bez odeslání)
+              </Text>
+            </Pressable>
+
+            <Pressable
+              disabled={!canSubmit || saving}
+              onPress={() => handleSubmit('email')}
+              style={[
+                styles.actionBtn,
+                { backgroundColor: t.surface, borderColor: canSubmit ? t.accent : t.border, borderWidth: 1 },
+              ]}
+            >
+              <MaterialCommunityIcons name="email-outline" size={18} color={canSubmit ? t.accent : t.textMuted} />
+              <Text style={[styles.actionBtnText, { color: canSubmit ? t.accent : t.textMuted }]}>
+                Uložit + email na ISA SafeCom
               </Text>
             </Pressable>
 
@@ -480,7 +514,10 @@ const makeStyles = (t: ReturnType<typeof useTheme>, fs: number) =>
     backdrop: { flex: 1, backgroundColor: 'rgba(0,0,0,0.6)', justifyContent: 'flex-end' },
     backdropDismiss: { flex: 1 },
     sheet: {
-      maxHeight: '90%',
+      // v0.8.0-alpha3: nechame prostor pro bottom tab bar (56 px) — jinak by
+      // sheet vyjizdel az pres nej a user by nevidel zpetnou navigaci.
+      maxHeight: '82%',
+      marginBottom: 56,
       backgroundColor: t.surface,
       borderTopLeftRadius: 16,
       borderTopRightRadius: 16,

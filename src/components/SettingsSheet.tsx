@@ -67,8 +67,9 @@ const SOURCES: { key: SourceFilter; label: string; useTranslation?: boolean }[] 
 // Pořadí abecedně podle endonymu, vlaječky přes Unicode regional indicator
 // (renderuje OS — žádné image assety potřeba).
 const LANGUAGES: { key: Lang; label: string }[] = [
-  { key: 'cs', label: '🇨🇿 Čeština' },
   { key: 'en', label: '🇬🇧 English' },
+  { key: 'cs', label: '🇨🇿 Čeština' },
+  { key: 'de', label: '🇩🇪 Deutsch' },
   { key: 'pl', label: '🇵🇱 Polski' },
 ];
 
@@ -516,7 +517,7 @@ export function SettingsSheet({ visible, onClose, mode = 'modal' }: SettingsShee
 function formatRefreshDate(iso: string, lang: Lang): string {
   try {
     const d = new Date(iso);
-    const locale = lang === 'cs' ? 'cs-CZ' : lang === 'pl' ? 'pl-PL' : 'en-US';
+    const locale = lang === 'cs' ? 'cs-CZ' : lang === 'pl' ? 'pl-PL' : lang === 'de' ? 'de-DE' : 'en-US';
     return d.toLocaleDateString(locale, { year: 'numeric', month: 'long', day: 'numeric' });
   } catch {
     return iso.slice(0, 10);
