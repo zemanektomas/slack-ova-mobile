@@ -1,12 +1,14 @@
 // i18n setup. Detekce jazyka:
-//   1) AsyncStorage 'slackline_lang' (uživatelův explicitní výběr)
-//   2) systémový locale (expo-localization)
-//   3) fallback 'cs'
+//   1) AsyncStorage 'slackline_lang' (uživatelův explicitní výběr — má přednost)
+//   2) fallback 'en' (v0.8.0+ international default, uživatel si CS/PL přepne v Settings)
+//
+// v0.7.x-: auto-detekce ze systému (cs→CS, pl→PL, else→EN).
+// Změněno v v0.8.0: apka je pozicovaná mezinárodně (Slackmap complement),
+// EN default nezmátne cizince ani mezinárodní testery Play Console.
 
 import i18n from 'i18next';
 import { initReactI18next } from 'react-i18next';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import * as Localization from 'expo-localization';
 import cs from './cs.json';
 import en from './en.json';
 import pl from './pl.json';
@@ -19,9 +21,6 @@ export async function detectInitialLang(): Promise<Lang> {
     const stored = await AsyncStorage.getItem(LANG_KEY);
     if (stored === 'cs' || stored === 'en' || stored === 'pl') return stored;
   } catch {}
-  const sys = Localization.getLocales()?.[0]?.languageCode;
-  if (sys === 'cs') return 'cs';
-  if (sys === 'pl') return 'pl';
   return 'en';
 }
 
