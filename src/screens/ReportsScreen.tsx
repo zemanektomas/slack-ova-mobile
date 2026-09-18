@@ -296,10 +296,10 @@ const styles = (t: ReturnType<typeof useTheme>, fs: number) =>
     reportActionText: { fontSize: 12 * fs, fontWeight: '500' },
     fab: {
       position: 'absolute',
-      // v0.8.0-alpha6: sceneContainerStyle uz pridava paddingBottom = TOTAL_HEIGHT + insets,
-      // takze FAB relativne k bottom: 20 uz je nad curve tab barem.
-      bottom: 20,
-      right: 20,
+      // v0.8.0-alpha5+: nad curve tab barem (120 px) + rezerva pro Settings pill.
+      // Umisten dole vlevo aby nekolidoval se Settings pillem v pravem hornim rohu curve.
+      bottom: 24,
+      left: 20,
       width: 56,
       height: 56,
       borderRadius: 28,
