@@ -296,7 +296,9 @@ const styles = (t: ReturnType<typeof useTheme>, fs: number) =>
     reportActionText: { fontSize: 12 * fs, fontWeight: '500' },
     fab: {
       position: 'absolute',
-      bottom: 24,
+      // v0.8.0-alpha5: nad curve tab barem (120 px) + rezerva. Bez toho by
+      // FAB spadl do zony pod Settings pill (pravy horni roh curve).
+      bottom: 140,
       right: 20,
       width: 56,
       height: 56,
