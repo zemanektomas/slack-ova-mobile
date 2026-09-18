@@ -1,0 +1,69 @@
+Slackline.Ova
+Copyright 2026 Tomáš Zemánek
+https://slacklineova.cz
+
+This product is licensed under the Apache License, Version 2.0 (the "License").
+You may not use this product except in compliance with the License. A copy of
+the License is included in the LICENSE file and may also be obtained at:
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+--------------------------------------------------------------------------------
+
+TRADEMARKS
+
+The name "Slackline.Ova", the "Sl.Ova" wordmark, the circular Ostrava-skyline
+logo, and related brand artwork are trademarks of Tomáš Zemánek. They are NOT
+licensed under the Apache License 2.0 and are excluded from the grant of that
+license (see Apache License §6).
+
+Forks and derivative works must:
+  - not use the "Slackline.Ova" or "Sl.Ova" marks in their name, branding,
+    app store listings, or user-facing UI;
+  - not use the circular Ostrava-skyline logo or derivatives of it;
+  - adopt a distinct name, logo, and app identifier (Android package name).
+
+Nominative use of the name to reference this original project (for example,
+"forked from Slackline.Ova") is permitted.
+
+--------------------------------------------------------------------------------
+
+THIRD-PARTY DATA AND ATTRIBUTIONS
+
+This product bundles or accesses data from the following sources, each under
+its own license:
+
+- slack.cz
+  Data from the Czech slackline community (https://slack.cz).
+  Scraped from the public /highlines/ page.
+
+- Slackmap
+  Data from the International Slackline Association (https://slackmap.com).
+  Public GeoJSON via data.slackmap.com and line details via api.slackmap.com.
+  Licensed under Creative Commons Attribution-ShareAlike 4.0 International
+  (CC BY-SA 4.0). https://creativecommons.org/licenses/by-sa/4.0/
+
+- SlackData
+  Gear catalog, warnings and recalls from the International Slackline
+  Association (https://slackdata.org).
+  Licensed under Creative Commons Attribution-ShareAlike 4.0 International
+  (CC BY-SA 4.0). https://creativecommons.org/licenses/by-sa/4.0/
+
+- Mapy.cz
+  Basemap tiles from Seznam.cz a.s. (https://mapy.cz), rendered from data
+  © OpenStreetMap contributors.
+
+- OpenStreetMap
+  © OpenStreetMap contributors, distributed under the Open Database License
+  (ODbL). https://www.openstreetmap.org/copyright
+
+--------------------------------------------------------------------------------
+
+CONTACT
+
+For licensing questions, trademark permissions, or other matters relating to
+this NOTICE, contact:
+
+  Tomáš Zemánek
+  https://slacklineova.cz
+  https://github.com/zemanektomas/slack-ova-mobile
