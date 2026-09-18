@@ -127,8 +127,8 @@ export function SlackCurveTabBar(props: BottomTabBarProps) {
         </Text>
       </Pressable>
 
-      {/* Bottom row: 6 primary tabs */}
-      <View style={[styles.tabRow, { paddingBottom: insets.bottom }]}>
+      {/* Bottom row: 6 primary tabs — sit ABOVE the system nav bar (insets.bottom) */}
+      <View style={[styles.tabRow, { bottom: insets.bottom }]}>
         {PRIMARY_TABS.map((tab) => {
           const isActive = active === tab.name;
           return (
@@ -139,7 +139,7 @@ export function SlackCurveTabBar(props: BottomTabBarProps) {
             >
               <MaterialCommunityIcons
                 name={tab.icon as any}
-                size={22}
+                size={24}
                 color={isActive ? t.accent : t.textMuted}
               />
               <Text
@@ -148,6 +148,8 @@ export function SlackCurveTabBar(props: BottomTabBarProps) {
                   { color: isActive ? t.accent : t.textDim },
                 ]}
                 numberOfLines={1}
+                adjustsFontSizeToFit
+                minimumFontScale={0.7}
               >
                 {getLabel(tab.name)}
               </Text>
@@ -196,7 +198,8 @@ const styles = StyleSheet.create({
     gap: 2,
   },
   tabLabel: {
-    fontSize: 10,
+    fontSize: 9,
     fontWeight: '500',
+    paddingHorizontal: 2,
   },
 });
