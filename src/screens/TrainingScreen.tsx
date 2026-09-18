@@ -90,7 +90,7 @@ const RESOURCES: Resource[] = [
     title: 'Philip Queen Blog',
     author: 'Philip Queen — ISA SafeCom',
     desc: 'Rigging science: force analysis, gear testing, longline recommendations. 5+ years in ISA safety commission.',
-    url: 'https://philipqueen.com/blog',
+    url: 'https://philipqueen.github.io/SlackBlog/',
     disciplines: ['highline', 'longline'],
     free: true,
   },

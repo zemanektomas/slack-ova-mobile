@@ -12,14 +12,15 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import cs from './cs.json';
 import en from './en.json';
 import pl from './pl.json';
+import de from './de.json';
 
 export const LANG_KEY = 'slackline_lang';
-export type Lang = 'cs' | 'en' | 'pl';
+export type Lang = 'cs' | 'en' | 'pl' | 'de';
 
 export async function detectInitialLang(): Promise<Lang> {
   try {
     const stored = await AsyncStorage.getItem(LANG_KEY);
-    if (stored === 'cs' || stored === 'en' || stored === 'pl') return stored;
+    if (stored === 'cs' || stored === 'en' || stored === 'pl' || stored === 'de') return stored;
   } catch {}
   return 'en';
 }
@@ -27,7 +28,12 @@ export async function detectInitialLang(): Promise<Lang> {
 export async function initI18n() {
   const lang = await detectInitialLang();
   await i18n.use(initReactI18next).init({
-    resources: { cs: { translation: cs }, en: { translation: en }, pl: { translation: pl } },
+    resources: {
+      cs: { translation: cs },
+      en: { translation: en },
+      pl: { translation: pl },
+      de: { translation: de },
+    },
     lng: lang,
     fallbackLng: 'en',
     interpolation: { escapeValue: false },
