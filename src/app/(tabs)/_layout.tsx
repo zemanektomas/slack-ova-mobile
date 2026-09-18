@@ -1,7 +1,6 @@
 import { Tabs } from 'expo-router';
 import { useTranslation } from 'react-i18next';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { SlackCurveTabBar, CURVE_TABBAR_HEIGHT } from '../../components/SlackCurveTabBar';
+import { SlackCurveTabBar } from '../../components/SlackCurveTabBar';
 import { useTheme } from '../../theme';
 
 /**
@@ -19,12 +18,10 @@ import { useTheme } from '../../theme';
 export default function TabsLayout() {
   const { t: tr } = useTranslation();
   const t = useTheme();
-  const insets = useSafeAreaInsets();
 
   return (
     <Tabs
       tabBar={(props) => <SlackCurveTabBar {...props} />}
-      sceneContainerStyle={{ paddingBottom: CURVE_TABBAR_HEIGHT + insets.bottom }}
       screenOptions={{
         headerStyle: { backgroundColor: t.surface },
         headerTintColor: t.text,

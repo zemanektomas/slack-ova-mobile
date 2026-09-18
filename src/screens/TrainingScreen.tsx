@@ -252,7 +252,7 @@ function makeStyles(t: ReturnType<typeof useTheme>, fs: number) {
     subTabText: { color: t.textDim, fontSize: 14 * fs },
     subTabTextActive: { color: t.text, fontWeight: '600' },
     content: { flex: 1 },
-    contentInner: { padding: 12, gap: 12, paddingBottom: 40 },
+    contentInner: { padding: 12, gap: 12, paddingBottom: 140 },
     card: {
       backgroundColor: t.surface,
       borderRadius: 12,
