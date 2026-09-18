@@ -1,119 +1,106 @@
 ---
-title: Slackline.Ova — Slackline map for slackliners
-description: Offline-first slackline map for Android. Lines from slack.cz and slackmap.com worldwide. Free, open source, no tracking.
+title: Slackline.Ova — Offline slackline companion
+description: Offline-first Android app for slackliners — multi-source map, ISA safety reference, gear log, training resources.
 ---
 
 # Slackline.Ova
 
-**Offline slackline map for Android. Lines from Czechia and worldwide.**
-**Mapa slacklines pro Android. Lajny z Česka a celého světa.**
+**Offline-first slackline companion for Android.**
+**Map, safety, gear and training — no signal required.**
 
-[![Latest release](https://img.shields.io/github/v/release/zemanektomas/slack-ova-mobile?label=Latest%20APK&color=0e8a16)](https://github.com/zemanektomas/slack-ova-mobile/releases/latest)
+[![Google Play](https://img.shields.io/badge/Google%20Play-Slackline.Ova-0e8a16?logo=google-play&logoColor=white)](https://play.google.com/store/apps/details?id=cz.slackline.ova)
 [![License](https://img.shields.io/badge/license-Apache%202.0-blue)](https://github.com/zemanektomas/slack-ova-mobile/blob/main/LICENSE)
-[![Platform](https://img.shields.io/badge/platform-Android-3DDC84?logo=android&logoColor=white)](https://github.com/zemanektomas/slack-ova-mobile/releases/latest)
+[![Platform](https://img.shields.io/badge/platform-Android-3DDC84?logo=android&logoColor=white)](https://play.google.com/store/apps/details?id=cz.slackline.ova)
 
 ---
 
-## English
+## What it is
 
-Slackline.Ova is an offline slackline map for slackliners. Every public line
-from [slack.cz](https://slack.cz) (Czechia) and [slackmap.com](https://slackmap.com)
-(worldwide) bundled inside the app — anchors, lengths, heights, descriptions,
-parking. Works without signal once installed.
+Slackline.Ova is a mobile companion for slackliners in the field — the
+places where phone signal usually is not. It started as an offline map for
+the Czech Republic (Sl.Ova, Ostrava scene) and grew into a **multi-source
+aggregator** with safety reference, gear tracking and curated training
+material.
 
-**What it does:**
+Complementary to [Slackmap](https://slackmap.com) and
+[ISA](https://slacklineinternational.org) — a national and regional
+mobile-offline layer, not a competitor. Slackmap stays the source of truth
+for global line submissions; local information belongs on a local platform.
 
-- Full-screen map with bottom sheet list (drag to resize)
-- Bounds-driven filtering — list updates as you pan
-- Marker color by type — highlines stand out, others muted
-- Sort by distance from you (or any column)
-- Tap a row → inline detail with anchors, description, source link
-- One **Navigate** button per line → Android picker (Mapy.cz / Google Maps /
-  Sygic / Locus / Waze, whatever you have installed)
-- Map styles: OSM (default), Mapy.cz satellite, Mapy.cz terrain
-- Czech / English / Polish UI
-- Dark / light theme follows system
-- Fully offline once installed
+## Features
 
-### Download
+### Map
 
-**Public testing** via Google Play Internal Testing
-([opt-in link](https://play.google.com/apps/internaltest/4701714531864286688))
-or sideload APK from [GitHub Releases](https://github.com/zemanektomas/slack-ova-mobile/releases/latest).
+- Every public line from [slack.cz](https://slack.cz),
+  [slackmap.com](https://slackmap.com) and [SlackData](https://slackdata.org)
+  bundled inside the app.
+- Anchors, lengths, heights, descriptions, parking.
+- Full-screen map with a bottom sheet list — drag to resize.
+- Bounds-driven filtering — the list updates as you pan.
+- Marker color by type — highlines stand out, others are muted.
+- Sort by distance from you or by any column.
+- Inline detail on tap — anchors, description, source link.
+- One **Navigate** button per line — Android picker (Mapy.cz, Google Maps,
+  Sygic, Locus, Waze — whatever you have installed).
+- Map styles: OSM (default), Mapy.cz satellite, Mapy.cz terrain.
+- Czech / English / Polish UI. Dark and light theme follow the system.
 
-**iOS** not yet — planned via EAS Build → TestFlight.
+### ISA Safety Companion
 
-### Privacy
+Offline reference cards and calculators citing ISA:21, ISA:37, ISA:41 and
+related standards — a pocket reference for people who already know what
+they're doing. Not a replacement for training or ISA certification.
 
-We do **not** collect any personal data. No accounts, no tracking, no ads, no
-analytics. GPS only shows your position on the map — never transmitted anywhere.
-Full details: [Privacy Policy](privacy.md).
+### Rig Log — *in development*
 
-### Open source
+Per-line safety check and a full rig record. Photo-documented anchors,
+weather, tension, incidents, and lead rigger identity.
 
-Apache 2.0. Code, issues, releases:
+### Gear — *in development*
+
+Material catalog (webbings, weblocks, connectors, harnesses) with ISA
+warnings and recalls from SlackData. Your own inventory with usage history
+and RLT (recommended lifetime) tracking.
+
+### Training — *planned*
+
+Curated external educational resources — postures, techniques, knots. Not
+safety-critical rigging — personal-growth material for slackliners at every
+level.
+
+## Privacy
+
+We do **not** collect any personal data. No accounts, no tracking, no ads,
+no analytics. GPS only shows your position on the map — it is never
+transmitted anywhere. Full details: [Privacy Policy](privacy.md).
+
+## Download
+
+**[Google Play — Slackline.Ova](https://play.google.com/store/apps/details?id=cz.slackline.ova)** — the primary distribution channel.
+
+iOS: not yet. Planned via EAS Build and TestFlight.
+
+## Open source
+
+Apache 2.0. Code, issues, releases and roadmap:
 [github.com/zemanektomas/slack-ova-mobile](https://github.com/zemanektomas/slack-ova-mobile)
 
-### Support the project
+## Support the project
 
-[buymeacoffee.com/slacklineova](https://buymeacoffee.com/slacklineova) — covers
-Google Play and Apple App Store fees. Everything stays free and open source.
-
----
-
-## Česky
-
-Slackline.Ova je offline mapa slacklajn. Všechny veřejné lajny z
-[slack.cz](https://slack.cz) (Česko) a [slackmap.com](https://slackmap.com)
-(celý svět) zabalené přímo v aplikaci — kotvy, délky, výšky, popisy, parkování.
-Funguje bez signálu po nainstalování.
-
-**Co umí:**
-
-- Mapa přes celou obrazovku + bottom sheet se seznamem (drag handle)
-- Filtruje podle výřezu mapy — posuneš mapu, list se přefiltruje
-- Marker barva podle typu — highlajny vyniknou, ostatní tlumené
-- Řazení podle vzdálenosti od tebe (nebo libovolného sloupce)
-- Klikneš na řádek → inline detail s kotvami, popisem, proklikem na zdroj
-- Jedno tlačítko **Navigovat** k parkování → Android nabídne picker (Mapy.cz /
-  Google Maps / Sygic / Locus / Waze, podle toho co máš nainstalované)
-- Podklady map: OSM (default), Mapy.cz letecká, Mapy.cz turistická
-- Čeština / English / Polski v UI
-- Tmavý / světlý motiv podle systému
-- Plně offline po instalaci
-
-### Stáhnout
-
-**Veřejné testování** přes Google Play Internal Testing
-([opt-in link](https://play.google.com/apps/internaltest/4701714531864286688))
-nebo APK z [GitHub Releases](https://github.com/zemanektomas/slack-ova-mobile/releases/latest).
-
-**iOS** zatím není — plánujem přes EAS Build → TestFlight.
-
-### Soukromí
-
-Nesbíráme žádné osobní údaje. Žádné účty, žádné sledování, žádné reklamy, žádná
-analytika. GPS slouží jen k zobrazení tvé polohy v mapě — nikam se neposílá.
-Detail: [Privacy Policy](privacy.md).
-
-### Open source
-
-Apache 2.0. Kód, issues, releases:
-[github.com/zemanektomas/slack-ova-mobile](https://github.com/zemanektomas/slack-ova-mobile)
-
-### Podpora
-
-[buymeacoffee.com/slacklineova](https://buymeacoffee.com/slacklineova) — pokrývá
-poplatky Google Play a Apple App Store. Apka zůstává zdarma a open source.
+[buymeacoffee.com/slacklineova](https://buymeacoffee.com/slacklineova) —
+covers store fees so the app stays free and open source.
 
 ---
 
 ## Attribution
 
-- **slack.cz** — Czech slackline community ([slack.cz](https://slack.cz))
-- **Slackmap** — [slackmap.com](https://slackmap.com), International Slackline
-  Association (ISA)
-- **Mapy.cz** — Seznam.cz a.s., © OpenStreetMap contributors
-- **OpenStreetMap** — © OSM contributors, ODbL license
+- **slack.cz** — Czech slackline community ([slack.cz](https://slack.cz)).
+- **Slackmap** — International Slackline Association
+  ([slackmap.com](https://slackmap.com)), data CC BY-SA 4.0.
+- **SlackData** — International Slackline Association
+  ([slackdata.org](https://slackdata.org)), data CC BY-SA 4.0.
+- **Mapy.cz** — Seznam.cz a.s., basemaps © OpenStreetMap contributors.
+- **OpenStreetMap** — © OSM contributors, ODbL.
 
-*Made by Tomáš Zemánek. For slackliners, by slackliners.*
+*Built by Tomáš Zemánek in Ostrava, Czech Republic.*
+*For slackliners, by slackliners.*
