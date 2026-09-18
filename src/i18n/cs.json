@@ -764,6 +764,28 @@
     "gear": "Vybavení",
     "reports": "Reporty",
     "settings": "Nastavení",
-    "calculators": "Kalkulátory"
+    "calculators": "Kalkulátory",
+    "training": "Trénink"
+  },
+  "training": {
+    "discipline": {
+      "all": "Vše",
+      "highline": "Highline",
+      "midline": "Midline",
+      "longline": "Longline",
+      "waterline": "Waterline",
+      "rodeo": "Rodeo",
+      "freestyle": "Freestyle"
+    },
+    "subTab": {
+      "resources": "Zdroje",
+      "journal": "Deník"
+    },
+    "openResource": "Otevřít",
+    "noResourcesForDiscipline": "Pro tuto disciplínu zatím nemáme zdroje.",
+    "journal": {
+      "comingSoonTitle": "Deník sessions",
+      "comingSoonDesc": "Záznamy tréninků (datum, délka, kroky, styl, hodnocení) přijdou v příští verzi. Zatím sleduj sessions jinde a používej Zdroje pro edukaci."
+    }
   }
 }
