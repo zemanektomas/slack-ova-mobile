@@ -764,6 +764,28 @@
     "gear": "Gear",
     "reports": "Reports",
     "settings": "Settings",
-    "calculators": "Calculators"
+    "calculators": "Calculators",
+    "training": "Training"
+  },
+  "training": {
+    "discipline": {
+      "all": "All",
+      "highline": "Highline",
+      "midline": "Midline",
+      "longline": "Longline",
+      "waterline": "Waterline",
+      "rodeo": "Rodeo",
+      "freestyle": "Freestyle"
+    },
+    "subTab": {
+      "resources": "Resources",
+      "journal": "Journal"
+    },
+    "openResource": "Open",
+    "noResourcesForDiscipline": "No resources for this discipline yet.",
+    "journal": {
+      "comingSoonTitle": "Session journal",
+      "comingSoonDesc": "Training session logging (date, distance, steps, style, rating) is coming in the next release. For now, use Resources for external educational material."
+    }
   }
 }

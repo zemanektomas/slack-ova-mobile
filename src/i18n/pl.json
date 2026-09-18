@@ -764,6 +764,28 @@
     "gear": "Sprzęt",
     "reports": "Raporty",
     "settings": "Ustawienia",
-    "calculators": "Kalkulatory"
+    "calculators": "Kalkulatory",
+    "training": "Trening"
+  },
+  "training": {
+    "discipline": {
+      "all": "Wszystko",
+      "highline": "Highline",
+      "midline": "Midline",
+      "longline": "Longline",
+      "waterline": "Waterline",
+      "rodeo": "Rodeo",
+      "freestyle": "Freestyle"
+    },
+    "subTab": {
+      "resources": "Zasoby",
+      "journal": "Dziennik"
+    },
+    "openResource": "Otwórz",
+    "noResourcesForDiscipline": "Brak zasobów dla tej dyscypliny.",
+    "journal": {
+      "comingSoonTitle": "Dziennik sesji",
+      "comingSoonDesc": "Rejestrowanie sesji treningowych (data, dystans, kroki, styl, ocena) pojawi się w kolejnej wersji. Na razie korzystaj z Zasobów w celu edukacji zewnętrznej."
+    }
   }
 }
