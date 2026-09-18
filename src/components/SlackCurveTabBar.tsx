@@ -26,6 +26,9 @@ const TAB_HEIGHT = 56;
 const CURVE_HEIGHT = 64;
 const TOTAL_HEIGHT = TAB_HEIGHT + CURVE_HEIGHT;
 
+/** Exported for screen paddingBottom — content sits ABOVE the curve. */
+export const CURVE_TABBAR_HEIGHT = TOTAL_HEIGHT;
+
 // Tabs shown in bottom row. Settings is separate on top-right.
 const PRIMARY_TABS = [
   { name: 'index', label: 'lines', icon: 'map' },
@@ -105,8 +108,8 @@ export function SlackCurveTabBar(props: BottomTabBarProps) {
         style={[
           styles.settingsBtn,
           {
-            top: insets.top ? 4 : 8,
-            right: 16,
+            top: 10,
+            right: 20,
             borderColor: isSettingsActive ? t.accent : 'transparent',
           },
         ]}
@@ -172,10 +175,11 @@ const styles = StyleSheet.create({
     position: 'absolute',
     alignItems: 'center',
     justifyContent: 'center',
-    paddingHorizontal: 10,
+    paddingHorizontal: 8,
     paddingVertical: 4,
     borderRadius: 12,
     borderWidth: 1,
+    maxWidth: 72,
   },
   settingsLabel: {
     fontSize: 10,
