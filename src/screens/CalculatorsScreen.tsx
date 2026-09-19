@@ -87,7 +87,7 @@ const makeStyles = (fs: number) =>
     },
     title: { fontSize: 18 * fs, fontWeight: '600' },
     subtitle: { fontSize: 12 * fs, marginTop: 2 },
-    scroll: { padding: 16, gap: 10 },
+    scroll: { padding: 16, gap: 10, paddingBottom: 140 },
     row: {
       flexDirection: 'row',
       alignItems: 'center',

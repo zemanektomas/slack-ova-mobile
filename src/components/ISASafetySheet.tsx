@@ -91,7 +91,7 @@ export function ISASafetyContent() {
 
   return (
     <>
-      <ScrollView style={styles.scroll} contentContainerStyle={{ paddingBottom: 24 }}>
+      <ScrollView style={styles.scroll} contentContainerStyle={{ paddingBottom: 140 }}>
         {groups.map(({ category, cards }) => {
           const isOpen = expandedCategory === category.id;
           return (

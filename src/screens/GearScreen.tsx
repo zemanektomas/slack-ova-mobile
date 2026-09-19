@@ -831,7 +831,7 @@ const styles = (t: ReturnType<typeof useTheme>, fs: number) =>
       gap: 8,
     },
     searchInput: { flex: 1, color: t.text, fontSize: 15 * fs },
-    scroll: { paddingVertical: 8 },
+    scroll: { paddingVertical: 8, paddingBottom: 140 },
     categoryRow: {
       flexDirection: 'row',
       alignItems: 'center',
