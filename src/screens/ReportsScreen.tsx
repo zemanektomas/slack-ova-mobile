@@ -2,6 +2,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import { View, Text, ScrollView, TextInput, TouchableOpacity, StyleSheet, Alert, Share, Linking } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { useTranslation } from 'react-i18next';
 import { useTheme } from '../theme';
 import { useFontStore } from '../store/fontStore';
 import { getDb } from '../db';
@@ -46,6 +47,7 @@ const CATEGORY_LABELS: Record<string, string> = {
 
 export default function ReportsScreen() {
   const theme = useTheme();
+  const { t: tr } = useTranslation();
   const fs = useFontStore((s) => s.fontScale);
   const [search, setSearch] = useState('');
   const [filter, setFilter] = useState<FilterType>('all');
@@ -155,7 +157,7 @@ export default function ReportsScreen() {
             onPress={() => setFilter(f)}
           >
             <Text style={[s.filterChipText, filter === f && s.filterChipTextActive]}>
-              {f === 'all' ? 'Vše' : f === 'rig' ? 'Rig' : f === 'incident' ? 'Incident' : 'Near-miss'} ({counts[f]})
+              {tr(`reports.filter.${f}`)} ({counts[f]})
             </Text>
           </TouchableOpacity>
         ))}
@@ -206,7 +208,7 @@ export default function ReportsScreen() {
         })}
       </ScrollView>
 
-      <TouchableOpacity style={s.fab} onPress={() => setSheetOpen(true)} accessibilityLabel="Nový report">
+      <TouchableOpacity style={s.fab} onPress={() => setSheetOpen(true)} accessibilityLabel={tr('reports.newReport')}>
         <MaterialCommunityIcons name="plus" size={28} color={theme.accentOn} />
       </TouchableOpacity>
 

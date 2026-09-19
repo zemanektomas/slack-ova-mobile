@@ -790,5 +790,29 @@
       "comingSoonTitle": "Deník sessions",
       "comingSoonDesc": "Záznamy tréninků (datum, délka, kroky, styl, hodnocení) přijdou v příští verzi. Zatím sleduj sessions jinde a používej Zdroje pro edukaci."
     }
+  },
+  "gear": {
+    "category": {
+      "webbing": "Popruhy",
+      "anchor": "Kotvení",
+      "personal": "Osobní",
+      "rescue": "Rescue kit"
+    },
+    "categoryHint": {
+      "webbing": "Popruhy main / backup",
+      "anchor": "Kotvítka, šekly, karabiny, spansety",
+      "personal": "Sedák, PAS, odsedka, kroužek, harness",
+      "rescue": "Kladky, ascendery, descendery"
+    }
+  },
+  "reports": {
+    "filter": {
+      "all": "Vše",
+      "rig": "Rig",
+      "incident": "Incident",
+      "near_miss": "Skoro-nehoda"
+    },
+    "newReport": "Nový report",
+    "title": "Reporty"
   }
 }

@@ -790,5 +790,29 @@
       "comingSoonTitle": "Session-Tagebuch",
       "comingSoonDesc": "Trainings-Session-Logging (Datum, Distanz, Schritte, Stil, Bewertung) kommt in nächster Version. Vorerst Ressourcen für externe Bildungsmaterialien nutzen."
     }
+  },
+  "gear": {
+    "category": {
+      "webbing": "Webbings",
+      "anchor": "Ankersystem",
+      "personal": "Persönlich",
+      "rescue": "Rescue-Kit"
+    },
+    "categoryHint": {
+      "webbing": "Main / Backup Webbing",
+      "anchor": "Weblocks, Schäkel, Karabiner, Spansets",
+      "personal": "Harness, PAS, Leash, Ring",
+      "rescue": "Rollen, Ascender, Descender"
+    }
+  },
+  "reports": {
+    "filter": {
+      "all": "Alle",
+      "rig": "Rig",
+      "incident": "Vorfall",
+      "near_miss": "Beinaheunfall"
+    },
+    "newReport": "Neuer Bericht",
+    "title": "Berichte"
   }
 }

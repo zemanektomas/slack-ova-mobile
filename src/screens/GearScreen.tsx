@@ -14,6 +14,7 @@ import {
 } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { useTranslation } from 'react-i18next';
 import { useTheme } from '../theme';
 import { useFontStore } from '../store/fontStore';
 import materials from '../../assets/materials.json';
@@ -95,26 +96,26 @@ const catalog = materials as unknown as MaterialsCatalog;
 const CATEGORY_GROUPS: Array<{
   id: string;
   icon: keyof typeof MaterialCommunityIcons.glyphMap;
-  label: string;
-  hint: string;
+  labelKey: string;
+  hintKey: string;
   subcategories: MaterialCategory[];
 }> = [
-  { id: 'webbing', icon: 'link-variant', label: 'Webbing', hint: 'Popruhy main / backup', subcategories: ['webbing'] },
+  { id: 'webbing', icon: 'link-variant', labelKey: 'gear.category.webbing', hintKey: 'gear.categoryHint.webbing', subcategories: ['webbing'] },
   {
     id: 'anchor_system',
     icon: 'anchor',
-    label: 'Anchor system',
-    hint: 'Kotvítka, šekly, karabiny, spansety',
+    labelKey: 'gear.category.anchor',
+    hintKey: 'gear.categoryHint.anchor',
     subcategories: ['weblock', 'shackle', 'carabiner', 'sling'],
   },
   {
     id: 'personal',
     icon: 'account',
-    label: 'Osobní',
-    hint: 'Sedák, PAS, odsedka, kroužek, harness',
+    labelKey: 'gear.category.personal',
+    hintKey: 'gear.categoryHint.personal',
     subcategories: ['leash', 'ring', 'harness', 'pas'],
   },
-  { id: 'rescue', icon: 'alert-octagon', label: 'Rescue kit', hint: 'Kladky, ascendery, descendery', subcategories: ['rescue'] },
+  { id: 'rescue', icon: 'alert-octagon', labelKey: 'gear.category.rescue', hintKey: 'gear.categoryHint.rescue', subcategories: ['rescue'] },
 ];
 
 /**
@@ -154,6 +155,7 @@ type NavState =
 
 export default function GearScreen() {
   const theme = useTheme();
+  const { t: tr } = useTranslation();
   const fs = useFontStore((s) => s.fontScale);
   const [nav, setNav] = useState<NavState>({ level: 'L1' });
   const [search, setSearch] = useState('');
@@ -271,15 +273,20 @@ export default function GearScreen() {
       <View style={s.header}>
         {nav.level === 'L1' ? (
           <>
-            <Text style={s.title}>Vybavení</Text>
+            <Text style={s.title}>{tr('tabs.gear')}</Text>
             <View style={{ width: 24 }} />
           </>
         ) : (
           <>
-            <TouchableOpacity onPress={() => setNav({ level: 'L1' })} accessibilityLabel="Zpět">
-              <MaterialCommunityIcons name="arrow-left" size={24} color={theme.text} />
+            <TouchableOpacity
+              onPress={() => setNav({ level: 'L1' })}
+              accessibilityLabel="Back"
+              hitSlop={16}
+              style={{ padding: 8, marginLeft: -8 }}
+            >
+              <MaterialCommunityIcons name="arrow-left" size={26} color={theme.text} />
             </TouchableOpacity>
-            <Text style={s.title}>{currentGroup?.label ?? ''}</Text>
+            <Text style={s.title}>{currentGroup ? tr(currentGroup.labelKey) : ''}</Text>
             <View style={{ width: 24 }} />
           </>
         )}
@@ -318,7 +325,7 @@ export default function GearScreen() {
                 <MaterialCommunityIcons name={cat.icon} size={28} color={theme.text} style={s.categoryIcon} />
                 <View style={s.categoryTextWrap}>
                   <View style={s.categoryTitleRow}>
-                    <Text style={s.categoryLabel}>{cat.label}</Text>
+                    <Text style={s.categoryLabel}>{tr(cat.labelKey)}</Text>
                     <Text style={s.categoryCount}>{cat.count}</Text>
                     {wCount > 0 && (
                       <View style={s.warningBadge}>
@@ -327,7 +334,7 @@ export default function GearScreen() {
                       </View>
                     )}
                   </View>
-                  <Text style={s.categoryHint}>{cat.hint}</Text>
+                  <Text style={s.categoryHint}>{tr(cat.hintKey)}</Text>
                 </View>
                 <MaterialCommunityIcons name="chevron-right" size={20} color={theme.textDim} />
               </TouchableOpacity>
@@ -530,8 +537,13 @@ function L3Detail({ item, subcategory, itemWarnings, onBack }: L3Props) {
   return (
     <SafeAreaView style={s.container} edges={['top']}>
       <View style={s.header}>
-        <TouchableOpacity onPress={onBack} accessibilityLabel="Zpět">
-          <MaterialCommunityIcons name="arrow-left" size={24} color={theme.text} />
+        <TouchableOpacity
+          onPress={onBack}
+          accessibilityLabel="Back"
+          hitSlop={16}
+          style={{ padding: 8, marginLeft: -8 }}
+        >
+          <MaterialCommunityIcons name="arrow-left" size={26} color={theme.text} />
         </TouchableOpacity>
         <Text style={s.title} numberOfLines={1}>
           {item.model}
