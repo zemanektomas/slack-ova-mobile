@@ -22,6 +22,7 @@ import { useLangStore } from '../store/langStore';
 import type { Lang } from '../i18n';
 import { useTheme } from '../theme';
 import { refreshGeometryFromSlackmap } from '../db/slackmap';
+import { refreshSlackDataCatalog, getSlackDataLastRefresh } from '../api/slackdata';
 import { getMeta } from '../db/index';
 import { OfflineManager } from '@maplibre/maplibre-react-native';
 import { useAuthStore } from '../store/authStore';
@@ -96,6 +97,8 @@ export function SettingsSheet({ visible, onClose, mode = 'modal' }: SettingsShee
   // Updates section state
   const [refreshing, setRefreshing] = useState(false);
   const [lastRefresh, setLastRefresh] = useState<string | null>(null);
+  const [slackdataLastRefresh, setSlackdataLastRefresh] = useState<string | null>(null);
+  const [refreshingSlackData, setRefreshingSlackData] = useState(false);
   const [isOnline, setIsOnline] = useState(true);
   const [clearingCache, setClearingCache] = useState(false);
 
@@ -130,6 +133,7 @@ export function SettingsSheet({ visible, onClose, mode = 'modal' }: SettingsShee
     if (!visible) return;
     // Načti timestamp poslední síťové aktualizace
     getMeta('slackmap_last_network_refresh').then(setLastRefresh).catch(() => {});
+    getSlackDataLastRefresh().then(setSlackdataLastRefresh).catch(() => {});
     // Detekce online stavu (live subscription, ne jen polling)
     const unsub = NetInfo.addEventListener((state) => {
       setIsOnline(state.isConnected === true && state.isInternetReachable !== false);
@@ -169,6 +173,28 @@ export function SettingsSheet({ visible, onClose, mode = 'modal' }: SettingsShee
       Alert.alert(tr('settings.refreshFailed'), err?.message ?? 'Network error');
     } finally {
       setRefreshing(false);
+    }
+  };
+
+  const handleRefreshSlackData = async () => {
+    if (refreshingSlackData) return;
+    setRefreshingSlackData(true);
+    try {
+      const result = await refreshSlackDataCatalog();
+      const refreshedAt = new Date().toISOString();
+      setSlackdataLastRefresh(refreshedAt);
+      Alert.alert(
+        tr('settings.refreshDone'),
+        tr('settings.slackdataRefreshSummary', {
+          webbings: result.webbings,
+          weblocks: result.weblocks,
+          warnings: result.warnings,
+        }),
+      );
+    } catch (err: any) {
+      Alert.alert(tr('settings.refreshFailed'), err?.message ?? 'Network error');
+    } finally {
+      setRefreshingSlackData(false);
     }
   };
 
@@ -397,6 +423,27 @@ export function SettingsSheet({ visible, onClose, mode = 'modal' }: SettingsShee
               style={[styles.linkBtn, { borderColor: t.border, opacity: (!isOnline || refreshing) ? 0.4 : 1, alignSelf: 'flex-start' }]}
             >
               {refreshing ? (
+                <ActivityIndicator size="small" color={t.accent} />
+              ) : (
+                <>
+                  <MaterialCommunityIcons name="refresh" size={14} color={t.accent} style={{ marginRight: 4 }} />
+                  <Text style={[styles.linkBtnText, { color: t.accent }]}>{tr('settings.refreshSlackmap')}</Text>
+                </>
+              )}
+            </Pressable>
+            {!isOnline && <Text style={[styles.offlineHint, { color: t.textMuted, marginTop: 6 }]}>⚠ {tr('settings.offlineHint')}</Text>}
+          </SettingsRow>
+          <SettingsRow
+            label={tr('settings.dataSlackData')}
+            hint={slackdataLastRefresh ? tr('settings.lastRefresh', { date: formatRefreshDate(slackdataLastRefresh, lang) }) : tr('settings.dataSlackDataNever')}
+            layout="stacked"
+          >
+            <Pressable
+              onPress={handleRefreshSlackData}
+              disabled={!isOnline || refreshingSlackData}
+              style={[styles.linkBtn, { borderColor: t.border, opacity: (!isOnline || refreshingSlackData) ? 0.4 : 1, alignSelf: 'flex-start' }]}
+            >
+              {refreshingSlackData ? (
                 <ActivityIndicator size="small" color={t.accent} />
               ) : (
                 <>

@@ -82,7 +82,10 @@
     "devMode": "Dev-Modus",
     "devModeHint": "Schaltet WIP-Funktionen frei (Gear, Reports, Slackmap-Login) + Diagnose. Standardmäßig aus.",
     "dbSchemaVersion": "DB-Schema-Version",
-    "bundledMaterials": "Eingebettete Materialien"
+    "bundledMaterials": "Eingebettete Materialien",
+    "dataSlackData": "Materialkatalog (SlackData)",
+    "dataSlackDataNever": "Nie aktualisiert",
+    "slackdataRefreshSummary": "Webbings: {{webbings}}\nWeblocks: {{weblocks}}\nISA-Warnungen: {{warnings}}"
   },
   "detail": {
     "length": "Länge",
@@ -120,7 +123,11 @@
       "angleLabel": "Winkel zwischen Schenkeln",
       "perLegLabel": "Kraft pro Schenkel",
       "tableLabel": "Referenztabelle",
-      "col": { "angle": "Winkel", "perLeg": "Pro Schenkel", "rating": "Bewertung" },
+      "col": {
+        "angle": "Winkel",
+        "perLeg": "Pro Schenkel",
+        "rating": "Bewertung"
+      },
       "rating": {
         "ideal": "🟢 ideal",
         "ok": "🟢 OK",
@@ -140,7 +147,9 @@
       "anchorPeak": "Anker-Peak",
       "leashPeak": "Leash-Peak",
       "tableLabel": "Anker-Peak (nach Länge)",
-      "col": { "length": "Länge" },
+      "col": {
+        "length": "Länge"
+      },
       "source": "Quelle: Jörren 2015 (SlackLab) — 20-m-Daten, extrapoliert für längere Lines.",
       "disclaimer": "⚠ Schätzungen — reale Kräfte gemessen mit Load Cell (Enforcer, LineScale)."
     },
@@ -157,7 +166,12 @@
       "sweetSpot": "Sweet Spot für Highline-Spannen.",
       "tooMuch": "Zugweg unpraktisch — max 4 bewegliche verwenden.",
       "tableLabel": "Referenztabelle",
-      "col": { "movable": "Beweglich", "theory": "Theorie", "real": "Real", "pullDist": "Zugweg" },
+      "col": {
+        "movable": "Beweglich",
+        "theory": "Theorie",
+        "real": "Real",
+        "pullDist": "Zugweg"
+      },
       "buckingham": "Buckingham-System (Balance Community)",
       "formula": "Formel: MA = 2^N_beweglich, Effizienz = 0.9^(N_beweglich + N_fest)",
       "source": "Quelle: Balance Community — Buckingham Tensioning System."
@@ -168,7 +182,11 @@
       "angle": "Umlenkwinkel",
       "forceLabel": "Kraft auf Umlenkung",
       "tableLabel": "Referenztabelle",
-      "col": { "angle": "Winkel", "force": "Kraft", "ratio": "Verhältnis" },
+      "col": {
+        "angle": "Winkel",
+        "force": "Kraft",
+        "ratio": "Verhältnis"
+      },
       "warning": "⚠ Umlenkung trägt mehr als die Line selbst. Anker für Umlenkung muss stärker sein als für Highline-Verankerung.",
       "formula": "Formel: F = 2 × T × sin(θ/2)"
     },
@@ -179,7 +197,11 @@
       "sagLabel": "Durchhang",
       "tensionLabel": "Mainline-Spannung",
       "tableLabel": "Referenztabelle",
-      "col": { "sag": "Durchhang", "tension": "Spannung", "rating": "Bewertung" },
+      "col": {
+        "sag": "Durchhang",
+        "tension": "Spannung",
+        "rating": "Bewertung"
+      },
       "rating": {
         "ideal": "locker",
         "ok": "komfort",
@@ -197,7 +219,12 @@
       "title": "Tape-Spacing-Plan",
       "lengthLabel": "Line-Länge",
       "typeLabel": "Line-Nutzungstyp",
-      "chip": { "walking": "Walking", "trick": "Trick Line", "longline": "Longline", "rodeo": "Rodeo" },
+      "chip": {
+        "walking": "Walking",
+        "trick": "Trick Line",
+        "longline": "Longline",
+        "rodeo": "Rodeo"
+      },
       "summaryRange": "Abstandsbereich: {{min}}-{{max}} m randomisiert, erste 10 m an Ankern eng bei 1-1,5 m.",
       "summaryPoints": "{{points}} Tape-Punkte, Tape ~{{tapeM}} m (22 cm/Punkt)",
       "regenerate": "Neu generieren",
@@ -210,7 +237,10 @@
       "spoNote": "Verbindung = natürlicher Knoten-Dämpfer (konzentrierte Masse dämpft Oszillation). Trick-Zone dichter nur beim Tricken — beim Walking kein Cluster um die Verbindung.",
       "source": "Quelle: Balance Community — All About Highline Tape Spacing + ISA:21 §3.3.1.4.",
       "tableLabel": "Referenztabelle",
-      "col": { "length": "Line-Länge", "spacing": "Tape-Abstand" },
+      "col": {
+        "length": "Line-Länge",
+        "spacing": "Tape-Abstand"
+      },
       "sequenceLabel": "Abstände (Anker zu Anker)"
     }
   },
@@ -616,7 +646,10 @@
     "isa21Limits": {
       "title": "ISA:21 Kraftgrenzen",
       "summary": "Schlüssel-Sicherheitsgrenzen für Highline-Systeme",
-      "col": { "what": "Komponente", "limit": "Grenze" },
+      "col": {
+        "what": "Komponente",
+        "limit": "Grenze"
+      },
       "row": {
         "workingLoad": "Arbeitslast an Ankern",
         "backupfall": "Backupfall-Kraft",
@@ -659,13 +692,21 @@
     "nylonRule": {
       "title": "Sub-40m Nylon Rule",
       "summary": "Webbing-Material-Kompatibilität mit Line-Länge",
-      "col": { "length": "Länge", "pa": "PA Nylon", "pes": "PES Polyester", "hmpe": "UHMWPE" },
+      "col": {
+        "length": "Länge",
+        "pa": "PA Nylon",
+        "pes": "PES Polyester",
+        "hmpe": "UHMWPE"
+      },
       "hint": "Sub-40m-Highline = Mainline + Backup + Leash alle PA (Nylon). Statische Materialien (PES, UHMWPE) erzeugen 2-3× höhere Peak-Kräfte = Risiko, ISA:21-Grenze 12 kN zu überschreiten."
     },
     "wind": {
       "title": "Wind-Advisory",
       "summary": "ISA-Schwellwerte für Rig-/Derig-Entscheidung",
-      "col": { "speed": "Windgeschwindigkeit", "action": "Empfehlung" },
+      "col": {
+        "speed": "Windgeschwindigkeit",
+        "action": "Empfehlung"
+      },
       "row": {
         "ok": "OK, sicher riggen",
         "caution": "Vorsicht — Detape beginnt",
@@ -677,8 +718,16 @@
     "rlt": {
       "title": "Recommended Lifetime (RLT)",
       "summary": "Empfohlene Webbing-Lebensdauer nach Typ und Material",
-      "col": { "type": "Typ (ISA:41)", "pa": "PA Nylon", "pes": "PES Polyester", "hmpe": "UHMWPE" },
-      "row": { "visual": "Visuelle Inspektion", "na": "Keine Empfehlung" },
+      "col": {
+        "type": "Typ (ISA:41)",
+        "pa": "PA Nylon",
+        "pes": "PES Polyester",
+        "hmpe": "UHMWPE"
+      },
+      "row": {
+        "visual": "Visuelle Inspektion",
+        "na": "Keine Empfehlung"
+      },
       "hint": "Tage = Exposition zur Umgebung (UV, Regen), NICHT ab Herstellungsdatum. Lagerung zählt nicht."
     },
     "weblockSystem": {

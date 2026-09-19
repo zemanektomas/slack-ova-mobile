@@ -82,7 +82,10 @@
     "devMode": "Dev Mode",
     "devModeHint": "Odemkne WIP featury (Vybavení, Reporty, Slackmap přihlášení) + diagnostiku. Default vypnuto.",
     "dbSchemaVersion": "Verze DB schema",
-    "bundledMaterials": "Bundled materials"
+    "bundledMaterials": "Bundled materials",
+    "dataSlackData": "Katalog materiálů (SlackData)",
+    "dataSlackDataNever": "Nikdy neaktualizováno",
+    "slackdataRefreshSummary": "Popruhy: {{webbings}}\nKotvítka: {{weblocks}}\nISA varování: {{warnings}}"
   },
   "detail": {
     "length": "Délka",

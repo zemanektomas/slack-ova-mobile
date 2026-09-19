@@ -319,3 +319,79 @@ export async function clearSlackDataCache(): Promise<void> {
   const db = await getDb();
   await db.execAsync('DELETE FROM slackdata_cache');
 }
+
+export interface SlackDataRefreshResult {
+  webbings: number;
+  weblocks: number;
+  warnings: number;
+  errors: number;
+}
+
+/**
+ * Batch aktualizace SlackData katalogu — mirror `refreshGeometryFromSlackmap` z db/slackmap.ts.
+ *
+ * Stáhne všechny list endpoints (webbings + weblocks + ISA warnings), stránkuje po 100 kusech
+ * a plní `slackdata_cache` tabulku (per-URL). Individuální detail endpointy (`/api/webbing/42`)
+ * se nezvou — L3 detail je fetchne až při otevření a natáhne se sám (síťově nebo z existující cache).
+ *
+ * Pro `246 webbings + 127 weblocks + 82 warnings` = ~6 requests, ~5-10 s celkem.
+ *
+ * Rate limit: SlackData API má soft limit ~15 req/min, ale list endpoint je jen 3+2+1 = 6 requests,
+ * bezpečně pod limitem.
+ *
+ * Force refresh (bypass cache TTL) je vždy zapnutý — user explicit tapl "Aktualizovat".
+ */
+export async function refreshSlackDataCatalog(): Promise<SlackDataRefreshResult> {
+  const result: SlackDataRefreshResult = { webbings: 0, weblocks: 0, warnings: 0, errors: 0 };
+
+  // Helper pro paginated fetch přes /api/{endpoint}/
+  async function fetchAllPaginated(endpoint: string): Promise<number> {
+    let count = 0;
+    const pageSize = 100;
+    const maxPages = 10; // safety limit — 1000 items max
+    for (let page = 0; page < maxPages; page++) {
+      const offset = page * pageSize;
+      const list = await apiGet<SlackDataBase[]>(`/api/${endpoint}/?limit=${pageSize}&offset=${offset}`, true);
+      if (!Array.isArray(list) || list.length === 0) break;
+      count += list.length;
+      if (list.length < pageSize) break; // last page
+    }
+    return count;
+  }
+
+  try {
+    result.webbings = await fetchAllPaginated('webbing');
+  } catch { result.errors++; }
+  try {
+    result.weblocks = await fetchAllPaginated('weblock');
+  } catch { result.errors++; }
+  try {
+    result.warnings = await fetchAllPaginated('isawarning');
+  } catch { result.errors++; }
+
+  // Update sync_meta — mirror slackmap pattern
+  try {
+    const db = await getDb();
+    const now = new Date().toISOString();
+    await db.runAsync(
+      'INSERT OR REPLACE INTO sync_meta (key, value) VALUES (?, ?)',
+      ['slackdata_last_refresh', now],
+    );
+  } catch { /* meta failure is not critical */ }
+
+  return result;
+}
+
+/** Get last refresh timestamp for UI display. */
+export async function getSlackDataLastRefresh(): Promise<string | null> {
+  try {
+    const db = await getDb();
+    const row = await db.getFirstAsync<{ value: string }>(
+      'SELECT value FROM sync_meta WHERE key = ?',
+      ['slackdata_last_refresh'],
+    );
+    return row?.value ?? null;
+  } catch {
+    return null;
+  }
+}

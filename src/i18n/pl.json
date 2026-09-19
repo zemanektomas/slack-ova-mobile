@@ -82,7 +82,10 @@
     "devMode": "Dev Mode",
     "devModeHint": "Odblokowuje WIP featury (Sprzęt, Raporty, Slackmap logowanie) + diagnostykę. Domyślnie wyłączone.",
     "dbSchemaVersion": "Wersja DB schema",
-    "bundledMaterials": "Bundled materials"
+    "bundledMaterials": "Bundled materials",
+    "dataSlackData": "Katalog materiałów (SlackData)",
+    "dataSlackDataNever": "Nigdy nie aktualizowano",
+    "slackdataRefreshSummary": "Popruchy: {{webbings}}\nWeblocki: {{weblocks}}\nOstrzeżenia ISA: {{warnings}}"
   },
   "detail": {
     "length": "Długość",
