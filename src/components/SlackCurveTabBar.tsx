@@ -102,32 +102,26 @@ export function SlackCurveTabBar(props: BottomTabBarProps) {
         <Circle cx={width} cy={curveTopY} r={4} fill={t.textDim} />
       </Svg>
 
-      {/* Settings pill in the top-right, hanging from the raised slackline end */}
+      {/* Settings — icon-only round button hanging from the raised slackline end */}
       <Pressable
         onPress={() => goTo('settings')}
         style={[
           styles.settingsBtn,
           {
-            top: 10,
-            right: 20,
-            borderColor: isSettingsActive ? t.accent : 'transparent',
+            top: 18,
+            right: 12,
+            borderColor: isSettingsActive ? t.accent : t.border,
+            backgroundColor: t.surface,
           },
         ]}
-        hitSlop={8}
+        hitSlop={12}
+        accessibilityLabel={getLabel('settings')}
       >
         <MaterialCommunityIcons
           name="cog"
-          size={24}
+          size={22}
           color={isSettingsActive ? t.accent : t.textMuted}
         />
-        <Text
-          style={[
-            styles.settingsLabel,
-            { color: isSettingsActive ? t.accent : t.textDim },
-          ]}
-        >
-          {getLabel('settings')}
-        </Text>
       </Pressable>
 
       {/* Bottom row: 6 primary tabs — sit ABOVE the system nav bar (insets.bottom) */}
@@ -175,16 +169,10 @@ const styles = StyleSheet.create({
     position: 'absolute',
     alignItems: 'center',
     justifyContent: 'center',
-    paddingHorizontal: 8,
-    paddingVertical: 4,
-    borderRadius: 12,
+    width: 36,
+    height: 36,
+    borderRadius: 18,
     borderWidth: 1,
-    maxWidth: 72,
-  },
-  settingsLabel: {
-    fontSize: 10,
-    marginTop: 1,
-    fontWeight: '500',
   },
   tabRow: {
     position: 'absolute',
