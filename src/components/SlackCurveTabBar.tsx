@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Pressable, StyleSheet, Text, useWindowDimensions } from 'react-native';
-import Svg, { Path, Circle } from 'react-native-svg';
+import Svg, { Path, Circle, Polygon } from 'react-native-svg';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useRouter, usePathname } from 'expo-router';
@@ -8,28 +8,33 @@ import type { BottomTabBarProps } from '@react-navigation/bottom-tabs';
 import { useTheme } from '../theme';
 
 /**
- * Slackline curve tab bar — v0.8.0-alpha4.
+ * Slackline curve tab bar — v0.8.0 (V2c design: legs + cog, no head).
  *
- * Layout:
- *   Bottom row (56 px) — 6 primary tabs: Lajny / ISA / Calc / Gear / Reports / Training
- *   Right side (64 px) — Bezier curve rising to top-right corner with Settings icon
+ * Design:
+ *   Bottom row (56 px) — 6 primary tabs: Lines / ISA / Calc / Gear / Reports / Training
+ *   Above it a bright white slackline runs across the full width.
+ *   The line is flat on the left, then sags near the right anchor under
+ *   the weight of a stick-figure standing on it — two asymmetric trapezoid
+ *   legs (narrow at top, wider at foot, slightly splayed for balance).
+ *   Above the legs floats the Settings ⚙ icon, tappable.
  *
- * The curve is drawn as SVG: solid fill under the shape (background surface color),
- * plus 2 px stroke along the curve edge (webbing top edge texture), plus 2 small
- * circles at the curve endpoints (anchors — where the slackline attaches).
- *
- * Design metaphor: the tab bar is a rigged slackline. Left side is flat (line at rest),
- * right side rises to the anchor point where Settings hangs.
+ * Anchors: white filled circles at the extreme left (0, LINE_Y) and right (width, LINE_Y).
  */
 
 const TAB_HEIGHT = 56;
-const CURVE_HEIGHT = 64;
+const CURVE_HEIGHT = 40; // curve space above tab row (was 64)
 const TOTAL_HEIGHT = TAB_HEIGHT + CURVE_HEIGHT;
 
 /** Exported for screen paddingBottom — content sits ABOVE the curve. */
 export const CURVE_TABBAR_HEIGHT = TOTAL_HEIGHT;
 
-// Tabs shown in bottom row. Settings is separate on top-right.
+// Slackline geometry (SVG coord system 0..TOTAL_HEIGHT tall)
+const LINE_Y = CURVE_HEIGHT; // 40 — line runs along top of tab row
+const SAG_Y = LINE_Y + 18; // 58 — deepest sag under stick figure
+const LEG_TOP_Y = 22;
+const FEET_Y = SAG_Y - 4; // 54
+
+// Tabs shown in bottom row. Settings hovers above the sag.
 const PRIMARY_TABS = [
   { name: 'index', label: 'lines', icon: 'map' },
   { name: 'isa', label: 'isa', icon: 'shield-check' },
@@ -46,43 +51,43 @@ export function SlackCurveTabBar(props: BottomTabBarProps) {
   const insets = useSafeAreaInsets();
   const { width } = useWindowDimensions();
 
-  const height = TOTAL_HEIGHT + insets.bottom;
+  const containerHeight = TOTAL_HEIGHT + insets.bottom;
 
-  // Curve geometry — right ~35% of the screen bends up.
-  const curveStartX = width * 0.6;
-  const curveEndX = width * 0.9;
-  const curveTopY = 6;
+  // Position of the stick figure along X (near the right anchor, but not touching it)
+  const FIG_X = width * 0.88;
 
-  // Bezier path for the background fill (solid shape covering bottom bar + right curve wing)
-  const fillPath = [
-    `M 0 ${CURVE_HEIGHT}`, // top-left of bottom bar
-    `L ${curveStartX} ${CURVE_HEIGHT}`, // top edge of bottom bar going right
-    `Q ${curveEndX - 20} ${CURVE_HEIGHT} ${curveEndX} ${curveTopY}`, // Bezier curve up
-    `L ${width} ${curveTopY}`, // top edge of right wing
-    `L ${width} ${height}`, // right edge all the way down
-    `L 0 ${height}`, // bottom edge
-    `Z`, // close back to start
+  // Slackline: flat left → sag under figure near right anchor → rises back to right anchor.
+  // Two Bezier quadratics form the shallow "V" of the sag right under the feet.
+  const linePath = [
+    `M 0 ${LINE_Y}`,
+    `L ${width * 0.62} ${LINE_Y}`,
+    `Q ${width * 0.78} ${LINE_Y} ${FIG_X - 4} ${FEET_Y - 2}`,
+    `Q ${FIG_X} ${SAG_Y} ${FIG_X + 4} ${FEET_Y - 2}`,
+    `Q ${width * 0.96} ${LINE_Y + 2} ${width} ${LINE_Y}`,
   ].join(' ');
 
-  // Stroke path — only the visible slackline (from left anchor along the curve to right anchor)
-  const strokePath = [
-    `M 0 ${CURVE_HEIGHT}`, // start at left anchor
-    `L ${curveStartX} ${CURVE_HEIGHT}`, // flat portion (line at rest)
-    `Q ${curveEndX - 20} ${CURVE_HEIGHT} ${curveEndX} ${curveTopY}`, // rise to right anchor
-    `L ${width} ${curveTopY}`, // continue to right edge
+  // Left leg: narrow at top (near body centerline), wider at foot, slight splay to the left.
+  const leftLegPts = [
+    `${FIG_X - 2},${LEG_TOP_Y}`,
+    `${FIG_X - 0.5},${LEG_TOP_Y}`,
+    `${FIG_X - 3},${FEET_Y}`,
+    `${FIG_X - 6},${FEET_Y}`,
   ].join(' ');
 
-  // Active tab detection — pathname without leading slash
+  // Right leg: narrow at top, MORE splayed to the right (asymmetric balance).
+  const rightLegPts = [
+    `${FIG_X + 0.5},${LEG_TOP_Y}`,
+    `${FIG_X + 2},${LEG_TOP_Y}`,
+    `${FIG_X + 11},${FEET_Y}`,
+    `${FIG_X + 8},${FEET_Y}`,
+  ].join(' ');
+
   const active = pathname === '/' ? 'index' : pathname.replace(/^\//, '');
-
   const goTo = (route: string) => {
     router.push(('/' + route) as any);
   };
-
   const isSettingsActive = active === 'settings';
 
-  const tr = props.state.routes.find((r) => r.name === 'index'); // hint for labels
-  // Use the passed props.descriptors for labels/i18n
   const getLabel = (routeName: string): string => {
     const route = props.state.routes.find((r) => r.name === routeName);
     if (!route) return routeName;
@@ -91,40 +96,60 @@ export function SlackCurveTabBar(props: BottomTabBarProps) {
   };
 
   return (
-    <View style={[styles.container, { height }]} pointerEvents="box-none">
-      {/* Background SVG: fill + curve stroke + anchor circles */}
-      <Svg width={width} height={height} style={StyleSheet.absoluteFill}>
-        <Path d={fillPath} fill={t.surface} />
-        <Path d={strokePath} stroke={t.border} strokeWidth={2} fill="none" />
-        {/* Left anchor: where the slackline is fixed to the bottom bar */}
-        <Circle cx={0} cy={CURVE_HEIGHT} r={4} fill={t.textDim} />
-        {/* Right anchor: where the line meets the top-right corner (Settings zone) */}
-        <Circle cx={width} cy={curveTopY} r={4} fill={t.textDim} />
+    <View style={[styles.container, { height: containerHeight }]} pointerEvents="box-none">
+      {/* Solid tab bar body (from slackline down to system nav area) */}
+      <View
+        style={{
+          position: 'absolute',
+          left: 0,
+          right: 0,
+          top: LINE_Y,
+          bottom: 0,
+          backgroundColor: t.surface,
+        }}
+      />
+
+      {/* SVG: slackline, anchors, stick-figure legs */}
+      <Svg
+        width={width}
+        height={TOTAL_HEIGHT}
+        style={{ position: 'absolute', top: 0, left: 0 }}
+      >
+        {/* Slackline */}
+        <Path d={linePath} stroke={t.text} strokeWidth={2.5} fill="none" strokeLinecap="round" />
+        {/* Left anchor */}
+        <Circle cx={0} cy={LINE_Y} r={5} fill={t.text} />
+        {/* Right anchor */}
+        <Circle cx={width} cy={LINE_Y} r={5} fill={t.text} />
+        {/* Left leg (mildly bent) */}
+        <Polygon points={leftLegPts} fill={t.text} />
+        {/* Right leg (more splayed — asymmetric balance) */}
+        <Polygon points={rightLegPts} fill={t.text} />
       </Svg>
 
-      {/* Settings — icon-only round button hanging from the raised slackline end */}
+      {/* Settings cog — hovering above the legs, tappable */}
       <Pressable
         onPress={() => goTo('settings')}
-        style={[
-          styles.settingsBtn,
-          {
-            top: 18,
-            right: 12,
-            borderColor: isSettingsActive ? t.accent : t.border,
-            backgroundColor: t.surface,
-          },
-        ]}
-        hitSlop={12}
+        style={{
+          position: 'absolute',
+          top: 2,
+          left: FIG_X - 16,
+          width: 32,
+          height: 22,
+          justifyContent: 'center',
+          alignItems: 'center',
+        }}
+        hitSlop={16}
         accessibilityLabel={getLabel('settings')}
       >
         <MaterialCommunityIcons
           name="cog"
-          size={22}
-          color={isSettingsActive ? t.accent : t.textMuted}
+          size={20}
+          color={isSettingsActive ? t.accent : t.text}
         />
       </Pressable>
 
-      {/* Bottom row: 6 primary tabs — sit ABOVE the system nav bar (insets.bottom) */}
+      {/* Bottom row: 6 primary tabs — above system nav bar */}
       <View style={[styles.tabRow, { bottom: insets.bottom }]}>
         {PRIMARY_TABS.map((tab) => {
           const isActive = active === tab.name;
@@ -164,15 +189,6 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     bottom: 0,
-  },
-  settingsBtn: {
-    position: 'absolute',
-    alignItems: 'center',
-    justifyContent: 'center',
-    width: 36,
-    height: 36,
-    borderRadius: 18,
-    borderWidth: 1,
   },
   tabRow: {
     position: 'absolute',
