@@ -790,5 +790,29 @@
       "comingSoonTitle": "Session journal",
       "comingSoonDesc": "Training session logging (date, distance, steps, style, rating) is coming in the next release. For now, use Resources for external educational material."
     }
+  },
+  "gear": {
+    "category": {
+      "webbing": "Webbing",
+      "anchor": "Anchor system",
+      "personal": "Personal",
+      "rescue": "Rescue kit"
+    },
+    "categoryHint": {
+      "webbing": "Main / backup webbing",
+      "anchor": "Weblocks, shackles, carabiners, spansets",
+      "personal": "Harness, PAS, leash, ring, personal gear",
+      "rescue": "Pulleys, ascenders, descenders"
+    }
+  },
+  "reports": {
+    "filter": {
+      "all": "All",
+      "rig": "Rig",
+      "incident": "Incident",
+      "near_miss": "Near-miss"
+    },
+    "newReport": "New report",
+    "title": "Reports"
   }
 }

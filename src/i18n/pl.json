@@ -790,5 +790,29 @@
       "comingSoonTitle": "Dziennik sesji",
       "comingSoonDesc": "Rejestrowanie sesji treningowych (data, dystans, kroki, styl, ocena) pojawi się w kolejnej wersji. Na razie korzystaj z Zasobów w celu edukacji zewnętrznej."
     }
+  },
+  "gear": {
+    "category": {
+      "webbing": "Popruchy",
+      "anchor": "System kotwiczenia",
+      "personal": "Osobiste",
+      "rescue": "Zestaw ratunkowy"
+    },
+    "categoryHint": {
+      "webbing": "Main / backup popruch",
+      "anchor": "Weblocki, szakle, karabinki, spansety",
+      "personal": "Uprząż, PAS, leash, ring",
+      "rescue": "Bloczki, ascendery, descendery"
+    }
+  },
+  "reports": {
+    "filter": {
+      "all": "Wszystkie",
+      "rig": "Rig",
+      "incident": "Incydent",
+      "near_miss": "Zdarzenie potencjalne"
+    },
+    "newReport": "Nowy raport",
+    "title": "Raporty"
   }
 }
