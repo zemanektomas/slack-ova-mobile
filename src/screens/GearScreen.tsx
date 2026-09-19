@@ -398,7 +398,6 @@ export default function GearScreen() {
           <View style={s.placeholderNote}>
             <Text style={s.placeholderText}>
               Katalog materiálů — {Object.values(catalog.categories).reduce((a, b) => a + b.length, 0)} typů.
-              User inventory (moje kusy) přijde v další iteraci.
             </Text>
           </View>
         )}
