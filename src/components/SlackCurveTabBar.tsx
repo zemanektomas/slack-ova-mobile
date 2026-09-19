@@ -35,13 +35,15 @@ const LEG_TOP_Y = 22;
 const FEET_Y = SAG_Y - 4; // 54
 
 // Tabs shown in bottom row. Settings hovers above the sag.
+// `flipY` mirrors the icon horizontally (used to make the dumbbell rise
+// from bottom-left to top-right instead of the default top-left to bottom-right).
 const PRIMARY_TABS = [
   { name: 'index', label: 'lines', icon: 'map' },
   { name: 'isa', label: 'isa', icon: 'shield-check' },
   { name: 'calculators', label: 'calculators', icon: 'calculator-variant' },
   { name: 'gear', label: 'gear', icon: 'bag-personal' },
   { name: 'reports', label: 'reports', icon: 'clipboard-text' },
-  { name: 'training', label: 'training', icon: 'dumbbell' },
+  { name: 'training', label: 'training', icon: 'dumbbell', flipY: true },
 ] as const;
 
 export function SlackCurveTabBar(props: BottomTabBarProps) {
@@ -163,6 +165,7 @@ export function SlackCurveTabBar(props: BottomTabBarProps) {
                 name={tab.icon as any}
                 size={24}
                 color={isActive ? t.accent : t.textMuted}
+                style={('flipY' in tab && tab.flipY) ? { transform: [{ scaleY: -1 }] } : undefined}
               />
               <Text
                 style={[
