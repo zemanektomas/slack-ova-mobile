@@ -82,7 +82,10 @@
     "devMode": "Dev Mode",
     "devModeHint": "Unlocks WIP features (Gear, Reports, Slackmap sign-in) + diagnostics. Off by default.",
     "dbSchemaVersion": "DB schema version",
-    "bundledMaterials": "Bundled materials"
+    "bundledMaterials": "Bundled materials",
+    "dataSlackData": "Materials catalog (SlackData)",
+    "dataSlackDataNever": "Never updated",
+    "slackdataRefreshSummary": "Webbings: {{webbings}}\nWeblocks: {{weblocks}}\nISA warnings: {{warnings}}"
   },
   "detail": {
     "length": "Length",
