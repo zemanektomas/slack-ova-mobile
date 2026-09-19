@@ -262,7 +262,7 @@ const styles = (t: ReturnType<typeof useTheme>, fs: number) =>
     filterChipActive: { backgroundColor: t.accent, borderColor: t.accent },
     filterChipText: { fontSize: 13 * fs, color: t.text },
     filterChipTextActive: { color: t.accentOn },
-    scroll: { flexGrow: 1, paddingVertical: 8, paddingHorizontal: 16, gap: 10 },
+    scroll: { flexGrow: 1, paddingVertical: 8, paddingHorizontal: 16, gap: 10, paddingBottom: 140 },
     emptyState: { alignItems: 'center', padding: 40, marginTop: 40 },
     emptyTitle: { fontSize: 18 * fs, fontWeight: '500', color: t.text, marginTop: 16 },
     emptyHint: {
