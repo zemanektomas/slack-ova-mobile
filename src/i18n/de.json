@@ -5,7 +5,9 @@
     "reset": "Zurücksetzen",
     "loading": "Wird geladen…",
     "cancel": "Abbrechen",
-    "error": "Fehler"
+    "error": "Fehler",
+    "back": "Zurück",
+    "retry": "Erneut versuchen"
   },
   "home": {
     "searchPlaceholder": "Nach Name, Region, Sektor suchen...",
@@ -116,7 +118,11 @@
     "tapeSpacingBtn": "Tape-Spacing-Plan",
     "restriction": "Einschränkung",
     "dateTense": "Erster Rig",
-    "openInMapy": "In Mapy.cz öffnen →"
+    "openInMapy": "In Mapy.cz öffnen →",
+    "notFound": "Slackline nicht gefunden",
+    "description": "Beschreibung",
+    "anchors": "Anker",
+    "details": "Details"
   },
   "calc": {
     "openBtn": "Rechner öffnen",
@@ -268,7 +274,10 @@
     "loadFailed": "Laden der Community fehlgeschlagen (Internet erforderlich).",
     "footerNote": "Quelle: Slackmap.com — Slackline-Gruppen & ISA-Mitglieder.",
     "sectionHint": "Slackline-Gruppen und ISA-Mitglieder in deinem Land",
-    "fbPage": "FB-Seite"
+    "fbPage": "FB-Seite",
+    "fbGroup": "FB-Gruppe",
+    "web": "Web",
+    "email": "E-Mail"
   },
   "onboarding": {
     "title": "Willkommen bei Slackline.Ova",
@@ -793,7 +802,9 @@
     "journal": {
       "comingSoonTitle": "Session-Tagebuch",
       "comingSoonDesc": "Trainings-Session-Logging (Datum, Distanz, Schritte, Stil, Bewertung) kommt in nächster Version. Vorerst Ressourcen für externe Bildungsmaterialien nutzen."
-    }
+    },
+    "free": "GRATIS",
+    "paid": "KOSTENPFLICHTIG"
   },
   "gear": {
     "category": {
@@ -814,7 +825,18 @@
     "catalogSummary": "Materialkatalog — {{count}} Typen.",
     "width": "Breite",
     "material": "Material",
-    "manufacturerWeb": "Herstellerseite"
+    "manufacturerWeb": "Herstellerseite",
+    "searchPlaceholder": "Marke / Modell suchen…",
+    "sourceLink": "Quelle →",
+    "searchInSlackData": "In SlackData suchen",
+    "pickMatch": "Passendes Produkt wählen:",
+    "thickness": "Dicke",
+    "weight": "Gewicht",
+    "isaClass": "ISA-Klasse",
+    "construction": "Konstruktion",
+    "style": "Stil",
+    "price": "Preis",
+    "type": "Typ"
   },
   "reports": {
     "filter": {
@@ -832,7 +854,8 @@
     "deleteFailed": "Löschen fehlgeschlagen",
     "share": "Teilen",
     "emptyTitle": "Noch keine Berichte",
-    "emptyBody": "Mit + legst du einen neuen Vorfallsbericht an. Er wird lokal gespeichert und kann danach geteilt werden (E-Mail / Community / SAIR-Seite)."
+    "emptyBody": "Mit + legst du einen neuen Vorfallsbericht an. Er wird lokal gespeichert und kann danach geteilt werden (E-Mail / Community / SAIR-Seite).",
+    "searchPlaceholder": "Suchen…"
   },
   "incident": {
     "title": "Vorfall melden",

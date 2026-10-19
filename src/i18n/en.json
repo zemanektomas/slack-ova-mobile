@@ -5,7 +5,9 @@
     "reset": "Reset",
     "loading": "Loading…",
     "cancel": "Cancel",
-    "error": "Error"
+    "error": "Error",
+    "back": "Back",
+    "retry": "Try again"
   },
   "home": {
     "searchPlaceholder": "Search name, region, sector...",
@@ -116,7 +118,11 @@
     "tapeSpacingBtn": "Tape spacing plan",
     "restriction": "Restriction",
     "dateTense": "First rig",
-    "openInMapy": "Open in Mapy.cz →"
+    "openInMapy": "Open in Mapy.cz →",
+    "notFound": "Slackline not found",
+    "description": "Description",
+    "anchors": "Anchors",
+    "details": "Details"
   },
   "calc": {
     "openBtn": "Open calculator",
@@ -268,7 +274,10 @@
     "loadFailed": "Failed to load community (needs internet).",
     "footerNote": "Source: Slackmap.com — Slackline groups & ISA members.",
     "sectionHint": "Slackline groups and ISA members in your country",
-    "fbPage": "FB page"
+    "fbPage": "FB page",
+    "fbGroup": "FB group",
+    "web": "web",
+    "email": "e-mail"
   },
   "onboarding": {
     "title": "Welcome to Slackline.Ova",
@@ -793,7 +802,9 @@
     "journal": {
       "comingSoonTitle": "Session journal",
       "comingSoonDesc": "Training session logging (date, distance, steps, style, rating) is coming in the next release. For now, use Resources for external educational material."
-    }
+    },
+    "free": "FREE",
+    "paid": "PAID"
   },
   "gear": {
     "category": {
@@ -814,7 +825,18 @@
     "catalogSummary": "Material catalogue — {{count}} types.",
     "width": "Width",
     "material": "Material",
-    "manufacturerWeb": "Manufacturer site"
+    "manufacturerWeb": "Manufacturer site",
+    "searchPlaceholder": "Search brand / model…",
+    "sourceLink": "Source →",
+    "searchInSlackData": "Search in SlackData",
+    "pickMatch": "Pick the matching item:",
+    "thickness": "Thickness",
+    "weight": "Weight",
+    "isaClass": "ISA class",
+    "construction": "Construction",
+    "style": "Style",
+    "price": "Price",
+    "type": "Type"
   },
   "reports": {
     "filter": {
@@ -832,7 +854,8 @@
     "deleteFailed": "Deleting failed",
     "share": "Share",
     "emptyTitle": "No reports yet",
-    "emptyBody": "The + button adds a new incident report. It is saved locally and you can then share it (e-mail / community / SAIR site)."
+    "emptyBody": "The + button adds a new incident report. It is saved locally and you can then share it (e-mail / community / SAIR site).",
+    "searchPlaceholder": "Search…"
   },
   "incident": {
     "title": "Report incident",

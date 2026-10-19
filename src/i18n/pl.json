@@ -5,7 +5,9 @@
     "reset": "Resetuj",
     "loading": "Ładowanie…",
     "cancel": "Anuluj",
-    "error": "Błąd"
+    "error": "Błąd",
+    "back": "Wstecz",
+    "retry": "Spróbuj ponownie"
   },
   "home": {
     "searchPlaceholder": "Szukaj nazwy, regionu, sektora...",
@@ -116,7 +118,11 @@
     "tapeSpacingBtn": "Plan tasmowania",
     "restriction": "Ograniczenia",
     "dateTense": "Pierwszy rig",
-    "openInMapy": "Otwórz w Mapy.cz →"
+    "openInMapy": "Otwórz w Mapy.cz →",
+    "notFound": "Nie znaleziono linii",
+    "description": "Opis",
+    "anchors": "Stanowiska",
+    "details": "Szczegóły"
   },
   "calc": {
     "openBtn": "Otwórz kalkulator",
@@ -268,7 +274,10 @@
     "loadFailed": "Nie udało się załadować społeczności (potrzeba internetu).",
     "footerNote": "Źródło: Slackmap.com — Slackline groups & ISA members.",
     "sectionHint": "Grupy slackline i ISA members w twoim kraju",
-    "fbPage": "Strona FB"
+    "fbPage": "Strona FB",
+    "fbGroup": "Grupa FB",
+    "web": "web",
+    "email": "e-mail"
   },
   "onboarding": {
     "title": "Witaj w Slackline.Ova",
@@ -793,7 +802,9 @@
     "journal": {
       "comingSoonTitle": "Dziennik sesji",
       "comingSoonDesc": "Rejestrowanie sesji treningowych (data, dystans, kroki, styl, ocena) pojawi się w kolejnej wersji. Na razie korzystaj z Zasobów w celu edukacji zewnętrznej."
-    }
+    },
+    "free": "ZA DARMO",
+    "paid": "PŁATNE"
   },
   "gear": {
     "category": {
@@ -814,7 +825,18 @@
     "catalogSummary": "Katalog materiałów — {{count}} typów.",
     "width": "Szerokość",
     "material": "Materiał",
-    "manufacturerWeb": "Strona producenta"
+    "manufacturerWeb": "Strona producenta",
+    "searchPlaceholder": "Szukaj marki / modelu…",
+    "sourceLink": "Źródło →",
+    "searchInSlackData": "Szukaj w SlackData",
+    "pickMatch": "Wybierz pasujący produkt:",
+    "thickness": "Grubość",
+    "weight": "Waga",
+    "isaClass": "Klasa ISA",
+    "construction": "Konstrukcja",
+    "style": "Styl",
+    "price": "Cena",
+    "type": "Typ"
   },
   "reports": {
     "filter": {
@@ -832,7 +854,8 @@
     "deleteFailed": "Usuwanie nie powiodło się",
     "share": "Udostępnij",
     "emptyTitle": "Brak raportów",
-    "emptyBody": "Przycisk + dodaje nowy raport o incydencie. Zapisze się lokalnie, potem możesz go udostępnić (e-mail / społeczność / strona SAIR)."
+    "emptyBody": "Przycisk + dodaje nowy raport o incydencie. Zapisze się lokalnie, potem możesz go udostępnić (e-mail / społeczność / strona SAIR).",
+    "searchPlaceholder": "Szukaj…"
   },
   "incident": {
     "title": "Zgłoś incydent",

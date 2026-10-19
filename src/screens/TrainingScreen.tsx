@@ -189,11 +189,11 @@ export default function TrainingScreen() {
                 <Text style={s.cardTitle}>{r.title}</Text>
                 {r.free ? (
                   <View style={s.badgeFree}>
-                    <Text style={s.badgeFreeText}>FREE</Text>
+                    <Text style={s.badgeFreeText}>{tr('training.free')}</Text>
                   </View>
                 ) : (
                   <View style={s.badgePaid}>
-                    <Text style={s.badgePaidText}>PAID</Text>
+                    <Text style={s.badgePaidText}>{tr('training.paid')}</Text>
                   </View>
                 )}
               </View>

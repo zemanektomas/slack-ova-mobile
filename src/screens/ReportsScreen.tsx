@@ -136,7 +136,7 @@ export default function ReportsScreen() {
   return (
     <SafeAreaView style={s.container} edges={['top']}>
       <View style={s.header}>
-        <Text style={s.title}>Reporty</Text>
+        <Text style={s.title}>{tr('reports.title')}</Text>
         <View style={{ width: 24 }} />
       </View>
 
@@ -144,7 +144,7 @@ export default function ReportsScreen() {
         <MaterialCommunityIcons name="magnify" size={18} color={theme.textDim} />
         <TextInput
           style={s.searchInput}
-          placeholder="Hledat..."
+          placeholder={tr('reports.searchPlaceholder')}
           placeholderTextColor={theme.textDim}
           value={search}
           onChangeText={setSearch}

@@ -280,7 +280,7 @@ export default function GearScreen() {
           <>
             <TouchableOpacity
               onPress={() => setNav({ level: 'L1' })}
-              accessibilityLabel="Back"
+              accessibilityLabel={tr('common.back')}
               hitSlop={16}
               style={{ padding: 8, marginLeft: -8 }}
             >
@@ -298,7 +298,7 @@ export default function GearScreen() {
           <MaterialCommunityIcons name="magnify" size={18} color={theme.textDim} />
           <TextInput
             style={s.searchInput}
-            placeholder="Hledat brand / model..."
+            placeholder={tr('gear.searchPlaceholder')}
             placeholderTextColor={theme.textDim}
             value={search}
             onChangeText={setSearch}
@@ -455,7 +455,7 @@ export default function GearScreen() {
                     )}
                     {w.links && w.links.length > 0 && (
                       <Pressable onPress={() => Linking.openURL(w.links![0])}>
-                        <Text style={s.isaWarningLink}>Zdroj →</Text>
+                        <Text style={s.isaWarningLink}>{tr('gear.sourceLink')}</Text>
                       </Pressable>
                     )}
                   </View>
@@ -542,7 +542,7 @@ function L3Detail({ item, subcategory, itemWarnings, onBack }: L3Props) {
       <View style={s.header}>
         <TouchableOpacity
           onPress={onBack}
-          accessibilityLabel="Back"
+          accessibilityLabel={tr('common.back')}
           hitSlop={16}
           style={{ padding: 8, marginLeft: -8 }}
         >
@@ -583,7 +583,7 @@ function L3Detail({ item, subcategory, itemWarnings, onBack }: L3Props) {
                   )}
                   {w.links && w.links.length > 0 && (
                     <Pressable onPress={() => Linking.openURL(w.links![0])}>
-                      <Text style={s.isaWarningLink}>Zdroj →</Text>
+                      <Text style={s.isaWarningLink}>{tr('gear.sourceLink')}</Text>
                     </Pressable>
                   )}
                 </View>
@@ -602,7 +602,7 @@ function L3Detail({ item, subcategory, itemWarnings, onBack }: L3Props) {
             {item.width_mm && <SpecCell label={tr('gear.width')} value={`${item.width_mm} mm`} theme={theme} fs={fs} />}
             {item.material_family && <SpecCell label={tr('gear.material')} value={item.material_family} theme={theme} fs={fs} />}
             {item.isa_cert && <SpecCell label="ISA cert" value={item.isa_cert} theme={theme} fs={fs} />}
-            {item.webbing_type && <SpecCell label="Typ" value={item.webbing_type} theme={theme} fs={fs} />}
+            {item.webbing_type && <SpecCell label={tr('gear.type')} value={item.webbing_type} theme={theme} fs={fs} />}
           </View>
           {item.notes && <Text style={s.detailNotes}>{item.notes}</Text>}
           {item.url && (
@@ -627,7 +627,7 @@ function L3Detail({ item, subcategory, itemWarnings, onBack }: L3Props) {
                   Doplnit stretch křivku, ISA warnings a další data z {SLACKDATA_ATTRIBUTION.source}.
                 </Text>
                 <TouchableOpacity style={s.enrichBtn} onPress={handleEnrichSearch}>
-                  <Text style={s.enrichBtnText}>Hledat v SlackData</Text>
+                  <Text style={s.enrichBtnText}>{tr('gear.searchInSlackData')}</Text>
                 </TouchableOpacity>
               </>
             )}
@@ -635,7 +635,7 @@ function L3Detail({ item, subcategory, itemWarnings, onBack }: L3Props) {
             {enrichLoading && (
               <View style={s.enrichLoading}>
                 <ActivityIndicator size="small" color={theme.accent} />
-                <Text style={s.enrichLoadingText}>Načítám…</Text>
+                <Text style={s.enrichLoadingText}>{tr('common.loading')}</Text>
               </View>
             )}
 
@@ -643,14 +643,14 @@ function L3Detail({ item, subcategory, itemWarnings, onBack }: L3Props) {
               <View style={s.enrichError}>
                 <Text style={s.enrichErrorText}>{searchError}</Text>
                 <TouchableOpacity onPress={handleEnrichSearch}>
-                  <Text style={s.enrichRetry}>Zkusit znovu</Text>
+                  <Text style={s.enrichRetry}>{tr('common.retry')}</Text>
                 </TouchableOpacity>
               </View>
             )}
 
             {searchResults && searchResults.length > 0 && !enrichData && (
               <>
-                <Text style={s.enrichHint}>Vyber odpovídající kus:</Text>
+                <Text style={s.enrichHint}>{tr('gear.pickMatch')}</Text>
                 {searchResults.map((r) => (
                   <TouchableOpacity
                     key={r.id}
@@ -730,18 +730,18 @@ function EnrichmentDisplay({ data, warnings, type, theme, fs }: EnrichmentDispla
         )}
         {webbing?.width != null && <SpecCell label={tr('gear.width')} value={`${webbing.width} mm`} theme={theme} fs={fs} />}
         {webbing?.thickness != null && (
-          <SpecCell label="Tloušťka" value={`${webbing.thickness} mm`} theme={theme} fs={fs} />
+          <SpecCell label={tr('gear.thickness')} value={`${webbing.thickness} mm`} theme={theme} fs={fs} />
         )}
         {data.weight != null && (
-          <SpecCell label="Váha" value={`${data.weight} ${type === 'webbing' ? 'g/m' : 'g'}`} theme={theme} fs={fs} />
+          <SpecCell label={tr('gear.weight')} value={`${data.weight} ${type === 'webbing' ? 'g/m' : 'g'}`} theme={theme} fs={fs} />
         )}
         {webbing?.classification && (
-          <SpecCell label="ISA Class" value={webbing.classification} theme={theme} fs={fs} />
+          <SpecCell label={tr('gear.isaClass')} value={webbing.classification} theme={theme} fs={fs} />
         )}
         {webbing?.webbing_construction && (
-          <SpecCell label="Konstrukce" value={webbing.webbing_construction} theme={theme} fs={fs} />
+          <SpecCell label={tr('gear.construction')} value={webbing.webbing_construction} theme={theme} fs={fs} />
         )}
-        {weblock?.style && <SpecCell label="Styl" value={weblock.style} theme={theme} fs={fs} />}
+        {weblock?.style && <SpecCell label={tr('gear.style')} value={weblock.style} theme={theme} fs={fs} />}
         {(weblock?.width_min != null || weblock?.width_max != null) && (
           <SpecCell
             label={tr('gear.width')}
@@ -752,7 +752,7 @@ function EnrichmentDisplay({ data, warnings, type, theme, fs }: EnrichmentDispla
         )}
         {data.price != null && (
           <SpecCell
-            label="Cena"
+            label={tr('gear.price')}
             value={`${data.price} ${data.currency ?? ''}${type === 'webbing' ? '/m' : ''}`}
             theme={theme}
             fs={fs}

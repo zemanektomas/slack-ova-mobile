@@ -5,7 +5,9 @@
     "reset": "Resetovat",
     "loading": "Načítám…",
     "cancel": "Zrušit",
-    "error": "Chyba"
+    "error": "Chyba",
+    "back": "Zpět",
+    "retry": "Zkusit znovu"
   },
   "home": {
     "searchPlaceholder": "Hledat název, region, sektor...",
@@ -116,7 +118,11 @@
     "translateUnsupportedHint": "Překlad v zařízení podporuje jen omezenou sadu jazyků. Originál zůstane viditelný.",
     "restriction": "Omezení",
     "dateTense": "První rig",
-    "openInMapy": "Otevřít v Mapy.cz →"
+    "openInMapy": "Otevřít v Mapy.cz →",
+    "notFound": "Slackline nenalezena",
+    "description": "Popis",
+    "anchors": "Kotvy",
+    "details": "Detaily"
   },
   "calc": {
     "openBtn": "Otevřít kalkulátor",
@@ -268,7 +274,10 @@
     "loadFailed": "Nepodařilo se načíst komunitu (potřeba internet).",
     "footerNote": "Zdroj: Slackmap.com — Slackline groups & ISA members.",
     "sectionHint": "Slackline groups a ISA members ve tvé zemi",
-    "fbPage": "FB stránka"
+    "fbPage": "FB stránka",
+    "fbGroup": "FB skupina",
+    "web": "web",
+    "email": "e-mail"
   },
   "onboarding": {
     "title": "Vítej ve Slackline.Ova",
@@ -793,7 +802,9 @@
     "journal": {
       "comingSoonTitle": "Deník sessions",
       "comingSoonDesc": "Záznamy tréninků (datum, délka, kroky, styl, hodnocení) přijdou v příští verzi. Zatím sleduj sessions jinde a používej Zdroje pro edukaci."
-    }
+    },
+    "free": "ZDARMA",
+    "paid": "PLACENÉ"
   },
   "gear": {
     "category": {
@@ -814,7 +825,18 @@
     "catalogSummary": "Katalog materiálů — {{count}} typů.",
     "width": "Šířka",
     "material": "Materiál",
-    "manufacturerWeb": "Web výrobce"
+    "manufacturerWeb": "Web výrobce",
+    "searchPlaceholder": "Hledat brand / model…",
+    "sourceLink": "Zdroj →",
+    "searchInSlackData": "Hledat v SlackData",
+    "pickMatch": "Vyber odpovídající kus:",
+    "thickness": "Tloušťka",
+    "weight": "Váha",
+    "isaClass": "ISA třída",
+    "construction": "Konstrukce",
+    "style": "Styl",
+    "price": "Cena",
+    "type": "Typ"
   },
   "reports": {
     "filter": {
@@ -832,7 +854,8 @@
     "deleteFailed": "Smazání selhalo",
     "share": "Sdílet",
     "emptyTitle": "Zatím žádné reporty",
-    "emptyBody": "Tlačítko + přidá nový incident report. Uloží se lokálně a nabídne sdílení (e-mail / komunita / SAIR web)."
+    "emptyBody": "Tlačítko + přidá nový incident report. Uloží se lokálně a nabídne sdílení (e-mail / komunita / SAIR web).",
+    "searchPlaceholder": "Hledat…"
   },
   "incident": {
     "title": "Nahlásit incident",

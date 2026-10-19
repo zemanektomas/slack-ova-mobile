@@ -445,7 +445,7 @@ export function IncidentReportSheet({ visible, onClose, onSaved }: Props) {
             <Text style={[styles.sectionLabel, { marginTop: 20 }]}>{tr('incident.saveSection')}</Text>
 
             {!canSubmit && (
-              <Text style={styles.footerNote}>Vyber kategorii, ať můžeš pokračovat.</Text>
+              <Text style={styles.footerNote}>{tr('incident.needCategory')}</Text>
             )}
 
             <Pressable

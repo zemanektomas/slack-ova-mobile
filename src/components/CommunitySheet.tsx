@@ -166,7 +166,7 @@ function ISAMemberRow({ member, theme, tr }: { member: ISAMember; theme: Theme; 
       </View>
       <View style={styles.linkRow}>
         {member.infoUrl && (
-          <LinkChip icon="web" label="web" url={member.infoUrl} theme={theme} />
+          <LinkChip icon="web" label={tr('community.web')} url={member.infoUrl} theme={theme} />
         )}
         {member.email && (
           <LinkChip icon="email-outline" label={member.email} url={`mailto:${member.email}`} theme={theme} />
@@ -187,10 +187,10 @@ function GroupRow({ group, theme, tr }: { group: SlacklineGroup; theme: Theme; t
       </View>
       <View style={styles.linkRow}>
         {group.webpage && (
-          <LinkChip icon="web" label="web" url={group.webpage} theme={theme} />
+          <LinkChip icon="web" label={tr('community.web')} url={group.webpage} theme={theme} />
         )}
         {group.facebookGroup && (
-          <LinkChip icon="facebook" label="FB skupina" url={group.facebookGroup} theme={theme} />
+          <LinkChip icon="facebook" label={tr('community.fbGroup')} url={group.facebookGroup} theme={theme} />
         )}
         {group.facebookPage && (
           <LinkChip icon="facebook" label={tr('community.fbPage')} url={group.facebookPage} theme={theme} />
@@ -202,7 +202,7 @@ function GroupRow({ group, theme, tr }: { group: SlacklineGroup; theme: Theme; t
           <LinkChip icon="youtube" label="YT" url={group.youtube} theme={theme} />
         )}
         {group.email && (
-          <LinkChip icon="email-outline" label="email" url={`mailto:${group.email}`} theme={theme} />
+          <LinkChip icon="email-outline" label={tr('community.email')} url={`mailto:${group.email}`} theme={theme} />
         )}
       </View>
     </View>

@@ -53,7 +53,7 @@ export default function DetailScreen() {
   if (!detail) {
     return (
       <View style={[styles.loading, { backgroundColor: t.bg }]}>
-        <Text style={{ color: t.textDim }}>Slackline nenalezena</Text>
+        <Text style={{ color: t.textDim }}>{tr('detail.notFound')}</Text>
       </View>
     );
   }
@@ -83,11 +83,11 @@ export default function DetailScreen() {
           <Stat t={t} label={tr('detail.length')} value={detail.length ? `${detail.length} m` : '—'} />
           <Stat t={t} label={tr('detail.height')} value={detail.height ? `${detail.height} m` : '—'} />
           <Stat t={t} label={tr('detail.rating')} value={detail.rating ? '★'.repeat(detail.rating) : '—'} />
-          <Stat t={t} label="Typ" value={detail.type ?? '—'} />
+          <Stat t={t} label={tr('detail.type')} value={detail.type ?? '—'} />
         </View>
 
         {detail.description && (
-          <Section t={t} title="Popis">
+          <Section t={t} title={tr('detail.description')}>
             <Text style={[styles.body, { color: t.text }]}>{detail.description}</Text>
           </Section>
         )}
@@ -101,14 +101,14 @@ export default function DetailScreen() {
           </Section>
         )}
 
-        <Section t={t} title="Kotvy">
-          <PointBlock t={t} label="Kotva 1" point={detail.first_anchor_point} />
-          <PointBlock t={t} label="Kotva 2" point={detail.second_anchor_point} />
+        <Section t={t} title={tr('detail.anchors')}>
+          <PointBlock t={t} label={tr('detail.anchor1')} point={detail.first_anchor_point} />
+          <PointBlock t={t} label={tr('detail.anchor2')} point={detail.second_anchor_point} />
           <PointBlock t={t} label={tr('detail.parking')} point={detail.parking_spot} />
         </Section>
 
-        <Section t={t} title="Detaily">
-          <Row t={t} label="Autor" value={detail.author} />
+        <Section t={t} title={tr('detail.details')}>
+          <Row t={t} label={tr('detail.author')} value={detail.author} />
           <Row t={t} label={tr('detail.nameHistory')} value={detail.name_history} />
           <Row t={t} label={tr('detail.dateTense')} value={detail.date_tense} />
           <Row t={t} label={tr('detail.timeApproach')} value={detail.time_approach} />
