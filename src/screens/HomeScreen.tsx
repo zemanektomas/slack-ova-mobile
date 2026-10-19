@@ -19,7 +19,7 @@ import { seedFromSlackcz } from '../db/seedSlackcz';
 import { seedFromSlackmap } from '../db/slackmap';
 import MapViewComponent from '../map/MapView';
 import InlineDetail from '../components/InlineDetail';
-import { CURVE_TABBAR_HEIGHT } from '../components/SlackCurveTabBar';
+import { CURVE_TABBAR_SOLID_HEIGHT } from '../components/SlackCurveTabBar';
 // v0.8.0: SettingsSheet import odstranen — Nastaveni je vlastni tab
 import { useUserLocation } from '../map/useLocation';
 import { useTheme } from '../theme';
@@ -73,10 +73,19 @@ export default function HomeScreen() {
   const [expandedId, setExpandedId] = useState<number | null>(null);
   const sheetRef = useRef<BottomSheet>(null);
   const listRef = useRef<any>(null);
-  const snapPoints = useMemo(() => ['15%', '50%', '92%'], []);
   const setSheetHeight = useMapStore((s) => s.setSheetHeight);
   const focusOn = useMapStore((s) => s.focusOn);
   const insets = useSafeAreaInsets();
+  // Nejnižší snap point musí nechat drag handle NAD neprůhlednou částí tab baru,
+  // jinak ho nejde chytit a stažený list už nejde vytáhnout zpět (na 360x800 dp
+  // bylo '15%' = 116 dp proti tab baru 144 dp, tedy celý schovaný pod ním).
+  // Proto absolutní hodnota, ne procento. Do curve zóny nad tab barem sheet smí,
+  // ta je box-none a doteky jí propadnou.
+  const minSheetHeight = CURVE_TABBAR_SOLID_HEIGHT + insets.bottom + 60;
+  const snapPoints = useMemo(
+    () => [minSheetHeight, '50%', '92%'],
+    [minSheetHeight]
+  );
   const fontScale = useFontStore((s) => s.fontScale);
   const styles = useMemo(() => makeStyles(fontScale), [fontScale]);
 
@@ -93,21 +102,12 @@ export default function HomeScreen() {
   // aby mohla kamerou centrovat na střed VIDITELNÉ plochy mapy (ne celé obrazovky).
   // Kamera stačí diskrétně (setStop per frame by bylo plýtvání) — plynule
   // sleduje sheet jen FAB blok, přes sheetPosition.
-  // Sheet musí sedět NAD curve tab barem. Bez toho je nejnižší snap point (15 %)
-  // skoro celý pod tab barem — handle se nedá chytit a sheet stažený dolů už
-  // nejde vytáhnout zpět nahoru. Gorhom posune hosting container o bottomInset,
-  // takže se o něj zmenší i základna pro procenta ve snapPoints.
-  const sheetBottomInset = CURVE_TABBAR_HEIGHT + insets.bottom;
-
   const handleSheetChange = (index: number) => {
-    // Kontejner je SafeAreaView edges={['top']} zmenšený o bottomInset, takže
-    // procenta nepočítáme z okna, ale z této plochy.
-    const containerH =
-      Dimensions.get('window').height - insets.top - sheetBottomInset;
-    const fractions = [0.15, 0.5, 0.92];
-    const fraction = fractions[index] ?? 0;
-    // Mapa potřebuje vědět, kolik jí odspodu ukrajuje sheet VČETNĚ tab baru.
-    setSheetHeight(containerH * fraction + sheetBottomInset);
+    // Kontejner je SafeAreaView edges={['top']}, takže o horní inset nižší než
+    // okno. Nejnižší bod je v px, zbylé dva procenta z kontejneru.
+    const containerH = Dimensions.get('window').height - insets.top;
+    const heights = [minSheetHeight, containerH * 0.5, containerH * 0.92];
+    setSheetHeight(heights[index] ?? 0);
   };
 
   useEffect(() => {
@@ -288,7 +288,6 @@ export default function HomeScreen() {
         ref={sheetRef}
         index={1}
         snapPoints={snapPoints}
-        bottomInset={sheetBottomInset}
         onChange={handleSheetChange}
         animatedPosition={sheetPosition}
         // Gorhom 5 má enableDynamicSizing default TRUE — vloží do snapPoints

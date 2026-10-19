@@ -27,6 +27,12 @@ const TOTAL_HEIGHT = TAB_HEIGHT + CURVE_HEIGHT;
 
 /** Exported for screen paddingBottom — content sits ABOVE the curve. */
 export const CURVE_TABBAR_HEIGHT = TOTAL_HEIGHT;
+/**
+ * Neprůhledná část tab baru. Nad ní je ještě CURVE_HEIGHT křivky, která je
+ * ale `pointerEvents="box-none"` a z větší části průhledná — obsah tam smí
+ * zasahovat a doteky jí propadnou. Používá HomeScreen pro nejnižší snap point.
+ */
+export const CURVE_TABBAR_SOLID_HEIGHT = TAB_HEIGHT;
 
 // Slackline geometry (SVG coord system 0..TOTAL_HEIGHT tall)
 const LINE_Y = CURVE_HEIGHT; // 40 — line runs along top of tab row
