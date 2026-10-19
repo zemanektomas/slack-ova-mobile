@@ -113,7 +113,10 @@
     "translateErrorHint": "Sprawdź połączenie internetowe (model tłumacza trzeba raz pobrać, ~30 MB przez WiFi).",
     "translateUnsupported": "Język nie obsługiwany",
     "translateUnsupportedHint": "Tłumaczenie na urządzeniu obsługuje tylko ograniczony zestaw języków. Oryginał pozostaje widoczny.",
-    "tapeSpacingBtn": "Plan tasmowania"
+    "tapeSpacingBtn": "Plan tasmowania",
+    "restriction": "Ograniczenia",
+    "dateTense": "Pierwszy rig",
+    "openInMapy": "Otwórz w Mapy.cz →"
   },
   "calc": {
     "openBtn": "Otwórz kalkulator",
@@ -264,7 +267,8 @@
     "empty": "Brak grup w katalogu dla tego kraju.",
     "loadFailed": "Nie udało się załadować społeczności (potrzeba internetu).",
     "footerNote": "Źródło: Slackmap.com — Slackline groups & ISA members.",
-    "sectionHint": "Grupy slackline i ISA members w twoim kraju"
+    "sectionHint": "Grupy slackline i ISA members w twoim kraju",
+    "fbPage": "Strona FB"
   },
   "onboarding": {
     "title": "Witaj w Slackline.Ova",
@@ -481,7 +485,7 @@
     }
   },
   "lineSafety": {
-    "sectionTitle": "Kontrola bezpieczeństwa",
+    "sectionTitle": "Checklista riggera",
     "neverChecked": "Jeszcze nie sprawdzone",
     "lastCheckedAt": "Ostatnio: {{date}}",
     "lastCheckedComplete": "Ostatnio: {{date}} ✓",
@@ -507,7 +511,7 @@
     "subtitle": "Przewodnik bezpieczeństwa highline",
     "openBtn": "Otwórz przewodnik ISA",
     "sectionLabel": "Bezpieczeństwo",
-    "disclaimer": "Zgodnie z ISA:21 (2023) i powiązanymi standardami. Aplikacja dostarcza rekomendacje, ostateczna decyzja należy do Ciebie.",
+    "disclaimer": "Na podstawie ISA:21 (2023) i powiązanych standardów. To nie jest instrukcja ani gwarancja bezpiecznego rigowania — pomaga jedynie ograniczyć błąd ludzki. Nie chroni przed nieodpowiednim sprzętem ani stanowiskiem, ani przed wypadkiem. Ostateczna decyzja zawsze należy do ciebie.",
     "modeReadOnly": "Nauka",
     "modeSession": "Sprawdzenie na miejscu",
     "sessionStart": "Rozpocznij",
@@ -661,7 +665,7 @@
     },
     "serene": {
       "title": "SERENE",
-      "summary": "5 zasad dla bezpiecznego anchora",
+      "summary": "5 zasad budowy stanowiska",
       "strong": "Strong — mocny",
       "strongDetail": "Anchor wytrzymuje min 2× oczekiwany peak load. Cel: 48 kN primary, 24 kN secondary.",
       "equalized": "Equalized — wyrównany",
@@ -708,7 +712,7 @@
         "action": "Rekomendacja"
       },
       "row": {
-        "ok": "OK, rig safely",
+        "ok": "W limicie",
         "caution": "Caution — zaczyna się detape",
         "damage": "Damage risk — derig",
         "stop": "Do not rig / ewakuacja"
@@ -803,7 +807,14 @@
       "anchor": "Weblocki, szakle, karabinki, spansety",
       "personal": "Uprząż, PAS, leash, ring",
       "rescue": "Bloczki, ascendery, descendery"
-    }
+    },
+    "generalWarnings": "Ogólne ostrzeżenia ISA",
+    "generalWarningsHint": "Ostrzeżenia bez konkretnego produktu (ogólne, systemowe)",
+    "nothingToShow": "Nic do pokazania. Spróbuj innego filtra.",
+    "catalogSummary": "Katalog materiałów — {{count}} typów.",
+    "width": "Szerokość",
+    "material": "Materiał",
+    "manufacturerWeb": "Strona producenta"
   },
   "reports": {
     "filter": {
@@ -813,6 +824,65 @@
       "near_miss": "Zdarzenie potencjalne"
     },
     "newReport": "Nowy raport",
-    "title": "Raporty"
+    "title": "Raporty",
+    "shareFailed": "Udostępnianie nie powiodło się",
+    "deleteTitle": "Usunąć raport?",
+    "deleteBody": "Tej operacji nie można cofnąć.",
+    "delete": "Usuń",
+    "deleteFailed": "Usuwanie nie powiodło się",
+    "share": "Udostępnij",
+    "emptyTitle": "Brak raportów",
+    "emptyBody": "Przycisk + dodaje nowy raport o incydencie. Zapisze się lokalnie, potem możesz go udostępnić (e-mail / społeczność / strona SAIR)."
+  },
+  "incident": {
+    "title": "Zgłoś incydent",
+    "subtitle": "Zapisze się lokalnie, potem wybierzesz gdzie wysłać",
+    "categoryLabel": "Kategoria *",
+    "descLabel": "Opis *",
+    "cat": {
+      "fall": "Upadek / uraz",
+      "rescue": "Ratownictwo",
+      "harness": "Uprząż / wpięcie",
+      "weblock": "Weblock / sprzęt",
+      "anchor": "Stanowisko",
+      "webbing": "Taśma",
+      "environmental": "Środowisko (wiatr, burza)",
+      "vehicle": "Pojazd / helikopter / dron",
+      "electrostatic": "Elektrostatyka",
+      "near_miss": "Sytuacja potencjalnie wypadkowa",
+      "ppe": "Uraz od sprzętu (PPE)",
+      "legal": "Prawo / społeczność"
+    },
+    "countryOther": "Inny",
+    "descPlaceholder": "Co się stało, w jakich okolicznościach, co zrobiłbyś inaczej...",
+    "charCount": "{{count}} znaków",
+    "dateLabel": "Data (rok-miesiąc)",
+    "dateHint": "Tylko miesiąc, ze względu na prywatność — dokładna data identyfikuje.",
+    "countryLabel": "Kraj",
+    "anonymous": "Anonimowo",
+    "anonymousHint": "Nie podawaj w opisie imienia poszkodowanego. Domyślnie włączone.",
+    "lineSection": "Linia (opcjonalnie)",
+    "lengthM": "Długość (m)",
+    "heightM": "Wysokość (m)",
+    "material": "Materiał",
+    "lineType": "Typ",
+    "conditionsSection": "Warunki (opcjonalnie)",
+    "windMs": "Wiatr (m/s)",
+    "tempC": "Temperatura (°C)",
+    "buddyCheck": "Buddy check wykonany?",
+    "saveSection": "Zapisz + wyślij",
+    "needCategory": "Wybierz kategorię, aby kontynuować.",
+    "btnSaveOnly": "Zapisz lokalnie (bez wysyłki)",
+    "btnEmail": "Zapisz + e-mail do ISA SafeCom",
+    "btnShare": "Udostępnij (WhatsApp / Telegram / …)",
+    "btnSair": "Otwórz oficjalną stronę SAIR",
+    "saveFailed": "Zapis nie powiódł się",
+    "savedLocally": "Zapisano lokalnie",
+    "savedLocallyBody": "Raport jest w zakładce Reports. Możesz go później otworzyć i wysłać lub udostępnić.",
+    "emailFailed": "Nie udało się otworzyć e-maila",
+    "shareFailed": "Udostępnianie nie powiodło się",
+    "sairFailed": "Nie udało się otworzyć SAIR",
+    "saved": "Zapisano",
+    "savedBody": "Raport jest w zakładce Reports. Możesz go później ponownie udostępnić lub edytować."
   }
 }

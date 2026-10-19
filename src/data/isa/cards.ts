@@ -100,7 +100,7 @@ export const CARDS: CardData[] = [
         ['cards.isa21Limits.row.leashRing', '≥ 24 kN'],
       ],
     },
-    reference: { source: 'ISA:21 (2023) §1.3, Příloha 2' },
+    reference: { source: 'ISA:21 (2023) §1.3, Annex 2' },
     relatedCalculator: 'force',  // → force estimator (kontext k 12 kN limit)
   },
 
@@ -157,7 +157,7 @@ export const CARDS: CardData[] = [
         ['> 200 m', '✅', '✅', '✅'],
       ],
     },
-    reference: { source: 'ISA:21 (2023) Příloha 5' },
+    reference: { source: 'ISA:21 (2023) Annex 5' },
     relatedCalculator: 'force',  // → force estimator (kontext k materiálu × délce)
   },
 
@@ -190,12 +190,12 @@ export const CARDS: CardData[] = [
     table: {
       headerKeys: ['cards.rlt.col.type', 'cards.rlt.col.pa', 'cards.rlt.col.pes', 'cards.rlt.col.hmpe'],
       rows: [
-        ['A+ / A', '720 dnů', 'cards.rlt.row.visual', 'cards.rlt.row.na'],
-        ['B', '360 dnů', '360 dnů', 'cards.rlt.row.na'],
-        ['C', '180 dnů', 'cards.rlt.row.na', 'cards.rlt.row.na'],
+        ['A+ / A', '720 d', 'cards.rlt.row.visual', 'cards.rlt.row.na'],
+        ['B', '360 d', '360 d', 'cards.rlt.row.na'],
+        ['C', '180 d', 'cards.rlt.row.na', 'cards.rlt.row.na'],
       ],
     },
-    reference: { source: 'ISA:21 (2023) Příloha 4' },
+    reference: { source: 'ISA:21 (2023) Annex 4' },
   },
 
   // 7. Electrostatic Discharge Warning (nový 2025 topic) -----------------
@@ -317,7 +317,7 @@ export const CARDS: CardData[] = [
       { id: 'rw2', labelKey: 'cards.rigWorkflow.rw2', detailKey: 'cards.rigWorkflow.rw2Detail' },
       { id: 'rw3', labelKey: 'cards.rigWorkflow.rw3', detailKey: 'cards.rigWorkflow.rw3Detail' },
     ],
-    reference: { source: 'pm/idea_rig_log.md — 9 fází + 3 gates + průřezové vrstvy' },
+    reference: { source: 'Slackline.Ova — rig workflow (9 phases, 3 gates)' },
     relatedCalculator: 'deviation',  // → deviation (fáze 5 Tensioning)
   },
 

@@ -5,6 +5,7 @@ import {
   View, Text, ScrollView, StyleSheet, ActivityIndicator,
   Pressable, Linking, Image,
 } from 'react-native';
+import { useTranslation } from 'react-i18next';
 import { useLocalSearchParams, Stack } from 'expo-router';
 import { getSlacklineDetail } from '../db/queries';
 import { fetchAndCacheDetail } from '../api/sync';
@@ -13,6 +14,7 @@ import type { SlacklineDetail, PointResponse } from '../types';
 
 export default function DetailScreen() {
   const t = useTheme();
+  const { t: tr } = useTranslation();
   const { id } = useLocalSearchParams<{ id: string }>();
   const slacklineId = Number(id);
   const [detail, setDetail] = useState<SlacklineDetail | null>(null);
@@ -78,9 +80,9 @@ export default function DetailScreen() {
         </Text>
 
         <View style={[styles.statsRow, { borderColor: t.border }]}>
-          <Stat t={t} label="Délka" value={detail.length ? `${detail.length} m` : '—'} />
-          <Stat t={t} label="Výška" value={detail.height ? `${detail.height} m` : '—'} />
-          <Stat t={t} label="Rating" value={detail.rating ? '★'.repeat(detail.rating) : '—'} />
+          <Stat t={t} label={tr('detail.length')} value={detail.length ? `${detail.length} m` : '—'} />
+          <Stat t={t} label={tr('detail.height')} value={detail.height ? `${detail.height} m` : '—'} />
+          <Stat t={t} label={tr('detail.rating')} value={detail.rating ? '★'.repeat(detail.rating) : '—'} />
           <Stat t={t} label="Typ" value={detail.type ?? '—'} />
         </View>
 
@@ -91,7 +93,7 @@ export default function DetailScreen() {
         )}
 
         {detail.restriction && (
-          <Section t={t} title="Omezení">
+          <Section t={t} title={tr('detail.restriction')}>
             <Text style={[
               styles.body,
               { color: t.danger, backgroundColor: t.dangerBg, padding: 10, borderRadius: 6 },
@@ -102,15 +104,15 @@ export default function DetailScreen() {
         <Section t={t} title="Kotvy">
           <PointBlock t={t} label="Kotva 1" point={detail.first_anchor_point} />
           <PointBlock t={t} label="Kotva 2" point={detail.second_anchor_point} />
-          <PointBlock t={t} label="Parkoviště" point={detail.parking_spot} />
+          <PointBlock t={t} label={tr('detail.parking')} point={detail.parking_spot} />
         </Section>
 
         <Section t={t} title="Detaily">
           <Row t={t} label="Autor" value={detail.author} />
-          <Row t={t} label="Historie názvu" value={detail.name_history} />
-          <Row t={t} label="První rig" value={detail.date_tense} />
-          <Row t={t} label="Přístup" value={detail.time_approach} />
-          <Row t={t} label="Doba rigování" value={detail.time_tensioning} />
+          <Row t={t} label={tr('detail.nameHistory')} value={detail.name_history} />
+          <Row t={t} label={tr('detail.dateTense')} value={detail.date_tense} />
+          <Row t={t} label={tr('detail.timeApproach')} value={detail.time_approach} />
+          <Row t={t} label={tr('detail.timeTensioning')} value={detail.time_tensioning} />
         </Section>
       </ScrollView>
     </>
@@ -152,6 +154,7 @@ function Row({ t, label, value }: { t: Theme; label: string; value: string | nul
 }
 
 function PointBlock({ t, label, point }: { t: Theme; label: string; point: PointResponse | null | undefined }) {
+  const { t: tr } = useTranslation();
   if (!point) return null;
   const openInMaps = () => {
     const url = `https://mapy.cz/turisticka?q=${point.latitude},${point.longitude}`;
@@ -164,7 +167,7 @@ function PointBlock({ t, label, point }: { t: Theme; label: string; point: Point
         {point.latitude.toFixed(6)}, {point.longitude.toFixed(6)}
       </Text>
       {point.description && <Text style={[styles.pointDesc, { color: t.textMuted }]}>{point.description}</Text>}
-      <Text style={[styles.openMaps, { color: t.accent }]}>Otevřít v Mapy.cz →</Text>
+      <Text style={[styles.openMaps, { color: t.accent }]}>{tr('detail.openInMapy')}</Text>
     </Pressable>
   );
 }

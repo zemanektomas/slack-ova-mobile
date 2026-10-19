@@ -193,7 +193,7 @@ function GroupRow({ group, theme, tr }: { group: SlacklineGroup; theme: Theme; t
           <LinkChip icon="facebook" label="FB skupina" url={group.facebookGroup} theme={theme} />
         )}
         {group.facebookPage && (
-          <LinkChip icon="facebook" label="FB stránka" url={group.facebookPage} theme={theme} />
+          <LinkChip icon="facebook" label={tr('community.fbPage')} url={group.facebookPage} theme={theme} />
         )}
         {group.instagram && (
           <LinkChip icon="instagram" label="IG" url={group.instagram} theme={theme} />

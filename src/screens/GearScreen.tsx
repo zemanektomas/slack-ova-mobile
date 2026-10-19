@@ -351,10 +351,10 @@ export default function GearScreen() {
             <MaterialCommunityIcons name="alert-outline" size={28} color="#f59e0b" style={s.categoryIcon} />
             <View style={s.categoryTextWrap}>
               <View style={s.categoryTitleRow}>
-                <Text style={s.categoryLabel}>Obecné ISA warnings</Text>
+                <Text style={s.categoryLabel}>{tr('gear.generalWarnings')}</Text>
                 <Text style={s.categoryCount}>{unmatched.length}</Text>
               </View>
-              <Text style={s.categoryHint}>Varování bez konkrétního materiálu (obecná, systémová)</Text>
+              <Text style={s.categoryHint}>{tr('gear.generalWarningsHint')}</Text>
             </View>
             <MaterialCommunityIcons name="chevron-right" size={20} color={theme.textDim} />
           </TouchableOpacity>
@@ -397,14 +397,16 @@ export default function GearScreen() {
 
         {nav.level === 'L2' && l2Items.length === 0 && (
           <View style={s.placeholderNote}>
-            <Text style={s.placeholderText}>Nic k zobrazení. Zkus jiný filtr.</Text>
+            <Text style={s.placeholderText}>{tr('gear.nothingToShow')}</Text>
           </View>
         )}
 
         {nav.level === 'L1' && (
           <View style={s.placeholderNote}>
             <Text style={s.placeholderText}>
-              Katalog materiálů — {Object.values(catalog.categories).reduce((a, b) => a + b.length, 0)} typů.
+              {tr('gear.catalogSummary', {
+                count: Object.values(catalog.categories).reduce((a, b) => a + b.length, 0),
+              })}
             </Text>
           </View>
         )}
@@ -422,7 +424,7 @@ export default function GearScreen() {
           <Pressable style={{ flex: 1 }} onPress={() => setShowGenericWarnings(false)} />
           <View style={[s.modalSheet, { backgroundColor: theme.surface }]}>
             <View style={s.modalHeader}>
-              <Text style={s.modalTitle}>Obecné ISA warnings</Text>
+              <Text style={s.modalTitle}>{tr('gear.generalWarnings')}</Text>
               <Pressable onPress={() => setShowGenericWarnings(false)} hitSlop={10}>
                 <MaterialCommunityIcons name="close" size={24} color={theme.textMuted} />
               </Pressable>
@@ -477,6 +479,7 @@ interface L3Props {
 }
 
 function L3Detail({ item, subcategory, itemWarnings, onBack }: L3Props) {
+  const { t: tr } = useTranslation();
   const theme = useTheme();
   const fs = useFontStore((s) => s.fontScale);
   const s = useMemo(() => styles(theme, fs), [theme, fs]);
@@ -596,8 +599,8 @@ function L3Detail({ item, subcategory, itemWarnings, onBack }: L3Props) {
           <View style={s.specGrid}>
             {item.mbs_kn && <SpecCell label="MBS" value={`${item.mbs_kn} kN`} theme={theme} fs={fs} />}
             {item.wll_kn && <SpecCell label="WLL" value={`${item.wll_kn} kN`} theme={theme} fs={fs} />}
-            {item.width_mm && <SpecCell label="Šířka" value={`${item.width_mm} mm`} theme={theme} fs={fs} />}
-            {item.material_family && <SpecCell label="Materiál" value={item.material_family} theme={theme} fs={fs} />}
+            {item.width_mm && <SpecCell label={tr('gear.width')} value={`${item.width_mm} mm`} theme={theme} fs={fs} />}
+            {item.material_family && <SpecCell label={tr('gear.material')} value={item.material_family} theme={theme} fs={fs} />}
             {item.isa_cert && <SpecCell label="ISA cert" value={item.isa_cert} theme={theme} fs={fs} />}
             {item.webbing_type && <SpecCell label="Typ" value={item.webbing_type} theme={theme} fs={fs} />}
           </View>
@@ -605,7 +608,7 @@ function L3Detail({ item, subcategory, itemWarnings, onBack }: L3Props) {
           {item.url && (
             <TouchableOpacity onPress={() => Linking.openURL(item.url!)} style={s.sourceRow}>
               <MaterialCommunityIcons name="open-in-new" size={14} color={theme.accent} />
-              <Text style={s.sourceLink}>Web výrobce</Text>
+              <Text style={s.sourceLink}>{tr('gear.manufacturerWeb')}</Text>
             </TouchableOpacity>
           )}
         </View>
@@ -714,6 +717,7 @@ interface EnrichmentDisplayProps {
 }
 
 function EnrichmentDisplay({ data, warnings, type, theme, fs }: EnrichmentDisplayProps) {
+  const { t: tr } = useTranslation();
   const s = useMemo(() => styles(theme, fs), [theme, fs]);
   const webbing = type === 'webbing' ? (data as SlackDataWebbing) : null;
   const weblock = type === 'weblock' ? (data as SlackDataWeblock) : null;
@@ -724,7 +728,7 @@ function EnrichmentDisplay({ data, warnings, type, theme, fs }: EnrichmentDispla
         {data.breaking_strength != null && (
           <SpecCell label="MBS (API)" value={`${data.breaking_strength} kN`} theme={theme} fs={fs} />
         )}
-        {webbing?.width != null && <SpecCell label="Šířka" value={`${webbing.width} mm`} theme={theme} fs={fs} />}
+        {webbing?.width != null && <SpecCell label={tr('gear.width')} value={`${webbing.width} mm`} theme={theme} fs={fs} />}
         {webbing?.thickness != null && (
           <SpecCell label="Tloušťka" value={`${webbing.thickness} mm`} theme={theme} fs={fs} />
         )}
@@ -740,7 +744,7 @@ function EnrichmentDisplay({ data, warnings, type, theme, fs }: EnrichmentDispla
         {weblock?.style && <SpecCell label="Styl" value={weblock.style} theme={theme} fs={fs} />}
         {(weblock?.width_min != null || weblock?.width_max != null) && (
           <SpecCell
-            label="Šířka"
+            label={tr('gear.width')}
             value={`${weblock.width_min ?? '?'}–${weblock.width_max ?? '?'} mm`}
             theme={theme}
             fs={fs}

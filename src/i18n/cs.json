@@ -113,7 +113,10 @@
     "translateError": "Překlad selhal",
     "translateErrorHint": "Zkontroluj připojení k internetu (překladač se musí jednou stáhnout, ~30 MB na WiFi).",
     "translateUnsupported": "Jazyk není podporován",
-    "translateUnsupportedHint": "Překlad v zařízení podporuje jen omezenou sadu jazyků. Originál zůstane viditelný."
+    "translateUnsupportedHint": "Překlad v zařízení podporuje jen omezenou sadu jazyků. Originál zůstane viditelný.",
+    "restriction": "Omezení",
+    "dateTense": "První rig",
+    "openInMapy": "Otevřít v Mapy.cz →"
   },
   "calc": {
     "openBtn": "Otevřít kalkulátor",
@@ -264,7 +267,8 @@
     "empty": "Pro tuto zemi nejsou v katalogu žádné skupiny.",
     "loadFailed": "Nepodařilo se načíst komunitu (potřeba internet).",
     "footerNote": "Zdroj: Slackmap.com — Slackline groups & ISA members.",
-    "sectionHint": "Slackline groups a ISA members ve tvé zemi"
+    "sectionHint": "Slackline groups a ISA members ve tvé zemi",
+    "fbPage": "FB stránka"
   },
   "onboarding": {
     "title": "Vítej ve Slackline.Ova",
@@ -464,8 +468,8 @@
       "leashDetail": "Certifikovaný kruh musí obepínat hlavní lajnu i back-up. Pokud jen jednu → při selhání spadneš pod druhou.",
       "anchor": "Kotva zkontrolována",
       "anchorDetail": "Redundance (min 2 body), úhel ramen < 45°, žádné ostré hrany. Vizuálně na obou stranách.",
-      "back-up": "Back-up připojení funkční",
-      "back-upDetail": "Back-up ring nebo PAS na sedáku. Fyzicky pověs se na back-up samostatně, ověř drží.",
+      "backup": "Back-up připojení funkční",
+      "backupDetail": "Back-up ring nebo PAS na sedáku. Fyzicky pověs se na back-up samostatně, ověř drží.",
       "rescuePlan": "Rescue plán jasný",
       "rescuePlanDetail": "Kdo záchranu provede, čím (rope, ascender, kladka), jak dlouho by trvalo dostat se k tobě. Nahlas s týmem.",
       "weblockTieoff": "Weblock tie-off zavázán",
@@ -481,7 +485,7 @@
     }
   },
   "lineSafety": {
-    "sectionTitle": "Bezpečnostní kontrola",
+    "sectionTitle": "Rigger checklist",
     "neverChecked": "Zatím nekontrolováno",
     "lastCheckedAt": "Naposled: {{date}}",
     "lastCheckedComplete": "Naposled: {{date}} ✓",
@@ -507,7 +511,7 @@
     "subtitle": "Bezpečnostní příručka pro highline",
     "openBtn": "Otevřít ISA příručku",
     "sectionLabel": "Bezpečnost",
-    "disclaimer": "Podle ISA:21 (2023) a souvisejících standardů. Apka poskytuje doporučení, konečné rozhodnutí je vždy na tobě.",
+    "disclaimer": "Podle ISA:21 (2023) a souvisejících standardů. Není to návod ani záruka bezpečného postavení lajny — pomáhá to jen omezit lidskou chybu. Nenahradí to nevhodné vybavení ani kotvy a nezabrání nehodě. Konečné rozhodnutí je vždy na tobě.",
     "modeReadOnly": "Studium",
     "modeSession": "Kontrola na místě",
     "sessionStart": "Zahájit kontrolu",
@@ -677,7 +681,7 @@
     },
     "serene": {
       "title": "SERENE",
-      "summary": "5 bodů pro bezpečný anchor",
+      "summary": "5 zásad pro stavbu kotvy",
       "strong": "Strong — pevný",
       "strongDetail": "Anchor unese min 2× očekávaný peak load. Cíl: 48 kN primary, 24 kN secondary.",
       "equalized": "Equalized — vyrovnaný",
@@ -724,7 +728,7 @@
         "action": "Doporučení"
       },
       "row": {
-        "ok": "OK, rig safely",
+        "ok": "V limitu",
         "caution": "Caution — začíná detape",
         "damage": "Damage risk — derig",
         "stop": "Do not rig / evacuate"
@@ -803,7 +807,14 @@
       "anchor": "Kotvítka, šekly, karabiny, spansety",
       "personal": "Sedák, PAS, odsedka, kroužek, harness",
       "rescue": "Kladky, ascendery, descendery"
-    }
+    },
+    "generalWarnings": "Obecné ISA warnings",
+    "generalWarningsHint": "Varování bez konkrétního materiálu (obecná, systémová)",
+    "nothingToShow": "Nic k zobrazení. Zkus jiný filtr.",
+    "catalogSummary": "Katalog materiálů — {{count}} typů.",
+    "width": "Šířka",
+    "material": "Materiál",
+    "manufacturerWeb": "Web výrobce"
   },
   "reports": {
     "filter": {
@@ -813,6 +824,65 @@
       "near_miss": "Skoro-nehoda"
     },
     "newReport": "Nový report",
-    "title": "Reporty"
+    "title": "Reporty",
+    "shareFailed": "Sdílení selhalo",
+    "deleteTitle": "Smazat report?",
+    "deleteBody": "Tuto akci nelze vrátit.",
+    "delete": "Smazat",
+    "deleteFailed": "Smazání selhalo",
+    "share": "Sdílet",
+    "emptyTitle": "Zatím žádné reporty",
+    "emptyBody": "Tlačítko + přidá nový incident report. Uloží se lokálně a nabídne sdílení (e-mail / komunita / SAIR web)."
+  },
+  "incident": {
+    "title": "Nahlásit incident",
+    "subtitle": "Uloží se lokálně + volba kam poslat",
+    "categoryLabel": "Kategorie *",
+    "descLabel": "Popis *",
+    "cat": {
+      "fall": "Pád / úraz",
+      "rescue": "Rescue",
+      "harness": "Sedák / tie-in",
+      "weblock": "Kotvítko / gear",
+      "anchor": "Kotva",
+      "webbing": "Popruh",
+      "environmental": "Prostředí (vítr, bouře)",
+      "vehicle": "Auto / helikoptéra / dron",
+      "electrostatic": "Elektrostatika",
+      "near_miss": "Near miss / Pre-accident",
+      "ppe": "PPE zranění",
+      "legal": "Právní / komunita"
+    },
+    "countryOther": "Jiná",
+    "descPlaceholder": "Co se stalo, jaké okolnosti, co bys řekl/a příště jinak...",
+    "charCount": "{{count}} znaků",
+    "dateLabel": "Datum (rok-měsíc)",
+    "dateHint": "Jen měsíc kvůli soukromí — přesné datum je identifikující.",
+    "countryLabel": "Země",
+    "anonymous": "Anonymní",
+    "anonymousHint": "Nezmiňuj v popisu jméno zraněného. Výchozí je zapnuto.",
+    "lineSection": "Lajna (volitelné)",
+    "lengthM": "Délka (m)",
+    "heightM": "Výška (m)",
+    "material": "Materiál",
+    "lineType": "Typ",
+    "conditionsSection": "Podmínky (volitelné)",
+    "windMs": "Vítr (m/s)",
+    "tempC": "Teplota (°C)",
+    "buddyCheck": "Buddy check proběhl?",
+    "saveSection": "Uložit + poslat",
+    "needCategory": "Vyber kategorii, ať můžeš pokračovat.",
+    "btnSaveOnly": "Uložit lokálně (bez odeslání)",
+    "btnEmail": "Uložit + e-mail na ISA SafeCom",
+    "btnShare": "Sdílet (WhatsApp / Telegram / …)",
+    "btnSair": "Otevřít oficiální SAIR web",
+    "saveFailed": "Uložení selhalo",
+    "savedLocally": "Uloženo lokálně",
+    "savedLocallyBody": "Report je uložený v tabu Reporty. Můžeš ho později otevřít a poslat nebo sdílet.",
+    "emailFailed": "Otevření e-mailu selhalo",
+    "shareFailed": "Sdílení selhalo",
+    "sairFailed": "Otevření SAIR selhalo",
+    "saved": "Uloženo",
+    "savedBody": "Report je uložený v tabu Reporty. Můžeš ho později znovu sdílet nebo upravit."
   }
 }

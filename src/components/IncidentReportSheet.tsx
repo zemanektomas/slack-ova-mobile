@@ -25,6 +25,7 @@ import {
   Switch,
 } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { useTranslation } from 'react-i18next';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { CURVE_TABBAR_HEIGHT } from './SlackCurveTabBar';
 import { useTheme } from '../theme';
@@ -51,30 +52,29 @@ type Category =
   | 'ppe'
   | 'legal';
 
-const CATEGORIES: Array<{ key: Category; label: string; icon: keyof typeof MaterialCommunityIcons.glyphMap }> = [
-  { key: 'fall', label: 'Pád / úraz', icon: 'arrow-down-bold' },
-  { key: 'rescue', label: 'Rescue', icon: 'medical-bag' },
-  { key: 'harness', label: 'Sedák / tie-in', icon: 'human-handsdown' },
-  { key: 'weblock', label: 'Kotvítko / gear', icon: 'wrench' },
-  { key: 'anchor', label: 'Kotva', icon: 'anchor' },
-  { key: 'webbing', label: 'Popruh', icon: 'link-variant' },
-  { key: 'environmental', label: 'Prostředí (vítr, bouře)', icon: 'weather-lightning' },
-  { key: 'vehicle', label: 'Auto / helikoptéra / dron', icon: 'car' },
-  { key: 'electrostatic', label: 'Elektrostatika', icon: 'flash' },
-  { key: 'near_miss', label: 'Near miss / Pre-accident', icon: 'alert-circle-outline' },
-  { key: 'ppe', label: 'PPE zranění', icon: 'shield-alert' },
-  { key: 'legal', label: 'Právní / komunita', icon: 'gavel' },
+// Popisky jsou v i18n pod incident.cat.<key> — tady jen poradi a ikony.
+// `en` jde do tela reportu pro ISA SafeCom — to je vzdy anglicky, at uzivatel
+// pouziva jakykoli jazyk. Popisek v UI se bere z i18n: incident.cat.<key>.
+const CATEGORIES: Array<{
+  key: Category;
+  en: string;
+  icon: keyof typeof MaterialCommunityIcons.glyphMap;
+}> = [
+  { key: 'fall', en: 'Fall / injury', icon: 'arrow-down-bold' },
+  { key: 'rescue', en: 'Rescue', icon: 'medical-bag' },
+  { key: 'harness', en: 'Harness / tie-in', icon: 'human-handsdown' },
+  { key: 'weblock', en: 'Weblock / gear', icon: 'wrench' },
+  { key: 'anchor', en: 'Anchor', icon: 'anchor' },
+  { key: 'webbing', en: 'Webbing', icon: 'link-variant' },
+  { key: 'environmental', en: 'Environment (wind, storm)', icon: 'weather-lightning' },
+  { key: 'vehicle', en: 'Vehicle / helicopter / drone', icon: 'car' },
+  { key: 'electrostatic', en: 'Electrostatic', icon: 'flash' },
+  { key: 'near_miss', en: 'Near miss / Pre-accident', icon: 'alert-circle-outline' },
+  { key: 'ppe', en: 'PPE injury', icon: 'shield-alert' },
+  { key: 'legal', en: 'Legal / community', icon: 'gavel' },
 ];
 
-const COUNTRIES: Array<{ code: string; label: string }> = [
-  { code: 'CZ', label: 'ČR' },
-  { code: 'SK', label: 'SK' },
-  { code: 'PL', label: 'PL' },
-  { code: 'DE', label: 'DE' },
-  { code: 'AT', label: 'AT' },
-  { code: 'HU', label: 'HU' },
-  { code: 'other', label: 'Jiná' },
-];
+const COUNTRIES = ['CZ', 'SK', 'PL', 'DE', 'AT', 'HU', 'other'];
 
 const ISA_SAFECOM_EMAIL = 'safety@slacklineinternational.org';
 const SAIR_URL = 'https://data.slacklineinternational.org/safety/report-incident/english/';
@@ -85,6 +85,7 @@ export function IncidentReportSheet({ visible, onClose, onSaved }: Props) {
   // Backdrop je poloprůhledný, takže pod ním prosvítá tab bar — sheet mu musí
   // nechat místo. Dřív tu bylo natvrdo 56 px podle starého rovného tab baru;
   // curve tab bar měří 96 + inset, takže spodní tlačítka mizela pod ním.
+  const { t: tr } = useTranslation();
   const insets = useSafeAreaInsets();
   const tabBarGap = CURVE_TABBAR_HEIGHT + insets.bottom;
   const styles = useMemo(() => makeStyles(t, fs, tabBarGap), [t, fs, tabBarGap]);
@@ -148,34 +149,34 @@ export function IncidentReportSheet({ visible, onClose, onSaved }: Props) {
 
   const formatShareBody = () => {
     const p = buildPayload();
-    const catLabel = CATEGORIES.find((c) => c.key === category)?.label ?? category;
+    const catLabel = CATEGORIES.find((c) => c.key === category)?.en ?? category;
     const parts: string[] = [];
     parts.push('INCIDENT REPORT');
     parts.push(`Kategorie: ${catLabel}`);
     parts.push(`Datum: ${dateYm}`);
-    parts.push(`Země: ${country}`);
-    parts.push(`Anonymní: ${anonymous ? 'ano' : 'ne'}`);
+    parts.push(`Country: ${country}`);
+    parts.push(`Anonymous: ${anonymous ? 'yes' : 'no'}`);
     parts.push('');
     parts.push('Popis:');
     parts.push(p.description);
     if (p.line_specs.length_m || p.line_specs.height_m || p.line_specs.material || p.line_specs.type) {
       parts.push('');
       parts.push('Lajna:');
-      if (p.line_specs.length_m) parts.push(`  délka: ${p.line_specs.length_m} m`);
-      if (p.line_specs.height_m) parts.push(`  výška: ${p.line_specs.height_m} m`);
-      if (p.line_specs.material) parts.push(`  materiál: ${p.line_specs.material}`);
+      if (p.line_specs.length_m) parts.push(`  length: ${p.line_specs.length_m} m`);
+      if (p.line_specs.height_m) parts.push(`  height: ${p.line_specs.height_m} m`);
+      if (p.line_specs.material) parts.push(`  material: ${p.line_specs.material}`);
       if (p.line_specs.type) parts.push(`  typ: ${p.line_specs.type}`);
     }
     if (p.conditions.wind_ms || p.conditions.temp_c || p.conditions.buddy_check) {
       parts.push('');
-      parts.push('Podmínky:');
-      if (p.conditions.wind_ms) parts.push(`  vítr: ${p.conditions.wind_ms} m/s`);
+      parts.push('Conditions:');
+      if (p.conditions.wind_ms) parts.push(`  wind: ${p.conditions.wind_ms} m/s`);
       if (p.conditions.temp_c) parts.push(`  teplota: ${p.conditions.temp_c} °C`);
       parts.push(`  buddy check: ${p.conditions.buddy_check ? 'ano' : 'ne'}`);
     }
     parts.push('');
     parts.push('---');
-    parts.push('Zasláno přes Slackline.Ova');
+    parts.push('Sent via Slackline.Ova');
     return parts.join('\n');
   };
 
@@ -191,7 +192,7 @@ export function IncidentReportSheet({ visible, onClose, onSaved }: Props) {
       );
       return res.lastInsertRowId as number;
     } catch (err) {
-      Alert.alert('Uložení selhalo', String(err));
+      Alert.alert(tr('incident.saveFailed'), String(err));
       return null;
     }
   };
@@ -204,8 +205,8 @@ export function IncidentReportSheet({ visible, onClose, onSaved }: Props) {
     if (id === null) return;
     onSaved?.();
     Alert.alert(
-      'Uloženo lokálně',
-      'Report je uložený v Reports tabu. Můžeš ho později otevřít a poslat nebo sdílet.',
+      tr('incident.savedLocally'),
+      tr('incident.savedLocallyBody'),
       [{ text: 'OK', onPress: () => { reset(); onClose(); } }],
     );
   };
@@ -221,28 +222,28 @@ export function IncidentReportSheet({ visible, onClose, onSaved }: Props) {
     const body = formatShareBody();
 
     if (mode === 'email') {
-      const subject = `Slackline incident report — ${CATEGORIES.find((c) => c.key === category)?.label}`;
+      const subject = `Slackline incident report — ${CATEGORIES.find((c) => c.key === category)?.en}`;
       const mailto = `mailto:${ISA_SAFECOM_EMAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
       try {
         await Linking.openURL(mailto);
       } catch (err) {
-        Alert.alert('Otevření emailu selhalo', String(err));
+        Alert.alert(tr('incident.emailFailed'), String(err));
       }
     } else if (mode === 'share') {
       try {
         await Share.share({ message: body });
       } catch (err) {
-        Alert.alert('Sdílení selhalo', String(err));
+        Alert.alert(tr('incident.shareFailed'), String(err));
       }
     } else if (mode === 'sair') {
       try {
         await Linking.openURL(SAIR_URL);
       } catch (err) {
-        Alert.alert('Otevření SAIR selhalo', String(err));
+        Alert.alert(tr('incident.sairFailed'), String(err));
       }
     }
 
-    Alert.alert('Uloženo', 'Report je uložený v Reporty tabu. Můžeš ho později znovu sdílet nebo upravit.', [
+    Alert.alert(tr('incident.saved'), tr('incident.savedBody'), [
       { text: 'OK', onPress: () => { reset(); onClose(); } },
     ]);
   };
@@ -260,8 +261,8 @@ export function IncidentReportSheet({ visible, onClose, onSaved }: Props) {
         <View style={styles.sheet}>
           <View style={styles.header}>
             <View style={{ flex: 1 }}>
-              <Text style={styles.title}>Nahlásit incident</Text>
-              <Text style={styles.subtitle}>Uloží se lokálně + volba kam poslat</Text>
+              <Text style={styles.title}>{tr('incident.title')}</Text>
+              <Text style={styles.subtitle}>{tr('incident.subtitle')}</Text>
             </View>
             <Pressable onPress={onClose} hitSlop={10}>
               <MaterialCommunityIcons name="close" size={24} color={t.textMuted} />
@@ -270,7 +271,7 @@ export function IncidentReportSheet({ visible, onClose, onSaved }: Props) {
 
           <ScrollView contentContainerStyle={styles.content}>
             {/* Kategorie */}
-            <Text style={styles.sectionLabel}>Kategorie *</Text>
+            <Text style={styles.sectionLabel}>{tr('incident.categoryLabel')}</Text>
             <View style={styles.catGrid}>
               {CATEGORIES.map((c) => {
                 const active = c.key === category;
@@ -292,7 +293,7 @@ export function IncidentReportSheet({ visible, onClose, onSaved }: Props) {
                       color={active ? t.accentOn : t.text}
                     />
                     <Text style={[styles.catLabel, { color: active ? t.accentOn : t.text }]}>
-                      {c.label}
+                      {tr(`incident.cat.${c.key}`)}
                     </Text>
                   </Pressable>
                 );
@@ -300,24 +301,22 @@ export function IncidentReportSheet({ visible, onClose, onSaved }: Props) {
             </View>
 
             {/* Popis */}
-            <Text style={styles.sectionLabel}>Popis *</Text>
+            <Text style={styles.sectionLabel}>{tr('incident.descLabel')}</Text>
             <TextInput
               value={description}
               onChangeText={setDescription}
               multiline
               numberOfLines={5}
-              placeholder="Co se stalo, jaké okolnosti, co bys řekl/a příště jinak..."
+              placeholder={tr('incident.descPlaceholder')}
               placeholderTextColor={t.textDim}
               style={styles.descInput}
             />
             <Text style={styles.hint}>
-              {description.trim().length < 20
-                ? `Ještě ${20 - description.trim().length} znaků do minima`
-                : `${description.trim().length} znaků ✓`}
+              {tr('incident.charCount', { count: description.trim().length })}
             </Text>
 
             {/* Datum */}
-            <Text style={styles.sectionLabel}>Datum (rok-měsíc)</Text>
+            <Text style={styles.sectionLabel}>{tr('incident.dateLabel')}</Text>
             <TextInput
               value={dateYm}
               onChangeText={setDateYm}
@@ -326,17 +325,17 @@ export function IncidentReportSheet({ visible, onClose, onSaved }: Props) {
               style={styles.input}
               keyboardType="numbers-and-punctuation"
             />
-            <Text style={styles.hint}>Jen měsíc kvůli privacy — přesné datum je identifikující.</Text>
+            <Text style={styles.hint}>{tr('incident.dateHint')}</Text>
 
             {/* Země */}
-            <Text style={styles.sectionLabel}>Země</Text>
+            <Text style={styles.sectionLabel}>{tr('incident.countryLabel')}</Text>
             <View style={styles.chipRow}>
               {COUNTRIES.map((c) => {
-                const active = c.code === country;
+                const active = c === country;
                 return (
                   <Pressable
-                    key={c.code}
-                    onPress={() => setCountry(c.code)}
+                    key={c}
+                    onPress={() => setCountry(c)}
                     style={[
                       styles.chip,
                       {
@@ -346,7 +345,7 @@ export function IncidentReportSheet({ visible, onClose, onSaved }: Props) {
                     ]}
                   >
                     <Text style={{ color: active ? t.accentOn : t.text, fontSize: 13 * fs }}>
-                      {c.label}
+                      {c === 'other' ? tr('incident.countryOther') : c}
                     </Text>
                   </Pressable>
                 );
@@ -356,17 +355,17 @@ export function IncidentReportSheet({ visible, onClose, onSaved }: Props) {
             {/* Anonymita */}
             <View style={styles.switchRow}>
               <View style={{ flex: 1 }}>
-                <Text style={styles.switchLabel}>Anonymní</Text>
-                <Text style={styles.hint}>Nezmíníš v popisu jméno oběti. Default = zapnuto (privacy).</Text>
+                <Text style={styles.switchLabel}>{tr('incident.anonymous')}</Text>
+                <Text style={styles.hint}>{tr('incident.anonymousHint')}</Text>
               </View>
               <Switch value={anonymous} onValueChange={setAnonymous} />
             </View>
 
             {/* Volitelné: lajna */}
-            <Text style={styles.sectionLabel}>Lajna (volitelné)</Text>
+            <Text style={styles.sectionLabel}>{tr('incident.lineSection')}</Text>
             <View style={styles.row2}>
               <View style={{ flex: 1, marginRight: 8 }}>
-                <Text style={styles.hint}>Délka (m)</Text>
+                <Text style={styles.hint}>{tr('incident.lengthM')}</Text>
                 <TextInput
                   value={lengthM}
                   onChangeText={setLengthM}
@@ -377,7 +376,7 @@ export function IncidentReportSheet({ visible, onClose, onSaved }: Props) {
                 />
               </View>
               <View style={{ flex: 1 }}>
-                <Text style={styles.hint}>Výška (m)</Text>
+                <Text style={styles.hint}>{tr('incident.heightM')}</Text>
                 <TextInput
                   value={heightM}
                   onChangeText={setHeightM}
@@ -390,7 +389,7 @@ export function IncidentReportSheet({ visible, onClose, onSaved }: Props) {
             </View>
             <View style={styles.row2}>
               <View style={{ flex: 1, marginRight: 8 }}>
-                <Text style={styles.hint}>Materiál</Text>
+                <Text style={styles.hint}>{tr('incident.material')}</Text>
                 <TextInput
                   value={material}
                   onChangeText={setMaterial}
@@ -400,7 +399,7 @@ export function IncidentReportSheet({ visible, onClose, onSaved }: Props) {
                 />
               </View>
               <View style={{ flex: 1 }}>
-                <Text style={styles.hint}>Typ</Text>
+                <Text style={styles.hint}>{tr('incident.lineType')}</Text>
                 <TextInput
                   value={lineType}
                   onChangeText={setLineType}
@@ -412,10 +411,10 @@ export function IncidentReportSheet({ visible, onClose, onSaved }: Props) {
             </View>
 
             {/* Volitelné: conditions */}
-            <Text style={styles.sectionLabel}>Podmínky (volitelné)</Text>
+            <Text style={styles.sectionLabel}>{tr('incident.conditionsSection')}</Text>
             <View style={styles.row2}>
               <View style={{ flex: 1, marginRight: 8 }}>
-                <Text style={styles.hint}>Vítr (m/s)</Text>
+                <Text style={styles.hint}>{tr('incident.windMs')}</Text>
                 <TextInput
                   value={windMs}
                   onChangeText={setWindMs}
@@ -426,7 +425,7 @@ export function IncidentReportSheet({ visible, onClose, onSaved }: Props) {
                 />
               </View>
               <View style={{ flex: 1 }}>
-                <Text style={styles.hint}>Teplota (°C)</Text>
+                <Text style={styles.hint}>{tr('incident.tempC')}</Text>
                 <TextInput
                   value={tempC}
                   onChangeText={setTempC}
@@ -438,12 +437,12 @@ export function IncidentReportSheet({ visible, onClose, onSaved }: Props) {
               </View>
             </View>
             <View style={styles.switchRow}>
-              <Text style={styles.switchLabel}>Buddy check proběhl?</Text>
+              <Text style={styles.switchLabel}>{tr('incident.buddyCheck')}</Text>
               <Switch value={buddyCheck} onValueChange={setBuddyCheck} />
             </View>
 
             {/* Actions */}
-            <Text style={[styles.sectionLabel, { marginTop: 20 }]}>Uložit + poslat</Text>
+            <Text style={[styles.sectionLabel, { marginTop: 20 }]}>{tr('incident.saveSection')}</Text>
 
             {!canSubmit && (
               <Text style={styles.footerNote}>Vyber kategorii, ať můžeš pokračovat.</Text>
@@ -459,7 +458,7 @@ export function IncidentReportSheet({ visible, onClose, onSaved }: Props) {
             >
               <MaterialCommunityIcons name="content-save-outline" size={18} color={canSubmit ? t.accentOn : t.textMuted} />
               <Text style={[styles.actionBtnText, { color: canSubmit ? t.accentOn : t.textMuted }]}>
-                Uložit lokálně (bez odeslání)
+                {tr('incident.btnSaveOnly')}
               </Text>
             </Pressable>
 
@@ -473,7 +472,7 @@ export function IncidentReportSheet({ visible, onClose, onSaved }: Props) {
             >
               <MaterialCommunityIcons name="email-outline" size={18} color={canSubmit ? t.accent : t.textMuted} />
               <Text style={[styles.actionBtnText, { color: canSubmit ? t.accent : t.textMuted }]}>
-                Uložit + email na ISA SafeCom
+                {tr('incident.btnEmail')}
               </Text>
             </Pressable>
 
@@ -487,7 +486,7 @@ export function IncidentReportSheet({ visible, onClose, onSaved }: Props) {
             >
               <MaterialCommunityIcons name="share-variant" size={18} color={canSubmit ? t.accent : t.textMuted} />
               <Text style={[styles.actionBtnText, { color: canSubmit ? t.accent : t.textMuted }]}>
-                Sdílet (WhatsApp / Telegram / …)
+                {tr('incident.btnShare')}
               </Text>
             </Pressable>
 
@@ -501,7 +500,7 @@ export function IncidentReportSheet({ visible, onClose, onSaved }: Props) {
             >
               <MaterialCommunityIcons name="open-in-new" size={18} color={canSubmit ? t.accent : t.textMuted} />
               <Text style={[styles.actionBtnText, { color: canSubmit ? t.accent : t.textMuted }]}>
-                Otevřít oficiální SAIR web
+                {tr('incident.btnSair')}
               </Text>
             </Pressable>
 

@@ -113,7 +113,10 @@
     "translateErrorHint": "Check your internet connection (the translator model needs to download once, ~30 MB on WiFi).",
     "translateUnsupported": "Language not supported",
     "translateUnsupportedHint": "On-device translation only supports a limited set of languages. The original text stays visible.",
-    "tapeSpacingBtn": "Tape spacing plan"
+    "tapeSpacingBtn": "Tape spacing plan",
+    "restriction": "Restriction",
+    "dateTense": "First rig",
+    "openInMapy": "Open in Mapy.cz →"
   },
   "calc": {
     "openBtn": "Open calculator",
@@ -264,7 +267,8 @@
     "empty": "No groups in the catalog for this country.",
     "loadFailed": "Failed to load community (needs internet).",
     "footerNote": "Source: Slackmap.com — Slackline groups & ISA members.",
-    "sectionHint": "Slackline groups and ISA members in your country"
+    "sectionHint": "Slackline groups and ISA members in your country",
+    "fbPage": "FB page"
   },
   "onboarding": {
     "title": "Welcome to Slackline.Ova",
@@ -481,7 +485,7 @@
     }
   },
   "lineSafety": {
-    "sectionTitle": "Safety check",
+    "sectionTitle": "Rigger checklist",
     "neverChecked": "Not checked yet",
     "lastCheckedAt": "Last: {{date}}",
     "lastCheckedComplete": "Last: {{date}} ✓",
@@ -507,7 +511,7 @@
     "subtitle": "Highline safety reference",
     "openBtn": "Open ISA reference",
     "sectionLabel": "Safety",
-    "disclaimer": "Based on ISA:21 (2023) and related standards. This app provides recommendations, the final decision is always yours.",
+    "disclaimer": "Based on ISA:21 (2023) and related standards. It is neither a manual nor a guarantee for a safe slackline setup — it only helps to minimise the human error factor. It does not protect against unsuited equipment or anchors, or against accidents. The final decision is always yours.",
     "modeReadOnly": "Study",
     "modeSession": "On-site check",
     "sessionStart": "Start check",
@@ -661,7 +665,7 @@
     },
     "serene": {
       "title": "SERENE",
-      "summary": "5 principles for a safe anchor",
+      "summary": "5 principles for building an anchor",
       "strong": "Strong",
       "strongDetail": "Anchor holds min 2× expected peak load. Target: 48 kN primary, 24 kN secondary.",
       "equalized": "Equalized",
@@ -708,7 +712,7 @@
         "action": "Recommendation"
       },
       "row": {
-        "ok": "OK, rig safely",
+        "ok": "Within limits",
         "caution": "Caution — detape starts",
         "damage": "Damage risk — derig",
         "stop": "Do not rig / evacuate"
@@ -803,7 +807,14 @@
       "anchor": "Weblocks, shackles, carabiners, spansets",
       "personal": "Harness, PAS, leash, ring, personal gear",
       "rescue": "Pulleys, ascenders, descenders"
-    }
+    },
+    "generalWarnings": "General ISA warnings",
+    "generalWarningsHint": "Warnings not tied to a specific product (general, systemic)",
+    "nothingToShow": "Nothing to show. Try another filter.",
+    "catalogSummary": "Material catalogue — {{count}} types.",
+    "width": "Width",
+    "material": "Material",
+    "manufacturerWeb": "Manufacturer site"
   },
   "reports": {
     "filter": {
@@ -813,6 +824,65 @@
       "near_miss": "Near-miss"
     },
     "newReport": "New report",
-    "title": "Reports"
+    "title": "Reports",
+    "shareFailed": "Sharing failed",
+    "deleteTitle": "Delete report?",
+    "deleteBody": "This cannot be undone.",
+    "delete": "Delete",
+    "deleteFailed": "Deleting failed",
+    "share": "Share",
+    "emptyTitle": "No reports yet",
+    "emptyBody": "The + button adds a new incident report. It is saved locally and you can then share it (e-mail / community / SAIR site)."
+  },
+  "incident": {
+    "title": "Report incident",
+    "subtitle": "Saved locally, then you choose where to send it",
+    "categoryLabel": "Category *",
+    "descLabel": "Description *",
+    "cat": {
+      "fall": "Fall / injury",
+      "rescue": "Rescue",
+      "harness": "Harness / tie-in",
+      "weblock": "Weblock / gear",
+      "anchor": "Anchor",
+      "webbing": "Webbing",
+      "environmental": "Environment (wind, storm)",
+      "vehicle": "Vehicle / helicopter / drone",
+      "electrostatic": "Electrostatic",
+      "near_miss": "Near miss / Pre-accident",
+      "ppe": "PPE injury",
+      "legal": "Legal / community"
+    },
+    "countryOther": "Other",
+    "descPlaceholder": "What happened, under what conditions, what you would do differently...",
+    "charCount": "{{count}} characters",
+    "dateLabel": "Date (year-month)",
+    "dateHint": "Month only, for privacy — an exact date is identifying.",
+    "countryLabel": "Country",
+    "anonymous": "Anonymous",
+    "anonymousHint": "Do not name the injured person in the description. On by default.",
+    "lineSection": "Line (optional)",
+    "lengthM": "Length (m)",
+    "heightM": "Height (m)",
+    "material": "Material",
+    "lineType": "Type",
+    "conditionsSection": "Conditions (optional)",
+    "windMs": "Wind (m/s)",
+    "tempC": "Temperature (°C)",
+    "buddyCheck": "Buddy check done?",
+    "saveSection": "Save + send",
+    "needCategory": "Pick a category to continue.",
+    "btnSaveOnly": "Save locally (do not send)",
+    "btnEmail": "Save + e-mail to ISA SafeCom",
+    "btnShare": "Share (WhatsApp / Telegram / …)",
+    "btnSair": "Open the official SAIR site",
+    "saveFailed": "Saving failed",
+    "savedLocally": "Saved locally",
+    "savedLocallyBody": "The report is in the Reports tab. You can open it later and send or share it.",
+    "emailFailed": "Could not open e-mail",
+    "shareFailed": "Sharing failed",
+    "sairFailed": "Could not open SAIR",
+    "saved": "Saved",
+    "savedBody": "The report is in the Reports tab. You can share or edit it later."
   }
 }

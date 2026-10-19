@@ -113,7 +113,10 @@
     "translateErrorHint": "Prüfe deine Internetverbindung (das Übersetzungsmodell muss einmal heruntergeladen werden, ~30 MB via WLAN).",
     "translateUnsupported": "Sprache nicht unterstützt",
     "translateUnsupportedHint": "On-Device-Übersetzung unterstützt nur eine begrenzte Anzahl von Sprachen. Das Original bleibt sichtbar.",
-    "tapeSpacingBtn": "Tape-Spacing-Plan"
+    "tapeSpacingBtn": "Tape-Spacing-Plan",
+    "restriction": "Einschränkung",
+    "dateTense": "Erster Rig",
+    "openInMapy": "In Mapy.cz öffnen →"
   },
   "calc": {
     "openBtn": "Rechner öffnen",
@@ -264,7 +267,8 @@
     "empty": "Keine Gruppen im Katalog für dieses Land.",
     "loadFailed": "Laden der Community fehlgeschlagen (Internet erforderlich).",
     "footerNote": "Quelle: Slackmap.com — Slackline-Gruppen & ISA-Mitglieder.",
-    "sectionHint": "Slackline-Gruppen und ISA-Mitglieder in deinem Land"
+    "sectionHint": "Slackline-Gruppen und ISA-Mitglieder in deinem Land",
+    "fbPage": "FB-Seite"
   },
   "onboarding": {
     "title": "Willkommen bei Slackline.Ova",
@@ -481,7 +485,7 @@
     }
   },
   "lineSafety": {
-    "sectionTitle": "Sicherheitscheck",
+    "sectionTitle": "Rigger-Checkliste",
     "neverChecked": "Noch nicht geprüft",
     "lastCheckedAt": "Zuletzt: {{date}}",
     "lastCheckedComplete": "Zuletzt: {{date}} ✓",
@@ -507,7 +511,7 @@
     "subtitle": "Highline-Sicherheitsreferenz",
     "openBtn": "ISA-Referenz öffnen",
     "sectionLabel": "Sicherheit",
-    "disclaimer": "Basiert auf ISA:21 (2023) und verwandten Standards. Diese App gibt Empfehlungen, die endgültige Entscheidung liegt bei dir.",
+    "disclaimer": "Basiert auf ISA:21 (2023) und verwandten Standards. Es ist weder eine Anleitung noch eine Garantie für einen sicheren Aufbau — es hilft nur, menschliche Fehler zu reduzieren. Es schützt nicht vor ungeeignetem Material oder Ankern und nicht vor Unfällen. Die endgültige Entscheidung liegt immer bei dir.",
     "modeReadOnly": "Studieren",
     "modeSession": "Vor-Ort-Check",
     "sessionStart": "Check starten",
@@ -661,7 +665,7 @@
     },
     "serene": {
       "title": "SERENE",
-      "summary": "5 Prinzipien für sicheren Anker",
+      "summary": "5 Prinzipien für den Ankerbau",
       "strong": "Strong",
       "strongDetail": "Anker hält min. 2× erwartete Peak-Last. Ziel: 48 kN primär, 24 kN sekundär.",
       "equalized": "Equalized",
@@ -708,7 +712,7 @@
         "action": "Empfehlung"
       },
       "row": {
-        "ok": "OK, sicher riggen",
+        "ok": "Im Limit",
         "caution": "Vorsicht — Detape beginnt",
         "damage": "Schaden-Risiko — abbauen",
         "stop": "Nicht riggen / evakuieren"
@@ -803,7 +807,14 @@
       "anchor": "Weblocks, Schäkel, Karabiner, Spansets",
       "personal": "Harness, PAS, Leash, Ring",
       "rescue": "Rollen, Ascender, Descender"
-    }
+    },
+    "generalWarnings": "Allgemeine ISA-Warnungen",
+    "generalWarningsHint": "Warnungen ohne konkretes Produkt (allgemein, systemisch)",
+    "nothingToShow": "Nichts anzuzeigen. Probiere einen anderen Filter.",
+    "catalogSummary": "Materialkatalog — {{count}} Typen.",
+    "width": "Breite",
+    "material": "Material",
+    "manufacturerWeb": "Herstellerseite"
   },
   "reports": {
     "filter": {
@@ -813,6 +824,65 @@
       "near_miss": "Beinaheunfall"
     },
     "newReport": "Neuer Bericht",
-    "title": "Berichte"
+    "title": "Berichte",
+    "shareFailed": "Teilen fehlgeschlagen",
+    "deleteTitle": "Bericht löschen?",
+    "deleteBody": "Das lässt sich nicht rückgängig machen.",
+    "delete": "Löschen",
+    "deleteFailed": "Löschen fehlgeschlagen",
+    "share": "Teilen",
+    "emptyTitle": "Noch keine Berichte",
+    "emptyBody": "Mit + legst du einen neuen Vorfallsbericht an. Er wird lokal gespeichert und kann danach geteilt werden (E-Mail / Community / SAIR-Seite)."
+  },
+  "incident": {
+    "title": "Vorfall melden",
+    "subtitle": "Wird lokal gespeichert, danach wählst du den Versand",
+    "categoryLabel": "Kategorie *",
+    "descLabel": "Beschreibung *",
+    "cat": {
+      "fall": "Sturz / Verletzung",
+      "rescue": "Rettung",
+      "harness": "Gurt / Einbindung",
+      "weblock": "Weblock / Material",
+      "anchor": "Anker",
+      "webbing": "Band",
+      "environmental": "Umwelt (Wind, Gewitter)",
+      "vehicle": "Fahrzeug / Hubschrauber / Drohne",
+      "electrostatic": "Elektrostatik",
+      "near_miss": "Beinaheunfall",
+      "ppe": "PSA-Verletzung",
+      "legal": "Recht / Community"
+    },
+    "countryOther": "Andere",
+    "descPlaceholder": "Was ist passiert, unter welchen Umständen, was würdest du anders machen...",
+    "charCount": "{{count}} Zeichen",
+    "dateLabel": "Datum (Jahr-Monat)",
+    "dateHint": "Nur Monat, aus Datenschutzgründen — ein genaues Datum ist identifizierend.",
+    "countryLabel": "Land",
+    "anonymous": "Anonym",
+    "anonymousHint": "Nenne in der Beschreibung keinen Namen. Standardmäßig an.",
+    "lineSection": "Line (optional)",
+    "lengthM": "Länge (m)",
+    "heightM": "Höhe (m)",
+    "material": "Material",
+    "lineType": "Typ",
+    "conditionsSection": "Bedingungen (optional)",
+    "windMs": "Wind (m/s)",
+    "tempC": "Temperatur (°C)",
+    "buddyCheck": "Buddy-Check gemacht?",
+    "saveSection": "Speichern + senden",
+    "needCategory": "Wähle eine Kategorie, um fortzufahren.",
+    "btnSaveOnly": "Lokal speichern (nicht senden)",
+    "btnEmail": "Speichern + E-Mail an ISA SafeCom",
+    "btnShare": "Teilen (WhatsApp / Telegram / …)",
+    "btnSair": "Offizielle SAIR-Seite öffnen",
+    "saveFailed": "Speichern fehlgeschlagen",
+    "savedLocally": "Lokal gespeichert",
+    "savedLocallyBody": "Der Bericht liegt im Tab Reports. Du kannst ihn später öffnen und senden oder teilen.",
+    "emailFailed": "E-Mail konnte nicht geöffnet werden",
+    "shareFailed": "Teilen fehlgeschlagen",
+    "sairFailed": "SAIR konnte nicht geöffnet werden",
+    "saved": "Gespeichert",
+    "savedBody": "Der Bericht liegt im Tab Reports. Du kannst ihn später erneut teilen oder bearbeiten."
   }
 }

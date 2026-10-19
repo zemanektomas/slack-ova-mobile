@@ -30,19 +30,21 @@ interface IncidentPayload {
   conditions?: { wind_ms?: number | null; temp_c?: number | null; buddy_check?: boolean };
 }
 
+// Anglicky — tenhle popisek jde do SDILENEHO textu reportu. V UI se bere
+// preklad z i18n (incident.cat.<key>).
 const CATEGORY_LABELS: Record<string, string> = {
-  fall: 'Pád / úraz',
+  fall: 'Fall / injury',
   rescue: 'Rescue',
-  harness: 'Sedák / tie-in',
-  weblock: 'Kotvítko / gear',
-  anchor: 'Kotva',
-  webbing: 'Popruh',
-  environmental: 'Prostředí',
-  vehicle: 'Auto / hel. / dron',
-  electrostatic: 'Elektrostatika',
+  harness: 'Harness / tie-in',
+  weblock: 'Weblock / gear',
+  anchor: 'Anchor',
+  webbing: 'Webbing',
+  environmental: 'Environment',
+  vehicle: 'Vehicle / heli / drone',
+  electrostatic: 'Electrostatic',
   near_miss: 'Near miss',
-  ppe: 'PPE zranění',
-  legal: 'Právní',
+  ppe: 'PPE injury',
+  legal: 'Legal',
 };
 
 export default function ReportsScreen() {
@@ -100,21 +102,21 @@ export default function ReportsScreen() {
       const catLabel = CATEGORY_LABELS[p.category] ?? p.category;
       const body =
         `INCIDENT REPORT\n` +
-        `Kategorie: ${catLabel}\n` +
-        `Datum: ${p.date_ym}\n` +
-        `Země: ${p.country}\n\n` +
+        `Category: ${catLabel}\n` +
+        `Date: ${p.date_ym}\n` +
+        `Country: ${p.country}\n\n` +
         `${p.description}\n\n---\nSlackline.Ova`;
       await Share.share({ message: body });
     } catch (err) {
-      Alert.alert('Sdílení selhalo', String(err));
+      Alert.alert(tr('reports.shareFailed'), String(err));
     }
   };
 
   const handleDelete = (row: ReportRow) => {
-    Alert.alert('Smazat report?', 'Tuto akci nelze vrátit.', [
-      { text: 'Zrušit', style: 'cancel' },
+    Alert.alert(tr('reports.deleteTitle'), tr('reports.deleteBody'), [
+      { text: tr('common.cancel'), style: 'cancel' },
       {
-        text: 'Smazat',
+        text: tr('reports.delete'),
         style: 'destructive',
         onPress: async () => {
           try {
@@ -122,7 +124,7 @@ export default function ReportsScreen() {
             await db.runAsync('DELETE FROM reports WHERE id = ?', [row.id]);
             loadReports();
           } catch (err) {
-            Alert.alert('Smazání selhalo', String(err));
+            Alert.alert(tr('reports.deleteFailed'), String(err));
           }
         },
       },
@@ -167,9 +169,9 @@ export default function ReportsScreen() {
         {filtered.length === 0 && (
           <View style={s.emptyState}>
             <MaterialCommunityIcons name="clipboard-text-outline" size={64} color={theme.textDim} />
-            <Text style={s.emptyTitle}>Zatím žádné reporty</Text>
+            <Text style={s.emptyTitle}>{tr('reports.emptyTitle')}</Text>
             <Text style={s.emptyHint}>
-              Tap na + přidá nový incident report. Uloží se lokálně a nabídne share sheet (email / komunita / SAIR web).
+              {tr('reports.emptyBody')}
             </Text>
           </View>
         )}
@@ -179,7 +181,7 @@ export default function ReportsScreen() {
           try {
             const p = JSON.parse(r.payload) as IncidentPayload;
             desc = p.description;
-            cat = CATEGORY_LABELS[p.category] ?? p.category;
+            cat = tr(`incident.cat.${p.category}`, { defaultValue: p.category });
           } catch {}
           return (
             <View key={r.id} style={s.reportCard}>
@@ -196,11 +198,11 @@ export default function ReportsScreen() {
               <View style={s.reportActions}>
                 <TouchableOpacity onPress={() => handleShareAgain(r)} style={s.reportActionBtn}>
                   <MaterialCommunityIcons name="share-variant" size={16} color={theme.accent} />
-                  <Text style={[s.reportActionText, { color: theme.accent }]}>Sdílet</Text>
+                  <Text style={[s.reportActionText, { color: theme.accent }]}>{tr('reports.share')}</Text>
                 </TouchableOpacity>
                 <TouchableOpacity onPress={() => handleDelete(r)} style={s.reportActionBtn}>
                   <MaterialCommunityIcons name="delete-outline" size={16} color={theme.textDim} />
-                  <Text style={[s.reportActionText, { color: theme.textDim }]}>Smazat</Text>
+                  <Text style={[s.reportActionText, { color: theme.textDim }]}>{tr('reports.delete')}</Text>
                 </TouchableOpacity>
               </View>
             </View>
