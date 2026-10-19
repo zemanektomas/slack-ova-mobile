@@ -27,7 +27,7 @@
     "production": {
       "ios": {
         "ascAppId": "PLACEHOLDER_ASC_APP_ID",
-        "appleTeamId": "PLACEHOLDER_TEAM_ID"
+        "appleTeamId": "4Z6D3GXY5J"
       },
       "android": {
         "serviceAccountKeyPath": "./google-service-account.json",
