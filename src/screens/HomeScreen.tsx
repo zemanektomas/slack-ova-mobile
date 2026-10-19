@@ -19,6 +19,7 @@ import { seedFromSlackcz } from '../db/seedSlackcz';
 import { seedFromSlackmap } from '../db/slackmap';
 import MapViewComponent from '../map/MapView';
 import InlineDetail from '../components/InlineDetail';
+import { CURVE_TABBAR_HEIGHT } from '../components/SlackCurveTabBar';
 // v0.8.0: SettingsSheet import odstranen — Nastaveni je vlastni tab
 import { useUserLocation } from '../map/useLocation';
 import { useTheme } from '../theme';
@@ -92,13 +93,21 @@ export default function HomeScreen() {
   // aby mohla kamerou centrovat na střed VIDITELNÉ plochy mapy (ne celé obrazovky).
   // Kamera stačí diskrétně (setStop per frame by bylo plýtvání) — plynule
   // sleduje sheet jen FAB blok, přes sheetPosition.
+  // Sheet musí sedět NAD curve tab barem. Bez toho je nejnižší snap point (15 %)
+  // skoro celý pod tab barem — handle se nedá chytit a sheet stažený dolů už
+  // nejde vytáhnout zpět nahoru. Gorhom posune hosting container o bottomInset,
+  // takže se o něj zmenší i základna pro procenta ve snapPoints.
+  const sheetBottomInset = CURVE_TABBAR_HEIGHT + insets.bottom;
+
   const handleSheetChange = (index: number) => {
-    // Kontejner je SafeAreaView edges={['top']}, takže o horní inset nižší než
-    // okno. Snap pointy jsou procenta z kontejneru, ne z okna.
-    const containerH = Dimensions.get('window').height - insets.top;
+    // Kontejner je SafeAreaView edges={['top']} zmenšený o bottomInset, takže
+    // procenta nepočítáme z okna, ale z této plochy.
+    const containerH =
+      Dimensions.get('window').height - insets.top - sheetBottomInset;
     const fractions = [0.15, 0.5, 0.92];
     const fraction = fractions[index] ?? 0;
-    setSheetHeight(containerH * fraction);
+    // Mapa potřebuje vědět, kolik jí odspodu ukrajuje sheet VČETNĚ tab baru.
+    setSheetHeight(containerH * fraction + sheetBottomInset);
   };
 
   useEffect(() => {
@@ -279,6 +288,7 @@ export default function HomeScreen() {
         ref={sheetRef}
         index={1}
         snapPoints={snapPoints}
+        bottomInset={sheetBottomInset}
         onChange={handleSheetChange}
         animatedPosition={sheetPosition}
         // Gorhom 5 má enableDynamicSizing default TRUE — vloží do snapPoints

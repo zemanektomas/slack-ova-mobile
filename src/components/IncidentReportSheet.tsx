@@ -25,6 +25,8 @@ import {
   Switch,
 } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { CURVE_TABBAR_HEIGHT } from './SlackCurveTabBar';
 import { useTheme } from '../theme';
 import { useFontStore } from '../store/fontStore';
 import { getDb } from '../db';
@@ -80,7 +82,12 @@ const SAIR_URL = 'https://data.slacklineinternational.org/safety/report-incident
 export function IncidentReportSheet({ visible, onClose, onSaved }: Props) {
   const t = useTheme();
   const fs = useFontStore((s) => s.fontScale);
-  const styles = useMemo(() => makeStyles(t, fs), [t, fs]);
+  // Backdrop je poloprůhledný, takže pod ním prosvítá tab bar — sheet mu musí
+  // nechat místo. Dřív tu bylo natvrdo 56 px podle starého rovného tab baru;
+  // curve tab bar měří 96 + inset, takže spodní tlačítka mizela pod ním.
+  const insets = useSafeAreaInsets();
+  const tabBarGap = CURVE_TABBAR_HEIGHT + insets.bottom;
+  const styles = useMemo(() => makeStyles(t, fs, tabBarGap), [t, fs, tabBarGap]);
 
   const [category, setCategory] = useState<Category | null>(null);
   const [description, setDescription] = useState('');
@@ -447,7 +454,7 @@ export function IncidentReportSheet({ visible, onClose, onSaved }: Props) {
               onPress={handleSaveOnly}
               style={[
                 styles.actionBtn,
-                { backgroundColor: canSubmit ? t.accent : t.border },
+                { backgroundColor: canSubmit ? t.accent : t.border, opacity: canSubmit ? 1 : 0.5 },
               ]}
             >
               <MaterialCommunityIcons name="content-save-outline" size={18} color={canSubmit ? t.accentOn : t.textMuted} />
@@ -461,7 +468,7 @@ export function IncidentReportSheet({ visible, onClose, onSaved }: Props) {
               onPress={() => handleSubmit('email')}
               style={[
                 styles.actionBtn,
-                { backgroundColor: t.surface, borderColor: canSubmit ? t.accent : t.border, borderWidth: 1 },
+                { backgroundColor: t.surface, borderColor: canSubmit ? t.accent : t.border, borderWidth: 1, opacity: canSubmit ? 1 : 0.5 },
               ]}
             >
               <MaterialCommunityIcons name="email-outline" size={18} color={canSubmit ? t.accent : t.textMuted} />
@@ -475,7 +482,7 @@ export function IncidentReportSheet({ visible, onClose, onSaved }: Props) {
               onPress={() => handleSubmit('share')}
               style={[
                 styles.actionBtn,
-                { backgroundColor: t.surface, borderColor: canSubmit ? t.accent : t.border, borderWidth: 1 },
+                { backgroundColor: t.surface, borderColor: canSubmit ? t.accent : t.border, borderWidth: 1, opacity: canSubmit ? 1 : 0.5 },
               ]}
             >
               <MaterialCommunityIcons name="share-variant" size={18} color={canSubmit ? t.accent : t.textMuted} />
@@ -489,7 +496,7 @@ export function IncidentReportSheet({ visible, onClose, onSaved }: Props) {
               onPress={() => handleSubmit('sair')}
               style={[
                 styles.actionBtn,
-                { backgroundColor: t.surface, borderColor: canSubmit ? t.accent : t.border, borderWidth: 1 },
+                { backgroundColor: t.surface, borderColor: canSubmit ? t.accent : t.border, borderWidth: 1, opacity: canSubmit ? 1 : 0.5 },
               ]}
             >
               <MaterialCommunityIcons name="open-in-new" size={18} color={canSubmit ? t.accent : t.textMuted} />
@@ -509,15 +516,15 @@ export function IncidentReportSheet({ visible, onClose, onSaved }: Props) {
   );
 }
 
-const makeStyles = (t: ReturnType<typeof useTheme>, fs: number) =>
+const makeStyles = (t: ReturnType<typeof useTheme>, fs: number, tabBarGap: number) =>
   StyleSheet.create({
     backdrop: { flex: 1, backgroundColor: 'rgba(0,0,0,0.6)', justifyContent: 'flex-end' },
     backdropDismiss: { flex: 1 },
     sheet: {
-      // v0.8.0-alpha3: nechame prostor pro bottom tab bar (56 px) — jinak by
-      // sheet vyjizdel az pres nej a user by nevidel zpetnou navigaci.
+      // Necháme prostor pro bottom tab bar, jinak sheet vyjede až přes něj
+      // a user nevidí zpětnou navigaci. Výška se bere z tab baru, ne natvrdo.
       maxHeight: '82%',
-      marginBottom: 56,
+      marginBottom: tabBarGap,
       backgroundColor: t.surface,
       borderTopLeftRadius: 16,
       borderTopRightRadius: 16,
