@@ -158,7 +158,10 @@ export default function ReportsScreen() {
       </View>
 
       <View style={s.filterRow}>
-        {(['all', 'rig', 'incident', 'near_miss'] as FilterType[]).map((f) => (
+        {/* 'rig' zatim schovany: rig logy se ukladaji do line_safety_checks,
+            ne do `reports`, takze by chip vzdy ukazoval (0) a prazdny seznam.
+            Vrati se, az Reports zacne cist i z line_safety_checks (v0.8.1). */}
+        {(['all', 'incident', 'near_miss'] as FilterType[]).map((f) => (
           <TouchableOpacity
             key={f}
             style={[s.filterChip, filter === f && s.filterChipActive]}

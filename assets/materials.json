@@ -33,7 +33,7 @@
         "isa_cert": null,
         "stretch_percent_at_5kn": 1,
         "rlt_days_default": null,
-        "notes": "29 g/m ultralight. NENI ISA-cert na HL (jen plna Y2K 25mm je Type A). Longline/park OK. Se seaHorse 20/25mm nutny 3D spacer (PETG/nylon).",
+        "notes": "29 g/m ultralight. NOT ISA-certified for highline (only the full 25 mm Y2K is Type A). Fine for longline and park. With a seaHorse 20/25 mm it needs a 3D-printed spacer (PETG/nylon).",
         "url": "https://slacktivity.com/en/y2k-light"
       },
       {
@@ -65,7 +65,7 @@
         "isa_cert": "ISA:41 Type A",
         "stretch_percent_at_5kn": null,
         "rlt_days_default": null,
-        "notes": "Prvni oficialni highline webbing na trhu. Tubular. MBS unpublished, verify with vendor (Type A = 30+ kN).",
+        "notes": "First official highline webbing on the market. Tubular. MBS unpublished, verify with vendor (Type A = 30+ kN).",
         "url": "https://slacktivity.com/en/redtube"
       },
       {
@@ -355,7 +355,7 @@
         "isa_cert": "ISA:51",
         "stretch_percent_at_5kn": null,
         "rlt_days_default": null,
-        "notes": "Prvni ISA:51 cert HighTech HL weblock. Sloty 2 (uzky+siroky) pro 19-20 + 25-27 mm. Y2K Light (18mm) potrebuje 3D spacer PETG/nylon. MBS ≥ 48 kN garantovano standardem ISA:21.",
+        "notes": "First ISA:51 certified HighTech highline weblock. Two slots (narrow + wide) for 19-20 and 25-27 mm. Y2K Light (18 mm) needs a 3D-printed PETG/nylon spacer. MBS >= 48 kN guaranteed by ISA:21.",
         "url": "https://slacktivity.com/en/seahorse"
       },
       {
@@ -501,7 +501,7 @@
         "isa_cert": "EN 13889",
         "stretch_percent_at_5kn": null,
         "rlt_days_default": null,
-        "notes": "WLL 6500 kg. Overkill pro slackline, ale komun ve fest rigging.",
+        "notes": "WLL 6500 kg. Overkill for slackline, but common in festival rigging.",
         "url": "https://www.vanbeest.com/en/products/green-pin-standard-bow-shackle"
       },
       {
@@ -517,7 +517,7 @@
         "isa_cert": null,
         "stretch_percent_at_5kn": 0.5,
         "rlt_days_default": null,
-        "notes": "Lehky soft shackle pro anchor buildy. NIKDY single soft shackle mezi BFK a rigging plate — vzdy 2 nezavisle sekle (main + backup separate connection). Double-wrapped single shackle vypada jako 2, ale je stale single point failure.",
+        "notes": "Light soft shackle for anchor builds. NEVER use a single soft shackle between the BFK and the rigging plate — always two independent shackles (main and backup as separate connections). A double-wrapped single shackle looks like two, but is still a single point of failure.",
         "url": "https://slacktivity.com/en/soft-shackle"
       },
       {
@@ -581,7 +581,7 @@
         "isa_cert": "EN 362",
         "stretch_percent_at_5kn": null,
         "rlt_days_default": null,
-        "notes": "Semi-circular karabina pro harness belay loop. Multi-directional (major=15 kN). Ne pro main anchor.",
+        "notes": "Semi-circular carabiner for the harness belay loop. Multi-directional (major axis 15 kN). Not for the main anchor.",
         "url": "https://www.petzl.com/US/en/Sport/Connectors/OMNI"
       }
     ],
@@ -695,7 +695,7 @@
         "isa_cert": "EN 12275",
         "stretch_percent_at_5kn": null,
         "rlt_days_default": null,
-        "notes": "Lehky HMS pro belay. 22/7/6 kN. Gate 21 mm, ~56 g. Ne pro main anchor (nizsi MBS).",
+        "notes": "Light HMS for belaying. 22/7/6 kN. 21 mm gate, ~56 g. Not for the main anchor (lower MBS).",
         "url": "https://www.petzl.com/US/en/Sport/Carabiners/ATTACHE"
       },
       {
@@ -711,7 +711,7 @@
         "isa_cert": "EN 12275",
         "stretch_percent_at_5kn": null,
         "rlt_days_default": null,
-        "notes": "Auto-lock wire gate, snadny na jedno rukou. 25/8/8 kN. Gate 21 mm, ~72 g. Popularni pro via ferrata a HL leash.",
+        "notes": "Auto-locking wire gate, easy one-handed. 25/8/8 kN. 21 mm gate, ~72 g. Popular for via ferrata and highline leashes.",
         "url": "https://www.petzl.com/US/en/Sport/Carabiners/VERTIGO-WIRE-LOCK"
       },
       {
@@ -955,7 +955,7 @@
         "isa_cert": "ISA:37",
         "stretch_percent_at_5kn": 8,
         "rlt_days_default": 720,
-        "notes": "Prvni ISA:37 cert leash. Sewn termination na obou koncich s thimble/ring. ~1.2 m standard. Verify exact MBS with vendor.",
+        "notes": "First ISA:37 certified leash. Sewn termination at both ends with thimble/ring. ~1.2 m standard. Verify exact MBS with vendor.",
         "url": "https://slacktivity.com/en/highline-leash"
       },
       {
@@ -1021,7 +1021,7 @@
         "isa_cert": "ISA:37",
         "stretch_percent_at_5kn": null,
         "rlt_days_default": null,
-        "notes": "ISA:37 cert leash ring, ~30 EUR. Prvni ISA:37 cert ring. Doporucuje se par pro redundanci.",
+        "notes": "ISA:37 certified leash ring, ~30 EUR. First ISA:37 certified ring. A pair is recommended for redundancy.",
         "url": "https://slacktivity.com/en/highline-ring"
       },
       {
@@ -1037,7 +1037,7 @@
         "isa_cert": null,
         "stretch_percent_at_5kn": null,
         "rlt_days_default": null,
-        "notes": "Vortex kruh, MBS 39 kN. NENI explicit ISA:37 cert (ale MBS OK). Tape gate shut vzdy elektrickou paskou — gate se muze sam otevrit pod nasplapem, obzvlast pri tandem highlining. Community consensus: pouze pro tandem, jinak preferovat standard leash ring.",
+        "notes": "Vortex ring, MBS 39 kN. NOT explicitly ISA:37 certified (MBS is fine though). Always tape the gate shut with electrical tape — it can open on its own under load, especially when tandem highlining. Community consensus: tandem only, otherwise prefer a standard leash ring.",
         "url": "https://slacktivity.com/en/vortex-2"
       },
       {
@@ -1103,7 +1103,7 @@
         "isa_cert": "EN 12277",
         "stretch_percent_at_5kn": null,
         "rlt_days_default": null,
-        "notes": "Comfort harness pro rigging (~490 g). Adjustable leg loops. Sirokovy pas pro dlouho na anchor.",
+        "notes": "Comfort harness for rigging (~490 g). Adjustable leg loops. Wide waist belt for long sessions on the anchor.",
         "url": "https://www.petzl.com/US/en/Sport/Harnesses/ADJAMA"
       },
       {
@@ -1299,7 +1299,7 @@
         "isa_cert": "EN 567 + EN 12278",
         "stretch_percent_at_5kn": null,
         "rlt_days_default": null,
-        "notes": "Progress capture pulley, rope 8-13 mm. MBS 15 kN, WLL 4 kN. ~85 g. TZ pouziva na PAS jako self-tending pri Texas ascent. Efficiency ~91%.",
+        "notes": "Progress capture pulley, rope 8-13 mm. MBS 15 kN, WLL 4 kN. ~85 g. Used on a PAS as self-tending capture during a Texas ascent. Efficiency ~91%.",
         "url": "https://www.petzl.com/US/en/Professional/Pulleys/MICRO-TRAXION"
       },
       {
@@ -1395,7 +1395,7 @@
         "isa_cert": "EN 567",
         "stretch_percent_at_5kn": null,
         "rlt_days_default": null,
-        "notes": "Chest ascender (bez handle), rope 8-13 mm. ~300 g. Pro chest attachment v Frog/Texas system.",
+        "notes": "Chest ascender (no handle), rope 8-13 mm. ~300 g. For the chest attachment in a Frog or Texas system.",
         "url": "https://www.petzl.com/US/en/Professional/Ascenders/BASIC"
       },
       {
@@ -1443,7 +1443,7 @@
         "isa_cert": "EN 341 + EN 12841",
         "stretch_percent_at_5kn": null,
         "rlt_days_default": null,
-        "notes": "Industrial descender, rope 10-11.5 mm. Anti-panic. Bez pripojene karabiny na load side. ~380 g. Popularni pro HL rescue.",
+        "notes": "Industrial descender, rope 10-11.5 mm. Anti-panic. No carabiner attached on the load side. ~380 g. Popular for highline rescue.",
         "url": "https://www.petzl.com/US/en/Professional/Descenders/RIG"
       },
       {
@@ -1459,7 +1459,7 @@
         "isa_cert": "EN 15151-1",
         "stretch_percent_at_5kn": null,
         "rlt_days_default": null,
-        "notes": "Assisted braking belay device, rope 8.5-11 mm. ~200 g. Pozor: NE anti-panic (na rozdil od Rig/I'D). Community consensus: NEPOUZIVAT pro highline descent — anti-panic descender (Rig / I'D / Pinch) je bezpecnejsi pro rescue scenario.",
+        "notes": "Assisted braking belay device, rope 8.5-11 mm. ~200 g. Note: NO anti-panic function (unlike the Rig or I'D). Community consensus: DO NOT use for highline descent — an anti-panic descender (Rig / I'D / Pinch) is safer in a rescue scenario.",
         "url": "https://www.petzl.com/US/en/Sport/Belay-devices/GRIGRI-PLUS"
       },
       {
@@ -1491,7 +1491,7 @@
         "isa_cert": null,
         "stretch_percent_at_5kn": null,
         "rlt_days_default": null,
-        "notes": "Nasslap (foot loop) pro ascending. Rychlouprinovaci prasknuti. TZ Texas system: pripevneno na jumary.",
+        "notes": "Foot loop for ascending. Quick-adjust buckle. Fits a Texas system attached to the ascenders.",
         "url": "https://www.rockempire.cz/produkty/step-qb"
       },
       {
@@ -1523,7 +1523,7 @@
         "isa_cert": null,
         "stretch_percent_at_5kn": null,
         "rlt_days_default": null,
-        "notes": "Load cell tension monitor s Bluetooth (iOS only, mensi accuracy ±2%). WLL 8 kN, MBS 25 kN. Vhodne pro HL research, drazsi nez LineGrip.",
+        "notes": "Load cell tension monitor with Bluetooth (iOS only, lower accuracy +-2%). WLL 8 kN, MBS 25 kN. Suitable for highline research, more expensive than LineGrip.",
         "url": "https://www.rockexotica.com/products/enforcer"
       },
       {
