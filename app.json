@@ -29,7 +29,7 @@
         "backgroundColor": "#0f172a"
       },
       "package": "cz.slackline.ova",
-      "versionCode": 66
+      "versionCode": 67
     },
     "plugins": [
       "expo-router",

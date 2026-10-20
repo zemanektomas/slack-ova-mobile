@@ -1,12 +1,13 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { View, Text, ScrollView, TextInput, TouchableOpacity, StyleSheet, Alert, Share, Linking } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useTranslation } from 'react-i18next';
 import { useTheme } from '../theme';
 import { useFontStore } from '../store/fontStore';
 import { getDb } from '../db';
 import { IncidentReportSheet } from '../components/IncidentReportSheet';
+import { CURVE_TABBAR_HEIGHT } from '../components/SlackCurveTabBar';
 
 type FilterType = 'all' | 'rig' | 'incident' | 'near_miss';
 
@@ -131,7 +132,12 @@ export default function ReportsScreen() {
     ]);
   };
 
-  const s = useMemo(() => styles(theme, fs), [theme, fs]);
+  // FAB musi sedet NAD curve tab barem. Drive tu bylo natvrdo bottom: 24,
+  // jenze tab bar meri CURVE_TABBAR_HEIGHT + inset (~144 dp) — tlacitko bylo
+  // cele schovane pod nim a nesel zalozit zadny report.
+  const insets = useSafeAreaInsets();
+  const fabBottom = CURVE_TABBAR_HEIGHT + insets.bottom + 16;
+  const s = useMemo(() => styles(theme, fs, fabBottom), [theme, fs, fabBottom]);
 
   return (
     <SafeAreaView style={s.container} edges={['top']}>
@@ -223,7 +229,7 @@ export default function ReportsScreen() {
   );
 }
 
-const styles = (t: ReturnType<typeof useTheme>, fs: number) =>
+const styles = (t: ReturnType<typeof useTheme>, fs: number, fabBottom: number) =>
   StyleSheet.create({
     container: { flex: 1, backgroundColor: t.bg },
     header: {
@@ -300,9 +306,8 @@ const styles = (t: ReturnType<typeof useTheme>, fs: number) =>
     reportActionText: { fontSize: 12 * fs, fontWeight: '500' },
     fab: {
       position: 'absolute',
-      // v0.8.0-alpha5+: nad curve tab barem (120 px) + rezerva pro Settings pill.
-      // Umisten dole vlevo aby nekolidoval se Settings pillem v pravem hornim rohu curve.
-      bottom: 24,
+      // Nad curve tab barem; vlevo, aby nekolidoval se Settings pillem vpravo.
+      bottom: fabBottom,
       left: 20,
       width: 56,
       height: 56,
