@@ -12,11 +12,12 @@ import {
   TextInput,
   View,
 } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
 import Constants from 'expo-constants';
 import NetInfo from '@react-native-community/netinfo';
+import { CURVE_TABBAR_HEIGHT } from './SlackCurveTabBar';
 import { useMapStore, MapKind, SourceFilter } from '../store/mapStore';
 import { useLangStore } from '../store/langStore';
 import type { Lang } from '../i18n';
@@ -75,6 +76,7 @@ const LANGUAGES: { key: Lang; label: string }[] = [
 ];
 
 export function SettingsSheet({ visible, onClose, mode = 'modal' }: SettingsSheetProps) {
+  const insets = useSafeAreaInsets();
   const t = useTheme();
   const { t: tr } = useTranslation();
   const kind = useMapStore((s) => s.kind);
@@ -259,7 +261,9 @@ export function SettingsSheet({ visible, onClose, mode = 'modal' }: SettingsShee
   // Header ma close X jen v modal mode (v tabu se navigate pres tab bar).
   const header = (
     <View style={styles.header}>
-      <Text style={[styles.title, { color: t.text }]}>{tr('settings.title')}</Text>
+      <Text style={[styles.title, { color: t.text }]}>
+        {mode === 'modal' ? tr('settings.title') : tr('tabs.settings')}
+      </Text>
       {mode === 'modal' && (
         <Pressable onPress={onClose} hitSlop={10}>
           <MaterialCommunityIcons name="close" size={24} color={t.textMuted} />
@@ -277,7 +281,15 @@ export function SettingsSheet({ visible, onClose, mode = 'modal' }: SettingsShee
   const secAdvanced = tr('settings.sectionAdvanced');
 
   const scrollBody = (
-    <ScrollView style={styles.scroll} contentContainerStyle={{ paddingBottom: 24, paddingTop: 8 }}>
+    <ScrollView
+      style={styles.scroll}
+      contentContainerStyle={{
+        paddingTop: 8,
+        // V tabu je pod obsahem curve tab bar — bez odsazeni zustane konec
+        // posledni sekce (Rozsirene) schovany za nim. V modalu staci 24.
+        paddingBottom: mode === 'inline' ? CURVE_TABBAR_HEIGHT + insets.bottom : 24,
+      }}
+    >
       {/* Search bar */}
       <View style={[styles.searchWrap, { backgroundColor: t.surface, borderColor: t.border }]}>
         <MaterialCommunityIcons name="magnify" size={18} color={t.textDim} />

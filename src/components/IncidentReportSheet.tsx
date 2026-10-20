@@ -152,27 +152,27 @@ export function IncidentReportSheet({ visible, onClose, onSaved }: Props) {
     const catLabel = CATEGORIES.find((c) => c.key === category)?.en ?? category;
     const parts: string[] = [];
     parts.push('INCIDENT REPORT');
-    parts.push(`Kategorie: ${catLabel}`);
-    parts.push(`Datum: ${dateYm}`);
+    parts.push(`Category: ${catLabel}`);
+    parts.push(`Date: ${dateYm}`);
     parts.push(`Country: ${country}`);
     parts.push(`Anonymous: ${anonymous ? 'yes' : 'no'}`);
     parts.push('');
-    parts.push('Popis:');
+    parts.push('Description:');
     parts.push(p.description);
     if (p.line_specs.length_m || p.line_specs.height_m || p.line_specs.material || p.line_specs.type) {
       parts.push('');
-      parts.push('Lajna:');
+      parts.push('Line:');
       if (p.line_specs.length_m) parts.push(`  length: ${p.line_specs.length_m} m`);
       if (p.line_specs.height_m) parts.push(`  height: ${p.line_specs.height_m} m`);
       if (p.line_specs.material) parts.push(`  material: ${p.line_specs.material}`);
-      if (p.line_specs.type) parts.push(`  typ: ${p.line_specs.type}`);
+      if (p.line_specs.type) parts.push(`  type: ${p.line_specs.type}`);
     }
     if (p.conditions.wind_ms || p.conditions.temp_c || p.conditions.buddy_check) {
       parts.push('');
       parts.push('Conditions:');
       if (p.conditions.wind_ms) parts.push(`  wind: ${p.conditions.wind_ms} m/s`);
-      if (p.conditions.temp_c) parts.push(`  teplota: ${p.conditions.temp_c} °C`);
-      parts.push(`  buddy check: ${p.conditions.buddy_check ? 'ano' : 'ne'}`);
+      if (p.conditions.temp_c) parts.push(`  temperature: ${p.conditions.temp_c} °C`);
+      parts.push(`  buddy check: ${p.conditions.buddy_check ? 'yes' : 'no'}`);
     }
     parts.push('');
     parts.push('---');
@@ -185,10 +185,14 @@ export function IncidentReportSheet({ visible, onClose, onSaved }: Props) {
       const db = await getDb();
       const payload = buildPayload();
       const now = new Date().toISOString();
+      // Near miss ma v tabulce `reports` vlastni typ. Kdyz se ulozil jako
+      // 'incident', filtr "Near-miss" v Reports ho nikdy nenasel a uzivateli
+      // zmizel ze seznamu.
+      const reportType = category === 'near_miss' ? 'near_miss' : 'incident';
       const res = await db.runAsync(
         `INSERT INTO reports (type, incident_category, session_date, payload, status, created_at, updated_at)
-         VALUES ('incident', ?, ?, ?, 'committed', ?, ?)`,
-        [category, dateYm + '-01', JSON.stringify(payload), now, now],
+         VALUES (?, ?, ?, ?, 'committed', ?, ?)`,
+        [reportType, category, dateYm + '-01', JSON.stringify(payload), now, now],
       );
       return res.lastInsertRowId as number;
     } catch (err) {
@@ -504,10 +508,7 @@ export function IncidentReportSheet({ visible, onClose, onSaved }: Props) {
               </Text>
             </Pressable>
 
-            <Text style={styles.footerNote}>
-              Uloží se lokálně do Reporty tabu — můžeš to znovu poslat nebo upravit později.
-              ISA SafeCom má backlog ~50 nezpracovaných reportů (2025) — nesluš čekat rychlou odpověď.
-            </Text>
+            <Text style={styles.footerNote}>{tr('incident.footerNote')}</Text>
           </ScrollView>
         </View>
       </View>

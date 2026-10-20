@@ -288,12 +288,20 @@ function CardView({
             </View>
           )}
 
-          {/* Hint text (for rule / thresholds / lifetime cards) */}
-          {card.category !== 'checklist' && card.category !== 'limits' && card.category !== 'workflow' && card.category !== 'calculators-hub' && (
-            <Text style={[styles.hint, { color: theme.textMuted }]}>
-              {tr(`cards.${card.id.replace(/-/g, '')}.hint`)}
-            </Text>
-          )}
+          {/* Hint text — jen u karet, ktere ho v i18n opravdu maji.
+              Klic se sklada z id karty: kebab-case -> camelCase ('nylon-rule' ->
+              'nylonRule'). Drive se jen mazala pomlcka, takze klic nesedel a
+              uzivateli se misto textu ukazal holy 'cards.nylonrule.hint'.
+              defaultValue: '' navic pokryje karty, ktere hint nemaji vubec. */}
+          {(() => {
+            if (['checklist', 'limits', 'workflow', 'calculators-hub'].includes(card.category)) return null
+            const ns = card.id.replace(/-([a-z])/g, (_m, c) => c.toUpperCase())
+            const hint = tr(`cards.${ns}.hint`, { defaultValue: '' })
+            if (!hint) return null
+            return (
+              <Text style={[styles.hint, { color: theme.textMuted }]}>{hint}</Text>
+            )
+          })()}
 
           {/* Kontextový kalkulátor (v0.7.4) */}
           {card.relatedCalculator && (

@@ -19,7 +19,7 @@ import { seedFromSlackcz } from '../db/seedSlackcz';
 import { seedFromSlackmap } from '../db/slackmap';
 import MapViewComponent from '../map/MapView';
 import InlineDetail from '../components/InlineDetail';
-import { CURVE_TABBAR_SOLID_HEIGHT } from '../components/SlackCurveTabBar';
+import { CURVE_TABBAR_HEIGHT, CURVE_TABBAR_SOLID_HEIGHT } from '../components/SlackCurveTabBar';
 // v0.8.0: SettingsSheet import odstranen — Nastaveni je vlastni tab
 import { useUserLocation } from '../map/useLocation';
 import { useTheme } from '../theme';
@@ -349,6 +349,10 @@ export default function HomeScreen() {
         <BottomSheetFlatList
           ref={listRef}
           data={items}
+          // Bez spodního odsazení zůstanou poslední řádky navždy pod tab barem —
+          // scroll je výš nedostane a tapy tam přepnou tab. Platí i pro konec
+          // rozbaleného detailu, když je posledním řádkem.
+          contentContainerStyle={{ paddingBottom: CURVE_TABBAR_HEIGHT + insets.bottom }}
           keyExtractor={(item: unknown) => String((item as SlacklineListItem).id)}
           renderItem={renderItem as any}
           // Drag listu zavře keyboard — řeší Petrův case "tahám sheet a klávesnice

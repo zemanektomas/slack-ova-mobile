@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import {
   View,
   Text,
@@ -15,6 +15,7 @@ import {
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useTranslation } from 'react-i18next';
+import { useFocusEffect } from 'expo-router';
 import { useTheme } from '../theme';
 import { useFontStore } from '../store/fontStore';
 import materials from '../../assets/materials.json';
@@ -211,7 +212,9 @@ export default function GearScreen() {
   // Hardware / gesture back button — vrací na předchozí úroveň state machiny.
   // Bez toho by system back zavíral app nebo přepínal na jiný tab (a user by
   // ztratil nav state uvnitř GearScreenu).
-  useEffect(() => {
+  // useFocusEffect, ne useEffect — jinak handler zustane registrovany i po
+  // prepnuti na jiny tab a polyka tam systemove back.
+  useFocusEffect(useCallback(() => {
     const sub = BackHandler.addEventListener('hardwareBackPress', () => {
       if (nav.level === 'L3') {
         setNav({ level: 'L2', groupId: nav.groupId });
@@ -225,7 +228,7 @@ export default function GearScreen() {
       return false; // L1 → default (systém zavře tab / app)
     });
     return () => sub.remove();
-  }, [nav]);
+  }, [nav]));
 
   // --- L1: kategorie s count ---
   const categoryCounts = useMemo(() => {
@@ -624,7 +627,7 @@ function L3Detail({ item, subcategory, itemWarnings, onBack }: L3Props) {
             {!enrichData && !enrichLoading && !searchResults && (
               <>
                 <Text style={s.enrichHint}>
-                  Doplnit stretch křivku, ISA warnings a další data z {SLACKDATA_ATTRIBUTION.source}.
+                  {tr('gear.enrichHint', { source: SLACKDATA_ATTRIBUTION.source })}
                 </Text>
                 <TouchableOpacity style={s.enrichBtn} onPress={handleEnrichSearch}>
                   <Text style={s.enrichBtnText}>{tr('gear.searchInSlackData')}</Text>
@@ -672,7 +675,10 @@ function L3Detail({ item, subcategory, itemWarnings, onBack }: L3Props) {
 
             {enrichData && (
               <Text style={s.attributionText}>
-                Zdroj: {SLACKDATA_ATTRIBUTION.source} · {SLACKDATA_ATTRIBUTION.license}
+                {tr('gear.attribution', {
+                source: SLACKDATA_ATTRIBUTION.source,
+                license: SLACKDATA_ATTRIBUTION.license,
+              })}
               </Text>
             )}
           </View>
@@ -680,9 +686,7 @@ function L3Detail({ item, subcategory, itemWarnings, onBack }: L3Props) {
 
         {!slackdataType && (
           <View style={s.placeholderNote}>
-            <Text style={s.placeholderText}>
-              Pro tento typ vybavení nemá SlackData endpoint (např. ascendery, descendery, šekly, karabiny, spansety, sedáky). Enrichment funguje pro webbing, kotvítka, kroužky a kladky.
-            </Text>
+            <Text style={s.placeholderText}>{tr('gear.noEnrichmentForType')}</Text>
           </View>
         )}
       </ScrollView>
@@ -759,7 +763,12 @@ function EnrichmentDisplay({ data, warnings, type, theme, fs }: EnrichmentDispla
           />
         )}
         {data.isa_certified != null && (
-          <SpecCell label="ISA cert" value={data.isa_certified ? 'ANO' : 'NE'} theme={theme} fs={fs} />
+          <SpecCell
+            label="ISA cert"
+            value={data.isa_certified ? tr('common.yes') : tr('common.no')}
+            theme={theme}
+            fs={fs}
+          />
         )}
       </View>
 

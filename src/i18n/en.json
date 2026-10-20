@@ -7,7 +7,9 @@
     "cancel": "Cancel",
     "error": "Error",
     "back": "Back",
-    "retry": "Try again"
+    "retry": "Try again",
+    "yes": "Yes",
+    "no": "No"
   },
   "home": {
     "searchPlaceholder": "Search name, region, sector...",
@@ -836,7 +838,10 @@
     "construction": "Construction",
     "style": "Style",
     "price": "Price",
-    "type": "Type"
+    "type": "Type",
+    "enrichHint": "Add the stretch curve, ISA warnings and more data from {{source}}.",
+    "attribution": "Source: {{source}} · {{license}}",
+    "noEnrichmentForType": "SlackData has no endpoint for this type of gear (ascenders, descenders, shackles, carabiners, roundslings, harnesses). Enrichment works for webbing, weblocks, rings and pulleys."
   },
   "reports": {
     "filter": {
@@ -906,6 +911,7 @@
     "shareFailed": "Sharing failed",
     "sairFailed": "Could not open SAIR",
     "saved": "Saved",
-    "savedBody": "The report is in the Reports tab. You can share or edit it later."
+    "savedBody": "The report is in the Reports tab. You can share or edit it later.",
+    "footerNote": "Saved locally to the Reports tab — you can send or edit it later. ISA SafeCom had a backlog of roughly 50 unprocessed reports in 2025, so do not expect a quick reply."
   }
 }

@@ -7,7 +7,9 @@
     "cancel": "Zrušit",
     "error": "Chyba",
     "back": "Zpět",
-    "retry": "Zkusit znovu"
+    "retry": "Zkusit znovu",
+    "yes": "Ano",
+    "no": "Ne"
   },
   "home": {
     "searchPlaceholder": "Hledat název, region, sektor...",
@@ -836,7 +838,10 @@
     "construction": "Konstrukce",
     "style": "Styl",
     "price": "Cena",
-    "type": "Typ"
+    "type": "Typ",
+    "enrichHint": "Doplnit stretch křivku, ISA warnings a další data z {{source}}.",
+    "attribution": "Zdroj: {{source}} · {{license}}",
+    "noEnrichmentForType": "Pro tento typ vybavení nemá SlackData endpoint (ascendery, descendery, šekly, karabiny, spansety, sedáky). Enrichment funguje pro popruhy, kotvítka, kroužky a kladky."
   },
   "reports": {
     "filter": {
@@ -906,6 +911,7 @@
     "shareFailed": "Sdílení selhalo",
     "sairFailed": "Otevření SAIR selhalo",
     "saved": "Uloženo",
-    "savedBody": "Report je uložený v tabu Reporty. Můžeš ho později znovu sdílet nebo upravit."
+    "savedBody": "Report je uložený v tabu Reporty. Můžeš ho později znovu sdílet nebo upravit.",
+    "footerNote": "Uloží se lokálně do tabu Reporty — můžeš ho později znovu poslat nebo upravit. ISA SafeCom měla v roce 2025 backlog kolem 50 nezpracovaných hlášení, takže rychlou odpověď nečekej."
   }
 }
