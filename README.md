@@ -19,12 +19,13 @@ gear log, and curated training resources — for slackliners in the field.
 - **ISA Safety Companion.** Offline reference cards and calculators citing
   ISA:21, ISA:37, ISA:41 and related standards. A pocket reference, not a
   replacement for training or certification.
-- **Rig Log.** Per-line safety check and a full rig record for riggers
-  *(in development)*.
-- **Gear.** Material catalog, personal inventory, RLT tracking
-  *(in development)*.
+- **Rig Log.** Per-line rigger checklist and a full rig record, tied to the
+  specific line.
+- **Gear.** Browsable catalog of webbings, weblocks and hardware, enriched
+  with ISA warnings and stretch data from SlackData. Personal inventory and RLT
+  tracking *(in development)*.
 - **Training.** Curated external educational resources — postures, techniques,
-  knots *(planned)*.
+  knots. Session journal *(in development)*.
 - **Offline & private.** No accounts, no analytics, no ads, no tracking.
 
 ## Positioning
@@ -60,13 +61,13 @@ cp .env.example .env  # add EXPO_PUBLIC_MAPY_CZ_API_KEY from developer.mapy.cz
 npx expo run:android
 ```
 
-Requires Node 18+, Android Studio (Java 17 in `jbr/`), and a Mapy.cz API key.
+Requires Node 20+, Android Studio (Java 17 in `jbr/`), and a Mapy.cz API key.
 
 ## Data sources
 
-- **slack.cz** — Czech slackline community. Scraped via
-  [`apps/slackcz-scraper/`](https://github.com/zemanektomas/slack-ova-mobile/tree/main/apps)
-  from the public `/highlines/` page (no REST API is available).
+- **slack.cz** — Czech slackline community. Scraped from the public
+  `/highlines/` page, since no REST API is available. The scraper lives outside
+  this repository; the resulting snapshot is bundled in `assets/seed/`.
 - **Slackmap** — [slackmap.com](https://slackmap.com), International Slackline
   Association. Public GeoJSON at `data.slackmap.com` and line details at
   `api.slackmap.com`. Data licensed under **CC BY-SA 4.0**.
